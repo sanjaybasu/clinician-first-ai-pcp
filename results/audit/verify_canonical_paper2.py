@@ -129,7 +129,7 @@ def registry():
     R.append(("txt.writer_only", pc(gw["among_safety_positive_weighted"]["writer_only"]), "texts_supplement.json"))
     sl = t["same_safety_layer"]
     a = sl["metrics"]["amie_style+layer"]
-    R.append(("layer.amie", f"{pc(a['hazard_sensitivity_weighted'])}% of hazard texts ({pc(a['hazard_sensitivity_weighted_ci'][0])} to {pc(a['hazard_sensitivity_weighted_ci'][1])})", "same_safety_layer"))
+    R.append(("layer.amie", f"{pc(a['hazard_sensitivity_weighted'])}% of texts with a safety hazard ({pc(a['hazard_sensitivity_weighted_ci'][0])} to {pc(a['hazard_sensitivity_weighted_ci'][1])})", "same_safety_layer"))
     for k in ["amie_style+layer", "mai_dxo_style+layer", "v22+layer"]:
         R.append((f"layer.{k}.nohaz", f1(sl["metrics"][k]["escalation_no_hazard_per_1000_weighted"]), "same_safety_layer"))
         R.append((f"layer.{k}.sens", pc(sl["metrics"][k]["hazard_sensitivity_weighted"]), "same_safety_layer"))
@@ -139,62 +139,62 @@ def registry():
     ag = t["second_physician"]["agreement"]["safety_positive"]
     R.append(("kappa.sp", f"κ = {ag['kappa']:.3f}", "texts_supplement.json"))
     sp = t["second_physician"]
-    R.append(("200.basu", f"{pc(sp['basu_labels_on_200']['ours']['hazard_sensitivity_weighted'])}% against {pc(sp['basu_labels_on_200']['amie_style']['hazard_sensitivity_weighted'])}%", "texts_supplement.json"))
-    R.append(("200.morgan", f"{pc(sp['morgan_labels_on_200']['ours']['hazard_sensitivity_weighted'])}% against {pc(sp['morgan_labels_on_200']['amie_style']['hazard_sensitivity_weighted'])}%", "texts_supplement.json"))
+    R.append(("200.basu", f"our system escalated {pc(sp['basu_labels_on_200']['ours']['hazard_sensitivity_weighted'])}% and the AMIE-style agent {pc(sp['basu_labels_on_200']['amie_style']['hazard_sensitivity_weighted'])}%", "texts_supplement.json"))
+    R.append(("200.morgan", f"our system escalated {pc(sp['morgan_labels_on_200']['ours']['hazard_sensitivity_weighted'])}% and the AMIE-style agent {pc(sp['morgan_labels_on_200']['amie_style']['hazard_sensitivity_weighted'])}%", "texts_supplement.json"))
     rc = t["repeat_consistency"]
-    R.append(("repeat", f"{pc(rc['ours']['share_all_3_agree'])}% of texts with the architecture and {pc(rc['amie_style']['share_all_3_agree'])}%", "texts_supplement.json"))
+    R.append(("repeat", f"{pc(rc['ours']['share_all_3_agree'])}% of texts with our system and {pc(rc['amie_style']['share_all_3_agree'])}%", "texts_supplement.json"))
     u = j(DER / "urgency_agreement.json")["_all"]
     R.append(("urg.agree", f"{pc(u['escalation_agreement'])}% (κ = {u['escalation_kappa']:.3f})", "urgency_agreement.json"))
-    R.append(("urg.rates", f"{pc(u['g61_escalation_rate'])}% of\nreplies an escalation against {pc(u['sonnet_escalation_rate'])}%", "urgency_agreement.json"))
+    R.append(("urg.rates", f"{pc(u['g61_escalation_rate'])}% of replies an escalation, and the primary\nclassifier {pc(u['sonnet_escalation_rate'])}%", "urgency_agreement.json"))
     reg = j(D / "paper2_final/texts/report.json")
-    R.append(("strict.held", f"{reg['_writer_replies_held_per_1000']} of every 1,000 writer replies", "texts/report.json"))
+    R.append(("strict.held", f"{reg['_writer_replies_held_per_1000']} of every 1,000 replies from our reply\nmodel", "texts/report.json"))
     R.append(("strict.nohaz", f"{reg['clinician_first']['escalation_no_hazard_per_1000_weighted']} of every 1,000 texts without\na hazard", "texts/report.json"))
     rh = t["registered_hypotheses_v22"]
     R.append(("h1a", f"{pc(rh['H1a']['majority_diff'])} points; {pc(rh['H1a']['majority_diff_ci95'][0])} to {pc(rh['H1a']['majority_diff_ci95'][1])}", "registered_hypotheses_v22"))
     R.append(("h1b", f"{pc(rh['H1b']['majority_diff'])} points; exact McNemar P = {rh['H1b']['mcnemar_exact_two_sided_p']:.3f}", "registered_hypotheses_v22"))
     e = j(DER / "texts_errors.json")
-    R.append(("err.med", f"{e['missed_by_category']['ours']['med_safety']:.1f} unescalated, against {e['missed_by_category']['amie_style']['med_safety']:.1f}", "texts_errors.json"))
-    R.append(("err.house", f"it left {e['missed_by_category']['ours']['environmental_housing_safety']:.1f}, against {e['missed_by_category']['amie_style']['environmental_housing_safety']:.1f}", "texts_errors.json"))
+    R.append(("err.med", f"{e['missed_by_category']['ours']['med_safety']:.1f} unescalated, and the AMIE-style agent {e['missed_by_category']['amie_style']['med_safety']:.1f}", "texts_errors.json"))
+    R.append(("err.house", f"our system left {e['missed_by_category']['ours']['environmental_housing_safety']:.1f} unescalated, and the AMIE-style agent {e['missed_by_category']['amie_style']['environmental_housing_safety']:.1f}", "texts_errors.json"))
     R.append(("groups", f"{e['label_groups']['other_hazard']} texts with a hazard", "texts_errors.json"))
     # gate
     g = j(D / "paper2_dev/paging_gate_497/report.json")["outcomes"]
     em = g["emergency"]["scores"]["kev_p911"]
     R.append(("gate.auroc", f"{em['auroc']['est']:.3f} (95% CI,\n{em['auroc']['ci95'][0]:.3f} to {em['auroc']['ci95'][1]:.3f})", "paging_gate_497/report.json"))
     R.append(("gate.miss", f"{pc(em['crc_0.05']['miss']['mean'])}% of", "paging_gate_497/report.json"))
-    R.append(("gate.paged", f"{pc(em['crc_0.05']['paged_w']['mean'])}% of care-team texts", "paging_gate_497/report.json"))
+    R.append(("gate.paged", f"{pc(em['crc_0.05']['paged_w']['mean'])}% of texts to care teams", "paging_gate_497/report.json"))
     R.append(("gate.above", f"{pc(em['crc_0.05']['share_splits_miss_above_alpha'])}% of the splits", "paging_gate_497/report.json"))
-    R.append(("gate.full_paged", f"{pc(em['full_sample_0.05']['paged_w'])}% of care-team texts", "paging_gate_497/report.json"))
+    R.append(("gate.full_paged", f"{pc(em['full_sample_0.05']['paged_w'])}% of texts to care teams", "paging_gate_497/report.json"))
     sa = g["safety"]["scores"]["kev_p_contact_doctor_or_911"]["auroc"]
     R.append(("gate.safety_auroc", f"{sa['est']:.3f} ({sa['ci95'][0]:.3f} to {sa['ci95'][1]:.3f})", "paging_gate_497/report.json"))
     aw = em["auroc_weighted"]
     R.append(("gate.auroc_w", f"{aw['est']:.3f} ({aw['ci95'][0]:.3f} to {aw['ci95'][1]:.3f})", "paging_gate_497/report.json"))
     R.append(("gate.miss_p95", f"{pc(em['crc_0.05']['miss']['p95'])}%", "paging_gate_497/report.json"))
     ii = j(DER / "intake_instructions.json")["arms"]
-    R.append(("intake.instr", f"{ii['amie_style']['unconditional_instruction']} of {ii['amie_style']['messages']} (AMIE-style) and "
-              f"{ii['mai_dxo_style']['unconditional_instruction']} of {ii['mai_dxo_style']['messages']}", "intake_instructions.json"))
-    R.append(("intake.none", f"none in {ii['intake']['messages']}", "intake_instructions.json"))
+    R.append(("intake.instr", f"{ii['amie_style']['unconditional_instruction']} of {ii['amie_style']['messages']} messages, the MAI-DxO-style "
+              f"agent in {ii['mai_dxo_style']['unconditional_instruction']} of {ii['mai_dxo_style']['messages']}", "intake_instructions.json"))
+    R.append(("intake.none", f"none of {ii['intake']['messages']}", "intake_instructions.json"))
     lk = j(DER / "texts_gate_test_and_leak.json")
     rl = lk["released_raw_llm_replies"]
     re_ = j(DER / "texts_routing_endpoints.json")
     em = re_["emergency_now_reaching_patient_per_1000_all_replies"]
-    R.append(("leak.released", f"The architecture released {rl['n_released']:,} of its 2,847 replies,\nand the classifier placed {rl['emergency_now']} of them in that class ({em['ours']} per 1,000 of all replies", "texts_gate_test_and_leak.json + routing"))
+    R.append(("leak.released", f"Our system\nreleased {rl['n_released']:,} of its 2,847 replies,\nand the classifier placed {rl['emergency_now']} of them in that class ({em['ours']} per 1,000 of all replies", "texts_gate_test_and_leak.json + routing"))
     ro, w = re_["ours_routed_only"], re_["withheld"]
-    R.append(("route.only", f"escalated {pc(ro['sens_safety_positive'])}% of hazard texts\n({pc(ro['sens_safety_positive_ci'][0])} to {pc(ro['sens_safety_positive_ci'][1])}) at {ro['per1000_no_hazard']} per 1,000", "texts_routing_endpoints.json"))
-    R.append(("route.withheld", f"the architecture withheld {w['total']}: {w['replies_withheld_by_page']} because the gate paged on {w['texts_paged']} texts, and {w['replies_held_by_check_not_paged']}", "texts_routing_endpoints.json"))
-    R.append(("route.review", f"The gate sent another {w['texts_review']} texts to review", "texts_routing_endpoints.json"))
+    R.append(("route.only", f"escalated {pc(ro['sens_safety_positive'])}% of texts with a safety hazard ({pc(ro['sens_safety_positive_ci'][0])} to {pc(ro['sens_safety_positive_ci'][1])}) and {ro['per1000_no_hazard']} per 1,000", "texts_routing_endpoints.json"))
+    R.append(("route.withheld", f"our system withheld {w['total']}: {w['replies_withheld_by_page']}\nbecause the emergency screen sent an alert for {w['texts_paged']} texts, and {w['replies_held_by_check_not_paged']}", "texts_routing_endpoints.json"))
+    R.append(("route.review", f"The emergency\nscreen sent another {w['texts_review']} texts to physician review", "texts_routing_endpoints.json"))
     R.append(("doc.n", f"the {re_['n']['doctor_call']} texts that the physician labeled as needing at least\na call from a doctor", "texts_routing_endpoints.json"))
-    R.append(("doc.vals", f"the architecture escalated {pc(re_['ours']['sens_doctor_call'])}% ({pc(re_['ours']['sens_doctor_call_ci'][0])} to {pc(re_['ours']['sens_doctor_call_ci'][1])}), against {pc(re_['amie_style']['sens_doctor_call'])}% for the\nAMIE-style agent, {pc(re_['mai_dxo_style']['sens_doctor_call'])}% for the MAI-DxO-style agent and {pc(re_['v22']['sens_doctor_call'])}% for the rule-based system", "texts_routing_endpoints.json"))
+    R.append(("doc.vals", f"Our system escalated {pc(re_['ours']['sens_doctor_call'])}% of these texts ({pc(re_['ours']['sens_doctor_call_ci'][0])} to {pc(re_['ours']['sens_doctor_call_ci'][1])}), the AMIE-style\nagent {pc(re_['amie_style']['sens_doctor_call'])}%, the MAI-DxO-style agent {pc(re_['mai_dxo_style']['sens_doctor_call'])}% and the rule-based system {pc(re_['v22']['sens_doctor_call'])}%", "texts_routing_endpoints.json"))
     dd = [re_[f"ours - {b} (doctor_call)"] for b in ("amie_style", "mai_dxo_style", "v22")]
-    R.append(("doc.diffs", "the differences were " + f"{100*dd[0]['diff']:.1f}".replace('-', '−') + f"\npoints ({100*dd[0]['ci'][0]:.1f} to {100*dd[0]['ci'][1]:.1f})".replace('-', '−') + ", " + f"{100*dd[1]['diff']:.1f} points ({100*dd[1]['ci'][0]:.1f} to {100*dd[1]['ci'][1]:.1f})".replace('-', '−') + " and " + f"{100*dd[2]['diff']:.1f} points ({100*dd[2]['ci'][0]:.1f} to {100*dd[2]['ci'][1]:.1f})".replace('-', '−'), "texts_routing_endpoints.json"))
+    R.append(("doc.diffs", "The differences were " + f"{100*dd[0]['diff']:.1f}".replace('-', '−') + f"\npoints ({100*dd[0]['ci'][0]:.1f} to {100*dd[0]['ci'][1]:.1f})".replace('-', '−') + ", " + f"{100*dd[1]['diff']:.1f} points ({100*dd[1]['ci'][0]:.1f} to {100*dd[1]['ci'][1]:.1f})".replace('-', '−') + " and " + f"{100*dd[2]['diff']:.1f} points ({100*dd[2]['ci'][0]:.1f} to {100*dd[2]['ci'][1]:.1f})".replace('-', '−'), "texts_routing_endpoints.json"))
     rc = re_["ours_registered_check"]
-    R.append(("reg.sens", f"escalated {pc(rc['sens_safety_positive'])}% of hazard\ntexts ({pc(rc['sens_safety_positive_ci'][0])} to {pc(rc['sens_safety_positive_ci'][1])}) and {rc['per1000_no_hazard']} of every 1,000", "texts_routing_endpoints.json"))
+    R.append(("reg.sens", f"escalated {pc(rc['sens_safety_positive'])}% of texts with a safety hazard ({pc(rc['sens_safety_positive_ci'][0])} to {pc(rc['sens_safety_positive_ci'][1])}) and {rc['per1000_no_hazard']} of every 1,000", "texts_routing_endpoints.json"))
     lay = [em[k] for k in ("amie_style+layer", "mai_dxo_style+layer", "v22+layer")]
     R.append(("leak.layer", f"released {min(lay)} to {max(lay)} such replies per 1,000", "texts_routing_endpoints.json"))
     g = j(Path.home() / "waymark-local/packaging/ai-pcp/data/gate_thresholds.json")
     e = [x for x in g["split_sample_check"]["safety"]["evaluations"] if x["choice"] == "target"][0]
-    R.append(("refit", f"missed {100*e['miss_mean']:.1f}% of the doctor-call texts in the held-out half on average (95th percentile {100*e['miss_p95']:.1f}%; above 10% in {100*e['share_splits_miss_above_alpha']:.1f}% of\nsplits), but it sent {100*e['gated_weighted_mean']:.1f}% of texts to review", "ai-pcp/data/gate_thresholds.json"))
+    R.append(("refit", f"missed {100*e['miss_mean']:.1f}% of the texts needing a doctor's call in the held-out half on average (95th percentile {100*e['miss_p95']:.1f}%; above 10% in {100*e['share_splits_miss_above_alpha']:.1f}% of\nsplits), but it sent {100*e['gated_weighted_mean']:.1f}% of texts to review", "ai-pcp/data/gate_thresholds.json"))
     cost = j(DER / "hbpro_test_supplement.json")["cost"]
-    R.append(("cost", f"USD {cost['attribution_rules']['A_file_order']['compass_pro_full']['usd_per_task']:.3f} per task at list prices, against USD {cost['comparator_chains']['amie_style']['usd_per_task']:.3f}\nfor the AMIE-style agent and USD {cost['comparator_chains']['mai_dxo_style']['usd_per_task']:.3f}", "hbpro_test_supplement.json"))
+    R.append(("cost", f"USD {cost['attribution_rules']['A_file_order']['compass_pro_full']['usd_per_task']:.3f} per task at list prices, the AMIE-style agent USD {cost['comparator_chains']['amie_style']['usd_per_task']:.3f} and the MAI-DxO-style agent USD {cost['comparator_chains']['mai_dxo_style']['usd_per_task']:.3f}", "hbpro_test_supplement.json"))
     for arm in ["opus_search_edit", "opus_edit", "amie_style_uncapped", "mai_dxo_style_uncapped", "amie_style_search"]:
         if arm not in rep2:
             continue
@@ -203,9 +203,9 @@ def registry():
     ca = cmp_file(D / "hbpro_test/compare_amie_search.txt")
     xa, xb = ca["compass_pro_full - amie_style_search"], ca["opus_search_edit - amie_style_search"]
     sc = rep2["amie_style_search"]["length_adjusted"]["score"]
-    R.append(("search.abstract", f"the AMIE-style agent scored {f1(sc)} (difference {f1(xa['diff'])}; {f1(xa['ci95'][0])}–{f1(xa['ci95'][1])})", "compare_amie_search.txt"))
-    R.append(("search.results", f"It then scored {f1(sc)}, {f1(sc - rep2['amie_style']['length_adjusted']['score'])} points above the AMIE-style agent without search; the\narchitecture scored {f1(xa['diff'])} points higher ({f1(xa['ci95'][0])} to {f1(xa['ci95'][1])}), and the two-step version {f1(xb['diff'])} points higher ({f1(xb['ci95'][0])} to {f1(xb['ci95'][1])})".replace('-0', '−0'), "compare_amie_search.txt"))
-    R.append(("search.discussion", f"the pipeline's lead fell to {f1(xa['diff'])} points ({f1(xa['ci95'][0])} to {f1(xa['ci95'][1])}), and the\ntwo-step version's lead to {f1(xb['diff'])} points ({f1(xb['ci95'][0])} to {f1(xb['ci95'][1])})".replace('-0', '−0'), "compare_amie_search.txt"))
+    R.append(("search.abstract", f"With the same web search, the difference was {f1(xa['diff'])} ({f1(xa['ci95'][0])}–{f1(xa['ci95'][1])})", "compare_amie_search.txt"))
+    R.append(("search.results", f"The AMIE-style agent then scored {f1(sc)}, {f1(sc - rep2['amie_style']['length_adjusted']['score'])} points higher than without search. Our\npipeline scored {f1(xa['diff'])} points higher than the AMIE-style agent with search ({f1(xa['ci95'][0])} to {f1(xa['ci95'][1])}), and the two-step pipeline\ndescribed below scored {f1(xb['diff'])} points higher ({f1(xb['ci95'][0])} to {f1(xb['ci95'][1])})".replace('-0', '−0'), "compare_amie_search.txt"))
+    R.append(("search.discussion", f"our pipeline's lead fell to {f1(xa['diff'])} points ({f1(xa['ci95'][0])} to {f1(xa['ci95'][1])}), and the two-step pipeline's lead fell to {f1(xb['diff'])} points ({f1(xb['ci95'][0])} to {f1(xb['ci95'][1])})".replace('-0', '−0'), "compare_amie_search.txt"))
     R.append(("search.lift", f"by {f1(sc - rep2['amie_style']['length_adjusted']['score'])} points", "report.json"))
     sl = t["same_safety_layer"]["metrics"]
     lo, hi = pc(sl["raw_llm+layer"]["hazard_sensitivity_weighted"]), pc(max(sl[k]["hazard_sensitivity_weighted"] for k in sl))
@@ -216,12 +216,12 @@ def registry():
         d = cn[k]
         R.append((lab, f"{f1(abs(d['diff']))} points ({f1(d['ci95'][0])} to {f1(d['ci95'][1])})".replace('-', '−') if lab.endswith("amie") else f"{f1(abs(d['diff']))} points ({f1(-d['ci95'][1])} to {f1(-d['ci95'][0])})", "compare_nosearch.txt"))
     cl = lk["classifier_emergency_now_all_replies"]
-    R.append(("leak.cls", f"{cl['amie_style']['per_1000']} (AMIE-style), {cl['mai_dxo_style']['per_1000']} (MAI-DxO-style)\nand {cl['raw_llm']['per_1000']} (bare writer)", "texts_gate_test_and_leak.json"))
-    R.append(("hb.simple_raw", f"two-step version scored {rep2['opus_search_edit']['raw']['score']} and the full pipeline {rep2['compass_pro_full']['raw']['score']}", "hbpro_test/report.json"))
-    R.append(("hb.simple_chars", f"averaged {rep2['compass_pro_full']['mean_chars']:,} characters and the two-step version's {rep2['opus_search_edit']['mean_chars']:,}", "hbpro_test/report.json"))
+    R.append(("leak.cls", f"in {cl['amie_style']['per_1000']} of every 1,000 replies, the MAI-DxO-style agent in {cl['mai_dxo_style']['per_1000']} and our reply model in {cl['raw_llm']['per_1000']}", "texts_gate_test_and_leak.json"))
+    R.append(("hb.simple_raw", f"two-step pipeline scored {rep2['opus_search_edit']['raw']['score']} and the full pipeline {rep2['compass_pro_full']['raw']['score']}", "hbpro_test/report.json"))
+    R.append(("hb.simple_chars", f"averaged {rep2['compass_pro_full']['mean_chars']:,} characters\nand the two-step pipeline's {rep2['opus_search_edit']['mean_chars']:,}", "hbpro_test/report.json"))
     gt = lk["gate_test"]["hazard_contact_doctor_or_911_gated"]
-    R.append(("gate.test", f"{gt[1]} of the {gt[0]} texts labeled", "texts_gate_test_and_leak.json"))
-    R.append(("gate.test_share", f"paged on {100 * lk['weighted_page_share']:.1f}% of texts and sent {100 * lk['weighted_review_share']:.1f}% to review", "texts_gate_test_and_leak.json"))
+    R.append(("gate.test", f"It sent only {gt[1]} of the {gt[0]}\ntexts needing a doctor's call to a physician", "texts_gate_test_and_leak.json"))
+    R.append(("gate.test_share", f"it sent an alert\nfor {100 * lk['weighted_page_share']:.1f}% of texts and a review request for {100 * lk['weighted_review_share']:.1f}%", "texts_gate_test_and_leak.json"))
     # intake
     ir = (D / "paper2_dev/intake_eval/report.md").read_text()
     for v in ["4.71", "3.46", "3.18", "71.7%", "40.9%", "55.8%", "6.43", "7.82", "7.71", "27.3%", "19.0%", "19.4%"]:
