@@ -1,0 +1,31 @@
+# SYNTHETIC numbers for unit tests only. Not clinical content.
+complaint: synthetic_back_pain
+version: "test"
+lane: undifferentiated_high_risk
+clinical_review: {approved_by: "test-fixture", approved_on: "2026-10-27"}
+features:
+  - {id: saddle_anesthesia, question: "numbness between the legs?"}
+  - {id: urinary_retention, question: "trouble passing urine?"}
+  - {id: rectal_exam, question: "rectal tone", remote_askable: false}
+  - {id: recent_lifting, question: "pain started after lifting?"}
+  - {id: radiating_leg, question: "pain goes down one leg?"}
+diagnoses:
+  - id: cauda_equina
+    label: Cauda equina (synthetic)
+    cannot_miss: true
+    prior: {p: 0.01, source: "synthetic"}
+    thresholds: {test: 0.005, treat: 0.15, source: "synthetic"}
+    lrs:
+      saddle_anesthesia: {lr_pos: 20.0, lr_neg: 0.3, lr_pos_ci: [10.0, 40.0], lr_neg_ci: [0.2, 0.45], group: neuro, source: "synthetic"}
+      urinary_retention: {lr_pos: 18.0, lr_neg: 0.2, group: neuro, source: "synthetic"}
+      rectal_exam: {lr_pos: 10.0, lr_neg: 0.5, source: "synthetic"}
+  - id: mechanical
+    label: Mechanical strain (synthetic)
+    prior: {p: 0.6, source: "synthetic"}
+    lrs:
+      recent_lifting: {lr_pos: 3.0, lr_neg: 0.6, source: "synthetic"}
+  - id: radiculopathy
+    label: Radiculopathy (synthetic)
+    prior: {p: 0.2, source: "synthetic"}
+    lrs:
+      radiating_leg: {lr_pos: 4.0, lr_neg: 0.4, source: "synthetic"}

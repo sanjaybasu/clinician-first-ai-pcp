@@ -1,0 +1,35 @@
+# Guideline pathway: dysuria in adults (always defers to a clinician; S. Basu decision of 2026-11-03).
+# Paper 2 development pathway, signed by S. Basu on 2026-11-05 (design/pathway_schema.md). Every source resolved in PubMed on 2026-11-04;
+# section-level support for each node stays unverified until the signing physician checks the cited section.
+pathway: dysuria
+version: "0.1.0-dev"
+script: dysuria@1.0.0
+status: signed
+signed_by: "S. Basu 2026-11-05"
+sources:
+  gupta2011:
+    citation: "Gupta K, et al. International clinical practice guidelines for the treatment of acute uncomplicated cystitis and pyelonephritis in women. Clin Infect Dis. 2011;52(5):e103-e120"
+    pmid: "21292654"
+  workowski2021:
+    citation: "Workowski KA, et al. Sexually Transmitted Infections Treatment Guidelines, 2021. MMWR Recomm Rep. 2021;70(4):1-187"
+    pmid: "34292926"
+  judgment:
+    citation: "Development judgment (S. Basu decision of 2026-11-03: dysuria always defers to a clinician)"
+nodes:
+  - id: vaginal_symptoms
+    when: {kinds: [escalate], red_flags_any: [any_vaginal_symptom]}
+    disposition: {level: urgent_same_day, within_hours: 24}
+    proposals:
+      - {kind: lab, name: "Nucleic acid amplification test for gonorrhea and chlamydia", source: [workowski2021]}
+    source: [workowski2021]
+  - id: escalate
+    when: {kinds: [escalate]}
+    disposition: {level: urgent_same_day, within_hours: 24}
+    proposals:
+      - {kind: lab, name: "Urinalysis and urine culture with susceptibility testing", source: [gupta2011]}
+    source: [gupta2011]
+  - id: defer
+    when: {kinds: [defer, ask]}
+    disposition: {level: clinician_review, within_hours: 24}
+    standing: {level: clinician_review, within_hours: 24}
+    source: [gupta2011, judgment]

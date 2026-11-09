@@ -1,0 +1,94 @@
+# COMPASS first-aid and warning-sign library (Paper 2 development, v17): v1 plus infant choking, child choking, and
+# unconscious low blood sugar (sources read 2026-11-05). Earlier v1 notes follow.
+# COMPASS first-aid and warning-sign library (Paper 2 development, v16). Each passage is inserted word for word into an
+# emergency reply when its crisis criterion fires as present (never "uncertain"), after the emergency instruction. No
+# number or step comes from the LLM. Every element traces to the quoted source passage; copies of the source pages are
+# in compass-pcp-data/first_aid_sources/ (read 2026-11-05, some through Internet Archive copies; re-open the live URLs
+# before signing).
+#
+# ######################################################################################################
+# SIGNED. S. Basu signed every passage as written on 2026-11-06 (sign-off sheet design/signoff_2026-11-05.md, item 1).
+# Decisions for the signer are listed under `decisions`.
+# ######################################################################################################
+version: "0.2.0-dev"
+status: signed
+signed_by: "Sanjay Basu, MD, PhD (2026-11-06)"
+decisions:
+  - "DECIDED (S. Basu 2026-11-05): anaphylaxis, always call 911 after epinephrine (AAAAI patient guidance), not the 2023
+    practice-parameter option to skip EMS after a prompt, complete, durable response."
+  - "DECIDED (S. Basu 2026-11-05): stroke uses BE FAST (CDC), not F.A.S.T."
+  - "Low blood sugar and choking are drafted but not mapped: no crisis criterion is specific to them (MD-02 cannot tell
+    low from high blood sugar)."
+  - "Adult-only passages (CPR, adult choking) are left out when the message is about someone else, who may be a child;
+    infant and child choking have their own passages (BR-03, BR-04)."
+  - "DECIDED (S. Basu 2026-11-05): infant chest pushes name no hand technique and no depth (AHA 2025 heel of hand vs Red
+    Cross two fingers)."
+  - "DECIDED (S. Basu 2026-11-05): the unconscious-low-sugar passage says 'sugar' (the AHA/Red Cross 2024 First Aid
+    class 3: Harm recommendation covers oral glucose), and it is mapped to MD-02 even though MD-02 also covers DKA."
+  - "CPR: AED voice-prompt wording is not included (the AHA consumer page could not be read)."
+  - "Naloxone: no repeat-dose interval is included (CDC gives none)."
+passages:
+  heart_attack:
+    text: "Heart attack signs include chest pressure, squeezing or pain, or pain in the arms, back, neck, jaw or stomach, with shortness of breath, a cold sweat, nausea or lightheadedness. Women may also have nausea, vomiting or unusual tiredness. Do not drive yourself; an ambulance can start treatment on the way."
+    sources:
+      - "American Heart Association. Warning Signs of a Heart Attack. Reviewed 2024-12-12. https://www.heart.org/en/health-topics/heart-attack/warning-signs-of-a-heart-attack"
+      - "NHLBI. Heart Attack: Symptoms. Updated 2022-03-24. https://www.nhlbi.nih.gov/health/heart-attack/symptoms"
+  stroke:
+    text: "Think BE FAST: sudden loss of Balance, trouble with the Eyes, a drooping Face, one Arm drifting down, or slurred or strange Speech. Note the Time the signs started. Do not drive to the hospital."
+    sources:
+      - "CDC. Signs and Symptoms of Stroke. 2026-05-19. https://www.cdc.gov/stroke/signs-symptoms/index.html"
+  anaphylaxis:
+    text: "If you have an epinephrine auto-injector, use it in the outer thigh now. Lie on your back, or sit up if it is hard to breathe. If you are not better within minutes, or you get worse, use the second dose."
+    sources:
+      - "AAAAI. Anaphylaxis. https://www.aaaai.org/tools-for-the-public/conditions-library/allergies/anaphylaxis"
+      - "ACAAI. Anaphylaxis. https://acaai.org/allergies/symptoms/anaphylaxis/"
+      - "Cardona V, et al. World Allergy Organization anaphylaxis guidance 2020. World Allergy Organ J. 2020;13(10):100472. PMID 33204386"
+  opioid_overdose:
+    text: "If the person will not wake up, is breathing slowly or not at all, or has blue lips, give naloxone if you have it. Try to keep them awake and breathing, lay them on their side, and stay with them until help arrives. More than one dose may be needed."
+    sources:
+      - "CDC. What to Do If You Think Someone Is Overdosing. 2024-04-02. https://www.cdc.gov/stop-overdose/response/index.html"
+      - "CDC. Lifesaving Naloxone. 2025-06-11. https://www.cdc.gov/stop-overdose/caring/naloxone.html"
+  cpr:
+    adult_only: true  # left out when the message is about someone else (who may be a child)
+    text: "If they collapse and are not breathing normally, push hard and fast in the center of the chest, 100 to 120 pushes a minute and at least 2 inches deep, until a defibrillator (AED) is put on them."
+    sources:
+      - "American Heart Association. Part 7: Adult Basic Life Support: 2025 AHA Guidelines for CPR and ECC. Circulation. 2025;152(16_suppl_2):S448-S478. PMID 41122888"
+      - "American Heart Association. What is CPR. https://cpr.heart.org/en/resources/what-is-cpr"
+  low_blood_sugar:
+    text: "If your blood sugar is below 70, eat or drink 15 grams of fast sugar, such as 4 ounces of juice or regular soda, 1 tablespoon of sugar or honey, or 3 to 4 glucose tablets. Wait 15 minutes and check again; if it is still below 70, do it again."
+    sources:
+      - "CDC. Treatment of Low Blood Sugar (Hypoglycemia). 2024-05-15. https://www.cdc.gov/diabetes/treatment/treatment-low-blood-sugar-hypoglycemia.html"
+      - "American Diabetes Association. Symptoms and Treatment of Low Blood Glucose. https://diabetes.org/living-with-diabetes/hypoglycemia-low-blood-glucose/symptoms-treatment"
+  choking:
+    adult_only: true  # left out when the message is about someone else (who may be a child)
+    text: "If an adult cannot cough, speak or breathe, give 5 firm blows between the shoulder blades with the heel of your hand, then 5 abdominal thrusts just above the belly button, pulling in and up. Repeat until the object comes out; if they pass out, start CPR."
+    sources:
+      - "American Heart Association. Part 7: Adult Basic Life Support, Section 10.1. Circulation. 2025. PMID 41122888"
+      - "American Red Cross. Choking: Adult/Child. https://www.redcross.org/take-a-class/resources/learn-first-aid/adult-child-choking"
+  infant_choking:
+    text: "Hold your baby face-down along your forearm, with the head lower than the body, and give 5 firm back slaps between the shoulder blades. Then turn your baby face-up, head still low, and give 5 quick chest pushes in the center of the chest, not the belly. Repeat until the object comes out; if your baby stops responding, start CPR, beginning with chest pushes."
+    sources:
+      - "Joyner BL, et al. Part 6: Pediatric Basic Life Support: 2025 AHA and AAP Guidelines for CPR and ECC. Circulation. 2025;152(16_suppl_2):S424-S447. PMID 41122891"
+      - "American Red Cross. Infant Choking. https://www.redcross.org/take-a-class/resources/learn-first-aid/infant-choking"
+  child_choking:
+    text: "Kneel or stand behind your child, lean them forward, and give 5 firm back slaps between the shoulder blades with the heel of your hand. Then give 5 quick belly pushes, in and up, just above the belly button. Repeat until the object comes out; if your child stops responding, start CPR, beginning with chest pushes."
+    sources:
+      - "Joyner BL, et al. Part 6: Pediatric Basic Life Support: 2025 AHA and AAP Guidelines for CPR and ECC. Circulation. 2025;152(16_suppl_2):S424-S447. PMID 41122891"
+      - "American Red Cross. Choking: Adult/Child. https://www.redcross.org/take-a-class/resources/learn-first-aid/adult-child-choking"
+  unconscious_low_sugar:
+    text: "If they have passed out, are very hard to wake, or cannot swallow safely, do not put sugar in their mouth; they could choke. If they have glucagon and you know how to use it, give it now and turn them on their side."
+    sources:
+      - "2024 American Heart Association and American Red Cross Guidelines for First Aid, section 6.7. Circulation. 2024;150(24):e519-e579. PMID 39540278"
+      - "American Diabetes Association. How to Use Glucagon; When to Use Glucagon. https://diabetes.org/living-with-diabetes/hypoglycemia-low-blood-glucose/severe"
+# criterion id (present, not uncertain) -> passages, in order
+criteria:
+  CA-01: [heart_attack]
+  CA-02: [heart_attack]
+  NE-01: [stroke]
+  BR-02: [anaphylaxis]
+  OD-01: [opioid_overdose, cpr]
+  BR-01: [cpr]
+  AM-01: [cpr]
+  BR-03: [infant_choking]
+  BR-04: [child_choking]
+  MD-02: [unconscious_low_sugar]

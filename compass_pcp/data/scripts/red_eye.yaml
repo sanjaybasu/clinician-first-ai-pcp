@@ -1,0 +1,100 @@
+# Illness script: red eye in adults (conjunctivitis lane).
+# Signed by a physician on 2026-10-28. Every value and its table location is listed in
+# docs/clinical/SCRIPT_SOURCES_uri_eye_ear.md. Priors are literature values; a later version replaces them with Waymark claims rates. Thresholds were drafted and accepted at physician review; they are not from a formal decision analysis.
+#
+# Bacterial-conjunctivitis LRs are DERIVED from 2x2 counts in Rietveld 2004
+# Table 1: 177 Dutch primary-care adults with a red eye and (muco)purulent
+# discharge or a glued eyelid, not wearing contact lenses; reference standard
+# bacterial culture. Two derived LRs agree with the pooled values in Narayana
+# and McGee 2015 (abstract): both eyes glued, LR 3.6 (1.9-6.5); no gluing of
+# either eye, LR 0.3 (0.1-0.8).
+#
+# The gluing findings and bilateral redness share group "glued_bilateral"
+# (two glued eyes implies two involved eyes).
+#
+# Eligibility exclusions (handled by the lane gate, not by this script):
+#   - Contact lens wearers. Rietveld 2004 excluded them, and contact lens use is
+#     a red flag for microbial keratitis. `contact_lens_wearer` is in must_ask
+#     with no LR; a PRESENT answer does not change any posterior here.
+#   - Recent eye injury or chemical splash.
+#
+# Serious eye disease (keratitis, iritis/uveitis, acute angle-closure glaucoma,
+# scleritis) has one sourced remote feature (penlight photophobia, Yaphe 2003).
+# `vision_change` and `severe_eye_pain` have no LRs. They are in must_ask so the
+# engine asks them, but a PRESENT answer must escalate through the ANCHOR
+# red-flag floor or a lane-gate hard rule.
+#
+# Allergic conjunctivitis is not a separate candidate diagnosis (no sourced LRs
+# or prior in a red-eye population). It sits inside the non-bacterial diagnosis.
+complaint: red_eye
+version: "1.0.0"
+lane: conjunctivitis
+clinical_review:
+  approved_by: "Sanjay Basu, MD, PhD"
+  approved_on: "2026-10-28"
+# must_ask: serious eye disease red flags; signed 2026-10-28
+must_ask: [vision_change, severe_eye_pain, contact_lens_wearer, penlight_photophobia]
+# Contact lens wearers were excluded from the source study (Rietveld 2004): out of lane, defer to a clinician.
+red_flag_action: {contact_lens_wearer: defer}
+features:
+  - id: both_eyes_glued
+    question: "When you woke up this morning, were BOTH eyes stuck shut with crust or goo?"
+    remote_askable: true
+  - id: any_eye_glued
+    question: "When you woke up this morning, was at least one eye stuck shut with crust or goo?"
+    remote_askable: true
+  - id: bilateral_redness
+    question: "Are both of your eyes red?"
+    remote_askable: true   # patient report or photo; source used clinician observation of bilateral involvement
+  - id: itching
+    question: "Does your eye itch?"
+    remote_askable: true
+  - id: history_conjunctivitis
+    question: "Have you had pink eye (conjunctivitis) before?"
+    remote_askable: true
+  - id: penlight_photophobia
+    question: "Shine your phone flashlight into the red eye for one second. Does the light make the eye hurt?"
+    remote_askable: true   # guided self-test; source used a clinician penlight
+  - id: vision_change
+    question: "Is your vision blurry or worse in the red eye, even after you blink?"
+    remote_askable: true
+  - id: severe_eye_pain
+    question: "Do you have strong pain in or around the eye (not just itching or a gritty feeling)?"
+    remote_askable: true
+  - id: contact_lens_wearer
+    question: "Do you wear contact lenses?"
+    remote_askable: true
+diagnoses:
+  - id: bacterial_conjunctivitis
+    label: "Bacterial conjunctivitis"
+    cannot_miss: false
+    prior:
+      p: 0.32
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Rietveld RP et al. BMJ 2004;329(7459):206-10 (PMID 15201195), Results: positive bacterial culture in 57 of 177 adults with presumed infectious conjunctivitis (32%)"
+    lrs:
+      both_eyes_glued: {lr_pos: 3.56, lr_neg: 0.69, lr_pos_ci: [1.94, 6.55], lr_neg_ci: [0.56, 0.85], group: glued_bilateral, source: "DERIVED from Rietveld 2004 BMJ (PMID 15201195) Table 1 counts, Glued eyes: two: TP22 FN35 FP13 TN107; log-method 95% CI"}
+      any_eye_glued: {lr_pos: 1.26, lr_neg: 0.32, lr_pos_ci: [1.10, 1.44], lr_neg_ci: [0.13, 0.77], group: glued_bilateral, source: "DERIVED from Rietveld 2004 BMJ (PMID 15201195) Table 1 counts, Glued eyes: one or two vs none: TP52 FN5 FP87 TN33; log-method 95% CI"}
+      bilateral_redness: {lr_pos: 2.33, lr_neg: 0.75, lr_pos_ci: [1.36, 3.97], lr_neg_ci: [0.61, 0.93], group: glued_bilateral, source: "DERIVED from Rietveld 2004 BMJ (PMID 15201195) Table 1 counts, Bilateral involvement: TP21 FN36 FP19 TN101; log-method 95% CI"}
+      itching: {lr_pos: 0.91, lr_neg: 1.15, lr_pos_ci: [0.70, 1.19], lr_neg_ci: [0.78, 1.69], source: "DERIVED from Rietveld 2004 BMJ (PMID 15201195) Table 1 counts, Itching: TP33 FN24 FP76 TN44; log-method 95% CI"}
+      history_conjunctivitis: {lr_pos: 0.42, lr_neg: 1.15, lr_pos_ci: [0.17, 1.04], lr_neg_ci: [1.02, 1.30], source: "DERIVED from Rietveld 2004 BMJ (PMID 15201195) Table 1 counts, History of conjunctivitis: TP5 FN52 FP25 TN95; log-method 95% CI"}
+  - id: non_bacterial_conjunctivitis
+    label: "Non-bacterial conjunctivitis (viral, or allergic or irritant; culture negative)"
+    cannot_miss: false
+    prior:
+      p: 0.68
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Rietveld RP et al. BMJ 2004 (PMID 15201195), Results: negative culture in 120 of 177 adults with presumed infectious conjunctivitis (68%)"
+    lrs:
+      both_eyes_glued: {lr_pos: 0.28, lr_neg: 1.45, lr_pos_ci: [0.15, 0.52], lr_neg_ci: [1.17, 1.80], group: glued_bilateral, source: "DERIVED as reciprocal of Rietveld 2004 (PMID 15201195) Table 1 derived bacterial LRs (culture negative = complement)"}
+      any_eye_glued: {lr_pos: 0.79, lr_neg: 3.13, lr_pos_ci: [0.69, 0.91], lr_neg_ci: [1.29, 7.60], group: glued_bilateral, source: "DERIVED as reciprocal of Rietveld 2004 (PMID 15201195) Table 1 derived bacterial LRs (culture negative = complement)"}
+      bilateral_redness: {lr_pos: 0.43, lr_neg: 1.33, lr_pos_ci: [0.25, 0.73], lr_neg_ci: [1.08, 1.65], group: glued_bilateral, source: "DERIVED as reciprocal of Rietveld 2004 (PMID 15201195) Table 1 derived bacterial LRs (culture negative = complement)"}
+      itching: {lr_pos: 1.09, lr_neg: 0.87, lr_pos_ci: [0.84, 1.42], lr_neg_ci: [0.59, 1.28], source: "DERIVED as reciprocal of Rietveld 2004 (PMID 15201195) Table 1 derived bacterial LRs (culture negative = complement)"}
+      history_conjunctivitis: {lr_pos: 2.38, lr_neg: 0.87, lr_pos_ci: [0.96, 5.88], lr_neg_ci: [0.77, 0.98], source: "DERIVED as reciprocal of Rietveld 2004 (PMID 15201195) Table 1 derived bacterial LRs (culture negative = complement)"}
+  - id: serious_eye_disease
+    label: "Serious eye disease (keratitis, iritis or uveitis, acute angle-closure glaucoma, scleritis)"
+    cannot_miss: true
+    prior:
+      p: 0.28
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Yaphe J, Pandher KS. Fam Pract 2003;20(4):425-7 (PMID 12876115), Abstract: serious pathology in 10 of 36 red eyes in one general practice (28%); small sample"
+    thresholds: {benefit: 30, harm: 1, test_se: 0.95, test_sp: 0.90, test_harm: 0.02, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs:
+      penlight_photophobia: {lr_pos: 4.16, lr_neg: 0.25, lr_pos_ci: [1.78, 9.70], lr_neg_ci: [0.07, 0.87], source: "DERIVED from Yaphe 2003 Fam Pract (PMID 12876115) Abstract counts, penlight test positive in 8 of 10 serious and 5 of 26 less serious: TP8 FN2 FP5 TN21; log-method 95% CI"}

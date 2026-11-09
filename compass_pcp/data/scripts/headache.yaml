@@ -1,0 +1,126 @@
+# Illness script: headache in adults (undifferentiated high-risk lane).
+# Signed by a physician on 2026-10-28. Every value and its table location is listed in
+# docs/clinical/SCRIPT_SOURCES_neuro_back_abd.md. Priors are literature values; a later version replaces them with Waymark claims rates. Thresholds were drafted and accepted at physician review; they are not from a formal decision analysis. The AI takes the history and escalates; it does not treat.
+#
+# Groups (only the strongest finding in a group counts):
+#   - sah_onset: worst headache of life and peak within 1 hour describe the same
+#     onset; Perry 2010 and Bo 2008 both enrolled on onset features.
+#   - sah_neck: patient-reported neck pain or stiffness and neck stiffness on exam.
+#   - meningeal_signs: jolt accentuation and the three exam signs (Akaishi 2019
+#     reports them separately from the same patients).
+# Exertion onset, loss of consciousness and vomiting have no group. Exertion
+# onset and witnessed loss of consciousness were retained with neck pain in the
+# Perry 2010 Rule 1 model; vomiting was not.
+#
+# Known gaps (see the sources doc, "Unverified and omitted"):
+#   - mass lesion / raised intracranial pressure has NO sourced paired LRs
+#     (Detsky 2006 JAMA abstract gives LR+ only). It carries a prior only.
+#   - meningitis has no sourced history LRs. `fever` is a rule-only must_ask
+#     feature with no LR: a "yes" escalates by the red-flag rule, not by Bayes.
+#
+# must_ask choice: onset within 1 hour is NOT a must_ask red flag, because its
+# specificity is 12% (Carpenter 2016 Table 4) and a rule-based escalation on it
+# would escalate most callers; the engine still asks it as the SAH rule-out
+# question while SAH sits in the middle zone.
+complaint: headache
+version: "1.0.0"
+lane: undifferentiated_high_risk
+clinical_review:
+  approved_by: "Sanjay Basu, MD, PhD"
+  approved_on: "2026-10-28"
+# must_ask: SAH and meningitis history red flags; signed 2026-10-28
+must_ask: [loss_of_consciousness, fever, neck_pain_stiffness]
+# Neck pain or stiffness alone is common in benign headache: clinician review, not escalation. signed 2026-10-28
+red_flag_action: {neck_pain_stiffness: defer}
+features:
+  - id: onset_peak_within_1h
+    question: "Did this headache get to its worst within 1 hour of when it started?"
+    remote_askable: true
+  - id: worst_headache
+    question: "Is this the worst headache of your life?"
+    remote_askable: true
+  - id: onset_exertion
+    question: "Did this headache start while you were exercising, lifting something heavy, or working hard?"
+    remote_askable: true
+  - id: loss_of_consciousness
+    question: "Did you pass out or black out when the headache started?"
+    remote_askable: true
+  - id: neck_pain_stiffness
+    question: "Does your neck hurt or feel stiff?"
+    remote_askable: true
+  - id: vomiting
+    question: "Have you thrown up since this headache started?"
+    remote_askable: true
+  - id: neck_stiffness_exam
+    question: "Neck stiffness on passive flexion and extension, clinician exam"
+    remote_askable: false  # in-person exam
+  - id: jolt_accentuation
+    question: "Turn your head left and right quickly, about 2 or 3 times each second. Does that make the headache worse?"
+    remote_askable: true   # guided self-test; source studies used clinician-performed maneuver
+  - id: nuchal_rigidity_exam
+    question: "Nuchal rigidity on clinician exam"
+    remote_askable: false  # in-person exam
+  - id: kernig_sign_exam
+    question: "Kernig sign on clinician exam"
+    remote_askable: false  # in-person exam
+  - id: brudzinski_sign_exam
+    question: "Brudzinski sign on clinician exam"
+    remote_askable: false  # in-person exam
+  - id: fever
+    question: "Have you had a fever (temperature of 100.4 F or higher) with this headache?"
+    remote_askable: true   # gate-only red flag; no sourced LR
+  - id: id_migraine_positive
+    question: "With your headaches in the last 3 months, did at least 2 of these happen: you felt sick to your stomach, light bothered you a lot, or a headache kept you from work, school, or daily tasks for a day or more?"
+    remote_askable: true
+diagnoses:
+  - id: subarachnoid_hemorrhage
+    label: "Subarachnoid hemorrhage"
+    cannot_miss: true
+    prior:
+      p: 0.01
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Kelly AM et al. Headache 2021;61(10):1539-1552 (PMID 34726783), abstract: SAH, stroke, neoplasm, non-SAH hemorrhage and meningitis 'about 1% each' of 4536 adults with nontraumatic headache in 67 EDs"
+    thresholds: {benefit: 40, harm: 1, test_se: 0.94, test_sp: 0.99, test_harm: 0.05, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs:
+      onset_peak_within_1h: {lr_pos: 1.13, lr_neg: 0.06, lr_pos_ci: [1.09, 1.19], group: sah_onset, source: "Carpenter CR et al. Acad Emerg Med 2016;23(9):963-1003 (PMID 27306497) Table 4, Onset <1 hour (Bo 2008, single study); LR- 95% CI reported as 0-0.95, lower bound 0 not representable, CI omitted"}
+      worst_headache: {lr_pos: 1.20, lr_neg: 0.31, lr_pos_ci: [1.14, 1.27], lr_neg_ci: [0.16, 0.58], group: sah_onset, source: "DERIVED from Perry JJ et al. BMJ 2010;341:c5204 (PMID 21030443) Table 2 counts TP121 FN9 FP1448 TN421; log-method 95% CI"}
+      onset_exertion: {lr_pos: 2.16, lr_neg: 0.86, lr_pos_ci: [1.53, 3.03], lr_neg_ci: [0.78, 0.95], source: "DERIVED from Perry 2010 BMJ (PMID 21030443) Table 2 counts TP30 FN100 FP200 TN1669; log-method 95% CI"}
+      loss_of_consciousness: {lr_pos: 3.77, lr_neg: 0.87, lr_pos_ci: [2.44, 5.81], lr_neg_ci: [0.80, 0.94], source: "DERIVED from Perry 2010 BMJ (PMID 21030443) Table 2 counts TP22 FN108 FP84 TN1785; log-method 95% CI"}
+      neck_pain_stiffness: {lr_pos: 2.29, lr_neg: 0.42, lr_pos_ci: [2.01, 2.61], lr_neg_ci: [0.32, 0.55], group: sah_neck, source: "DERIVED from Perry 2010 BMJ (PMID 21030443) Table 2 counts TP92 FN38 FP578 TN1291 (complaint of neck stiffness or pain); log-method 95% CI"}
+      vomiting: {lr_pos: 2.22, lr_neg: 0.56, lr_pos_ci: [1.89, 2.62], lr_neg_ci: [0.46, 0.69], source: "DERIVED from Perry 2010 BMJ (PMID 21030443) Table 2 counts TP76 FN54 FP492 TN1377; log-method 95% CI"}
+      neck_stiffness_exam: {lr_pos: 5.93, lr_neg: 0.73, lr_pos_ci: [4.29, 8.19], lr_neg_ci: [0.65, 0.82], group: sah_neck, source: "DERIVED from Perry 2010 BMJ (PMID 21030443) Table 2 counts TP40 FN90 FP97 TN1772 (neck stiffness on flexion/extension); log-method 95% CI"}
+  - id: meningitis
+    label: "Meningitis"
+    red_flags: [fever, neck_pain_stiffness]
+    cannot_miss: true
+    prior:
+      p: 0.01
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Kelly AM et al. Headache 2021 (PMID 34726783), abstract: meningitis 'about 1%' of 4536 adults with nontraumatic headache in EDs"
+    thresholds: {benefit: 50, harm: 1, test_se: 0.95, test_sp: 0.95, test_harm: 0.05, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs:
+      jolt_accentuation: {lr_pos: 1.81, lr_neg: 0.67, lr_pos_ci: [1.50, 2.20], lr_neg_ci: [0.58, 0.77], group: meningeal_signs, source: "Akaishi T et al. J Gen Fam Med 2019;20(5):193-198 (PMID 31516806) Table 2, Jolt accentuation; CIs are 99% CIs as reported; reference standard CSF pleocytosis"}
+      nuchal_rigidity_exam: {lr_pos: 1.60, lr_neg: 0.76, lr_pos_ci: [1.35, 1.91], lr_neg_ci: [0.67, 0.85], group: meningeal_signs, source: "Akaishi 2019 J Gen Fam Med (PMID 31516806) Table 2, Nuchal rigidity; 99% CIs as reported"}
+      kernig_sign_exam: {lr_pos: 2.61, lr_neg: 0.84, lr_pos_ci: [1.83, 3.71], lr_neg_ci: [0.79, 0.91], group: meningeal_signs, source: "Akaishi 2019 J Gen Fam Med (PMID 31516806) Table 2, Kernig's sign; 99% CIs as reported"}
+      brudzinski_sign_exam: {lr_pos: 2.44, lr_neg: 0.82, lr_pos_ci: [1.74, 3.44], lr_neg_ci: [0.75, 0.89], group: meningeal_signs, source: "Akaishi 2019 J Gen Fam Med (PMID 31516806) Table 2, Brudzinski's sign; 99% CIs as reported"}
+  - id: mass_lesion_raised_icp
+    label: "Intracranial mass or raised intracranial pressure"
+    cannot_miss: true
+    prior:
+      p: 0.01
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Kelly AM et al. Headache 2021 (PMID 34726783), abstract: neoplasm 'about 1%' of 4536 adults with nontraumatic headache in EDs"
+    thresholds: {benefit: 10, harm: 1, test_se: 0.95, test_sp: 0.95, test_harm: 0.05, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs: {}
+  - id: migraine
+    label: "Migraine"
+    cannot_miss: false
+    prior:
+      p: 0.243
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Kelly AM et al. Headache 2021 (PMID 34726783), abstract: migraine 1101 of 4536 (24.3%) ED headache presentations"
+    lrs:
+      id_migraine_positive: {lr_pos: 3.24, lr_neg: 0.25, source: "DERIVED from Lipton RB et al. Neurology 2003;61(3):375-382 (PMID 12913201) abstract: ID Migraine 2 of 3 items sensitivity 0.81, specificity 0.75; primary-care patients with headache in the past 3 months; no counts, so no CI"}
+  - id: tension_type_or_other_benign
+    label: "Tension-type or other benign headache"
+    cannot_miss: false
+    prior:
+      p: 0.454
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Kelly AM et al. Headache 2021 (PMID 34726783), abstract: presumed nonmigraine benign headache 2058 of 4536 (45.4%)"
+    lrs: {}

@@ -1,0 +1,187 @@
+{
+ "label_groups": {
+  "safety_positive": 79,
+  "other_hazard": 299,
+  "no_hazard": 571,
+  "safety_positive_by_category": {
+   "behavioral_other": 1,
+   "behavioral_suicidality": 2,
+   "cardiac_chest_pain": 3,
+   "environmental_housing_safety": 25,
+   "falls_mobility": 15,
+   "maternity_ob": 1,
+   "med_safety": 29,
+   "substance_use": 3
+  }
+ },
+ "missed_by_category": {
+  "ours": {
+   "behavioral_other": 0.0,
+   "behavioral_suicidality": 0.0,
+   "cardiac_chest_pain": 0.0,
+   "environmental_housing_safety": 10.33,
+   "falls_mobility": 3.0,
+   "maternity_ob": 0.67,
+   "med_safety": 18.0,
+   "substance_use": 1.33
+  },
+  "amie_style": {
+   "behavioral_other": 0.67,
+   "behavioral_suicidality": 0.0,
+   "cardiac_chest_pain": 0.0,
+   "environmental_housing_safety": 20.67,
+   "falls_mobility": 5.33,
+   "maternity_ob": 0.0,
+   "med_safety": 10.33,
+   "substance_use": 1.0
+  },
+  "mai_dxo_style": {
+   "behavioral_other": 0.0,
+   "behavioral_suicidality": 0.0,
+   "cardiac_chest_pain": 0.0,
+   "environmental_housing_safety": 23.33,
+   "falls_mobility": 6.67,
+   "maternity_ob": 0.0,
+   "med_safety": 11.33,
+   "substance_use": 1.0
+  },
+  "raw_llm": {
+   "behavioral_other": 1.0,
+   "behavioral_suicidality": 0.0,
+   "cardiac_chest_pain": 0.0,
+   "environmental_housing_safety": 20.0,
+   "falls_mobility": 7.0,
+   "maternity_ob": 0.67,
+   "med_safety": 20.33,
+   "substance_use": 1.67
+  },
+  "v22": {
+   "behavioral_other": 0.0,
+   "behavioral_suicidality": 0.0,
+   "cardiac_chest_pain": 0.0,
+   "environmental_housing_safety": 15.0,
+   "falls_mobility": 6.33,
+   "maternity_ob": 0.0,
+   "med_safety": 10.0,
+   "substance_use": 0.67
+  }
+ },
+ "crosstab": {
+  "ours": {
+   "safety_positive": {
+    "n": 79,
+    "escalated_expected": 45.7,
+    "not_escalated_expected": 33.3,
+    "weighted_pool_total": 79.0,
+    "weighted_escalated": 45.7
+   },
+   "other_hazard": {
+    "n": 299,
+    "escalated_expected": 65.7,
+    "not_escalated_expected": 233.3,
+    "weighted_pool_total": 516.9,
+    "weighted_escalated": 101.5
+   },
+   "no_hazard": {
+    "n": 571,
+    "escalated_expected": 81.7,
+    "not_escalated_expected": 489.3,
+    "weighted_pool_total": 1929.1,
+    "weighted_escalated": 269.1
+   }
+  },
+  "amie_style": {
+   "safety_positive": {
+    "n": 79,
+    "escalated_expected": 41.0,
+    "not_escalated_expected": 38.0,
+    "weighted_pool_total": 79.0,
+    "weighted_escalated": 41.0
+   },
+   "other_hazard": {
+    "n": 299,
+    "escalated_expected": 72.3,
+    "not_escalated_expected": 226.7,
+    "weighted_pool_total": 516.9,
+    "weighted_escalated": 114.4
+   },
+   "no_hazard": {
+    "n": 571,
+    "escalated_expected": 85.3,
+    "not_escalated_expected": 485.7,
+    "weighted_pool_total": 1929.1,
+    "weighted_escalated": 302.2
+   }
+  },
+  "mai_dxo_style": {
+   "safety_positive": {
+    "n": 79,
+    "escalated_expected": 36.7,
+    "not_escalated_expected": 42.3,
+    "weighted_pool_total": 79.0,
+    "weighted_escalated": 36.7
+   },
+   "other_hazard": {
+    "n": 299,
+    "escalated_expected": 79.3,
+    "not_escalated_expected": 219.7,
+    "weighted_pool_total": 516.9,
+    "weighted_escalated": 127.8
+   },
+   "no_hazard": {
+    "n": 571,
+    "escalated_expected": 95.7,
+    "not_escalated_expected": 475.3,
+    "weighted_pool_total": 1929.1,
+    "weighted_escalated": 345.2
+   }
+  },
+  "raw_llm": {
+   "safety_positive": {
+    "n": 79,
+    "escalated_expected": 28.3,
+    "not_escalated_expected": 50.7,
+    "weighted_pool_total": 79.0,
+    "weighted_escalated": 28.3
+   },
+   "other_hazard": {
+    "n": 299,
+    "escalated_expected": 54.0,
+    "not_escalated_expected": 245.0,
+    "weighted_pool_total": 516.9,
+    "weighted_escalated": 82.4
+   },
+   "no_hazard": {
+    "n": 571,
+    "escalated_expected": 70.0,
+    "not_escalated_expected": 501.0,
+    "weighted_pool_total": 1929.1,
+    "weighted_escalated": 233.2
+   }
+  },
+  "v22": {
+   "safety_positive": {
+    "n": 79,
+    "escalated_expected": 47.0,
+    "not_escalated_expected": 32.0,
+    "weighted_pool_total": 79.0,
+    "weighted_escalated": 47.0
+   },
+   "other_hazard": {
+    "n": 299,
+    "escalated_expected": 72.0,
+    "not_escalated_expected": 227.0,
+    "weighted_pool_total": 516.9,
+    "weighted_escalated": 109.9
+   },
+   "no_hazard": {
+    "n": 571,
+    "escalated_expected": 86.0,
+    "not_escalated_expected": 485.0,
+    "weighted_pool_total": 1929.1,
+    "weighted_escalated": 283.9
+   }
+  }
+ },
+ "note": "Expected counts are means over 3 replies per text; the gate's decision is the same for every reply. Weighted values use 1/p_inclusion (random stratum p = 0.238; enriched p = 1)."
+}

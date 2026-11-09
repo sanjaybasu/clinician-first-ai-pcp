@@ -1,0 +1,72 @@
+# Illness script: ear pain in adults (URI lane).
+# Signed by a physician on 2026-10-28. Every value and its table location is listed in
+# docs/clinical/SCRIPT_SOURCES_uri_eye_ear.md. Priors are literature values; a later version replaces them with Waymark claims rates. Thresholds were drafted and accepted at physician review; they are not from a formal decision analysis.
+#
+# KNOWN GAP. This script has NO sourced likelihood ratios. We found no
+# diagnostic-accuracy study that separates acute otitis media (AOM) from
+# otitis externa (OE) by history in adults with ear pain, and none for
+# mastoiditis. Symptom studies of AOM (Rothman 2003 JAMA; Heikkinen 1995) are in
+# young children, use clinician diagnosis or otoscopy, and compare AOM with
+# uncomplicated URI, not with OE. See SCRIPT_SOURCES_uri_eye_ear.md.
+#
+# Engine consequence (read before sign-off): the AOM and OE priors (0.50 each)
+# cannot move, and their entropy (0.69 nats) is above the default limit
+# (eta = 0.5). Because no feature has a positive score, workup.step does not ask
+# about them and returns COMPLETE after the must_ask red flags are answered,
+# before the question budget is spent. The engine does not separate AOM from OE.
+# The mastoiditis red flags have no LRs: a PRESENT answer does not change any
+# posterior and must escalate through the ANCHOR red-flag floor
+# (anchor_bridge.py::red_flag_floor) or a lane-gate hard rule.
+#
+# Eligibility exclusions (handled by the lane gate, not by this script):
+#   - Age < 18 (all source priors are for adults or adolescents and adults).
+#   - Diabetes or immunosuppression with ear pain (malignant otitis externa).
+#   - Ear pain after trauma, a foreign body, or sudden hearing loss.
+complaint: ear_pain
+version: "1.0.0"
+lane: uri
+clinical_review:
+  approved_by: "Sanjay Basu, MD, PhD"
+  approved_on: "2026-10-28"
+# must_ask: mastoiditis and intracranial-spread red flags; signed 2026-10-28
+must_ask: [swelling_behind_ear, ear_pushed_forward, severe_headache_or_stiff_neck, confusion_or_drowsiness]
+features:
+  - id: swelling_behind_ear
+    question: "Is the skin behind your ear swollen, red, or painful when you touch it?"
+    remote_askable: true   # patient report or photo
+  - id: ear_pushed_forward
+    question: "Does the ear look like it sticks out more than the other ear?"
+    remote_askable: true   # patient or family report, or photo
+  - id: severe_headache_or_stiff_neck
+    question: "Do you have a very bad headache, or a stiff neck?"
+    remote_askable: true
+  - id: confusion_or_drowsiness
+    question: "Are you (or the person you are writing for) confused or very hard to wake up?"
+    remote_askable: true
+diagnoses:
+  - id: acute_otitis_media
+    label: "Acute otitis media"
+    cannot_miss: false
+    prior:
+      p: 0.50
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value DERIVED from Rijk MH et al. Fam Pract 2021;38(4):448-453 (PMID 33506857), Abstract: adult AOM incidence 5.3/1000 person-years (age >=15, Netherlands), and Piercefield EW et al. MMWR 2011 (CDC, Estimated burden of acute otitis externa, United States, 2003-2007): AOE visit rate 5.3/1000 in adults aged >=20; share of AOM among AOM plus AOE = 5.3/(5.3+5.3)"
+    # lrs: none verified. See SCRIPT_SOURCES_uri_eye_ear.md, "Unverified and omitted".
+    lrs: {}
+  - id: otitis_externa
+    label: "Acute otitis externa"
+    cannot_miss: false
+    prior:
+      p: 0.50
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value DERIVED from Piercefield EW et al. MMWR 2011 (CDC), AOE visit rate 5.3/1000 in adults aged >=20, and Rijk MH et al. Fam Pract 2021 (PMID 33506857), adult AOM incidence 5.3/1000 person-years; share of AOE among AOM plus AOE = 5.3/(5.3+5.3)"
+    # lrs: none verified. See SCRIPT_SOURCES_uri_eye_ear.md, "Unverified and omitted".
+    lrs: {}
+  - id: mastoiditis
+    label: "Acute mastoiditis"
+    red_flags: [swelling_behind_ear, ear_pushed_forward, severe_headache_or_stiff_neck, confusion_or_drowsiness]
+    cannot_miss: true
+    prior:
+      p: 0.00077
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value DERIVED from Petersen I et al. BMJ 2007;335(7627):982 (PMID 17947744), Table 3: mastoiditis within 1 month of otitis media, age 16-64, 11.92/10,000 of 16,780 without and 6.77/10,000 of 76,763 with antibiotics; pooled about 72 of 93,543 (7.7/10,000)"
+    thresholds: {benefit: 100, harm: 1, test_se: 0.95, test_sp: 0.90, test_harm: 0.02, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    # lrs: none verified. See SCRIPT_SOURCES_uri_eye_ear.md, "Unverified and omitted".
+    lrs: {}

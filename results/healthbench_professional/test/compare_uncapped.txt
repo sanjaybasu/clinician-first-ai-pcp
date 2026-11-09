@@ -1,0 +1,18 @@
+{
+ "compass_pro_full - amie_style_uncapped": {
+  "n": 350,
+  "diff": 8.2,
+  "ci95": [
+   3.9,
+   12.6
+  ]
+ },
+ "compass_pro_full - mai_dxo_style_uncapped": {
+  "n": 350,
+  "diff": 10.0,
+  "ci95": [
+   5.5,
+   14.6
+  ]
+ }
+}

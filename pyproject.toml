@@ -1,0 +1,30 @@
+[project]
+name = "compass-pcp"
+version = "0.1.0"
+description = "Deterministic workup, gating and retrospective-validation harness for converting Compass from triage to AI PCP"
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic>=2.6",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "black>=24", "ruff>=0.4", "mypy>=1.10"]
+arms = ["anthropic>=0.40", "google-genai>=1.0", "openai>=1.50"]
+review = ["numpy>=2.0", "scipy>=1.13", "scikit-learn>=1.5"]  # v4 review-score fitting (compass_pcp/review_score.py)
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["compass_pcp*"]
+
+[tool.setuptools.package-data]
+compass_pcp = ["data/**/*.yaml"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

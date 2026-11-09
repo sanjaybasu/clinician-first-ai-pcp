@@ -1,0 +1,1974 @@
+{
+ "labels": "S. Basu labels on all 949 texts; J. Morgan labels on 200; Hajek two-phase weights (paper/fresh_weights.py)",
+ "policy": "ours = paging gate + raw_llm writer + check_unconditional (final policy; conditional safety-net lines allowed). clinician_first_any_hit_held = the registered report.json rule (any check() hit held).",
+ "arms": "amie_style, mai_dxo_style, raw_llm, v22 as run; writer_alone = raw_llm escalation or unconditional hit, no gate; gate_alone = gate pages, no writer",
+ "main": {
+  "amie_style": {
+   "texts": 949,
+   "safety_positive": 79,
+   "no_hazard": 571,
+   "call_911": 5,
+   "hazard_sensitivity_weighted": 0.519,
+   "hazard_sensitivity_weighted_ci": [
+    0.426,
+    0.61
+   ],
+   "hazard_sensitivity_unweighted": 0.519,
+   "hazard_sensitivity_unweighted_ci": [
+    0.426,
+    0.61
+   ],
+   "escalation_no_hazard_per_1000_weighted": 156.7,
+   "escalation_no_hazard_weighted_ci": [
+    131.7,
+    182.5
+   ],
+   "escalation_no_hazard_per_1000_unweighted": 149.4,
+   "escalation_no_hazard_unweighted_ci": [
+    127.6,
+    173.2
+   ],
+   "call_911_escalated_mean": 5.0
+  },
+  "mai_dxo_style": {
+   "texts": 949,
+   "safety_positive": 79,
+   "no_hazard": 571,
+   "call_911": 5,
+   "hazard_sensitivity_weighted": 0.464,
+   "hazard_sensitivity_weighted_ci": [
+    0.366,
+    0.557
+   ],
+   "hazard_sensitivity_unweighted": 0.464,
+   "hazard_sensitivity_unweighted_ci": [
+    0.366,
+    0.557
+   ],
+   "escalation_no_hazard_per_1000_weighted": 178.9,
+   "escalation_no_hazard_weighted_ci": [
+    152.7,
+    206.2
+   ],
+   "escalation_no_hazard_per_1000_unweighted": 167.5,
+   "escalation_no_hazard_unweighted_ci": [
+    143.9,
+    191.5
+   ],
+   "call_911_escalated_mean": 5.0
+  },
+  "raw_llm": {
+   "texts": 949,
+   "safety_positive": 79,
+   "no_hazard": 571,
+   "call_911": 5,
+   "hazard_sensitivity_weighted": 0.359,
+   "hazard_sensitivity_weighted_ci": [
+    0.262,
+    0.449
+   ],
+   "hazard_sensitivity_unweighted": 0.359,
+   "hazard_sensitivity_unweighted_ci": [
+    0.262,
+    0.449
+   ],
+   "escalation_no_hazard_per_1000_weighted": 120.9,
+   "escalation_no_hazard_weighted_ci": [
+    96.4,
+    147.2
+   ],
+   "escalation_no_hazard_per_1000_unweighted": 122.6,
+   "escalation_no_hazard_unweighted_ci": [
+    99.8,
+    146.1
+   ],
+   "call_911_escalated_mean": 5.0
+  },
+  "v22": {
+   "texts": 949,
+   "safety_positive": 79,
+   "no_hazard": 571,
+   "call_911": 5,
+   "hazard_sensitivity_weighted": 0.595,
+   "hazard_sensitivity_weighted_ci": [
+    0.496,
+    0.691
+   ],
+   "hazard_sensitivity_unweighted": 0.595,
+   "hazard_sensitivity_unweighted_ci": [
+    0.496,
+    0.691
+   ],
+   "escalation_no_hazard_per_1000_weighted": 147.2,
+   "escalation_no_hazard_weighted_ci": [
+    120.3,
+    175.4
+   ],
+   "escalation_no_hazard_per_1000_unweighted": 150.6,
+   "escalation_no_hazard_unweighted_ci": [
+    124.8,
+    177.0
+   ],
+   "call_911_escalated_mean": 5.0
+  },
+  "ours": {
+   "texts": 949,
+   "safety_positive": 79,
+   "no_hazard": 571,
+   "call_911": 5,
+   "hazard_sensitivity_weighted": 0.578,
+   "hazard_sensitivity_weighted_ci": [
+    0.475,
+    0.675
+   ],
+   "hazard_sensitivity_unweighted": 0.578,
+   "hazard_sensitivity_unweighted_ci": [
+    0.475,
+    0.675
+   ],
+   "escalation_no_hazard_per_1000_weighted": 139.5,
+   "escalation_no_hazard_weighted_ci": [
+    113.7,
+    166.9
+   ],
+   "escalation_no_hazard_per_1000_unweighted": 143.0,
+   "escalation_no_hazard_unweighted_ci": [
+    118.5,
+    167.3
+   ],
+   "call_911_escalated_mean": 5.0
+  },
+  "writer_alone": {
+   "texts": 949,
+   "safety_positive": 79,
+   "no_hazard": 571,
+   "call_911": 5,
+   "hazard_sensitivity_weighted": 0.367,
+   "hazard_sensitivity_weighted_ci": [
+    0.273,
+    0.46
+   ],
+   "hazard_sensitivity_unweighted": 0.367,
+   "hazard_sensitivity_unweighted_ci": [
+    0.273,
+    0.46
+   ],
+   "escalation_no_hazard_per_1000_weighted": 135.8,
+   "escalation_no_hazard_weighted_ci": [
+    110.6,
+    162.6
+   ],
+   "escalation_no_hazard_per_1000_unweighted": 136.0,
+   "escalation_no_hazard_unweighted_ci": [
+    112.9,
+    160.2
+   ],
+   "call_911_escalated_mean": 5.0
+  },
+  "gate_alone": {
+   "texts": 949,
+   "safety_positive": 79,
+   "no_hazard": 571,
+   "call_911": 5,
+   "hazard_sensitivity_weighted": 0.38,
+   "hazard_sensitivity_weighted_ci": [
+    0.276,
+    0.493
+   ],
+   "hazard_sensitivity_unweighted": 0.38,
+   "hazard_sensitivity_unweighted_ci": [
+    0.276,
+    0.493
+   ],
+   "escalation_no_hazard_per_1000_weighted": 10.1,
+   "escalation_no_hazard_weighted_ci": [
+    3.6,
+    18.1
+   ],
+   "escalation_no_hazard_per_1000_unweighted": 17.5,
+   "escalation_no_hazard_unweighted_ci": [
+    7.2,
+    28.7
+   ],
+   "call_911_escalated_mean": 5.0
+  },
+  "clinician_first_any_hit_held": {
+   "texts": 949,
+   "safety_positive": 79,
+   "no_hazard": 571,
+   "call_911": 5,
+   "hazard_sensitivity_weighted": 0.709,
+   "hazard_sensitivity_weighted_ci": [
+    0.612,
+    0.805
+   ],
+   "hazard_sensitivity_unweighted": 0.709,
+   "hazard_sensitivity_unweighted_ci": [
+    0.612,
+    0.805
+   ],
+   "escalation_no_hazard_per_1000_weighted": 752.1,
+   "escalation_no_hazard_weighted_ci": [
+    718.7,
+    784.6
+   ],
+   "escalation_no_hazard_per_1000_unweighted": 691.8,
+   "escalation_no_hazard_unweighted_ci": [
+    657.6,
+    726.0
+   ],
+   "call_911_escalated_mean": 5.0
+  }
+ },
+ "paired_diffs": {
+  "ours - amie_style": {
+   "sens_diff_weighted": 0.059,
+   "sens_diff_weighted_ci": [
+    -0.058,
+    0.177
+   ],
+   "nohaz_diff_per1000_weighted": -17.2,
+   "nohaz_diff_weighted_ci": [
+    -40.3,
+    5.1
+   ],
+   "sens_diff_unweighted": 0.059,
+   "sens_diff_unweighted_ci": [
+    -0.058,
+    0.177
+   ],
+   "nohaz_diff_per1000_unweighted": -6.4,
+   "nohaz_diff_unweighted_ci": [
+    -27.0,
+    14.7
+   ]
+  },
+  "ours - mai_dxo_style": {
+   "sens_diff_weighted": 0.114,
+   "sens_diff_weighted_ci": [
+    0.004,
+    0.222
+   ],
+   "nohaz_diff_per1000_weighted": -39.5,
+   "nohaz_diff_weighted_ci": [
+    -63.9,
+    -14.3
+   ],
+   "sens_diff_unweighted": 0.114,
+   "sens_diff_unweighted_ci": [
+    0.004,
+    0.222
+   ],
+   "nohaz_diff_per1000_unweighted": -24.5,
+   "nohaz_diff_unweighted_ci": [
+    -48.0,
+    -0.6
+   ]
+  },
+  "ours - raw_llm": {
+   "sens_diff_weighted": 0.219,
+   "sens_diff_weighted_ci": [
+    0.14,
+    0.306
+   ],
+   "nohaz_diff_per1000_weighted": 18.6,
+   "nohaz_diff_weighted_ci": [
+    10.0,
+    28.3
+   ],
+   "sens_diff_unweighted": 0.219,
+   "sens_diff_unweighted_ci": [
+    0.14,
+    0.306
+   ],
+   "nohaz_diff_per1000_unweighted": 20.4,
+   "nohaz_diff_unweighted_ci": [
+    11.6,
+    30.4
+   ]
+  },
+  "ours - v22": {
+   "sens_diff_weighted": -0.017,
+   "sens_diff_weighted_ci": [
+    -0.125,
+    0.092
+   ],
+   "nohaz_diff_per1000_weighted": -7.7,
+   "nohaz_diff_weighted_ci": [
+    -28.6,
+    12.2
+   ],
+   "sens_diff_unweighted": -0.017,
+   "sens_diff_unweighted_ci": [
+    -0.125,
+    0.092
+   ],
+   "nohaz_diff_per1000_unweighted": -7.6,
+   "nohaz_diff_unweighted_ci": [
+    -28.9,
+    13.1
+   ]
+  }
+ },
+ "same_safety_layer": {
+  "definition": "writer + the same paging gate + check_unconditional: escalated in a repeat when the reply advises routine_followup or higher or check_unconditional hits; all repeats escalated when the gate pages. raw_llm+layer is ours (identical by construction). Same bootstrap index vectors as main.",
+  "unconditional_instructions_reaching_patient_per_1000": {
+   "amie_style+layer": 0.0,
+   "mai_dxo_style+layer": 0.0,
+   "v22+layer": 0.0,
+   "raw_llm+layer": 0.0
+  },
+  "unconditional_instructions_note": "0 by construction: every reply with an unconditional hit is held and the text is escalated to clinician review",
+  "replies_held_per_1000": {
+   "amie_style+layer": 55.5,
+   "mai_dxo_style+layer": 146.8,
+   "v22+layer": 35.8,
+   "raw_llm+layer": 25.3
+  },
+  "metrics": {
+   "amie_style+layer": {
+    "texts": 949,
+    "safety_positive": 79,
+    "no_hazard": 571,
+    "call_911": 5,
+    "hazard_sensitivity_weighted": 0.696,
+    "hazard_sensitivity_weighted_ci": [
+     0.607,
+     0.784
+    ],
+    "hazard_sensitivity_unweighted": 0.696,
+    "hazard_sensitivity_unweighted_ci": [
+     0.607,
+     0.784
+    ],
+    "escalation_no_hazard_per_1000_weighted": 210.9,
+    "escalation_no_hazard_weighted_ci": [
+     183.4,
+     238.7
+    ],
+    "escalation_no_hazard_per_1000_unweighted": 203.7,
+    "escalation_no_hazard_unweighted_ci": [
+     178.9,
+     231.2
+    ],
+    "call_911_escalated_mean": 5.0
+   },
+   "mai_dxo_style+layer": {
+    "texts": 949,
+    "safety_positive": 79,
+    "no_hazard": 571,
+    "call_911": 5,
+    "hazard_sensitivity_weighted": 0.667,
+    "hazard_sensitivity_weighted_ci": [
+     0.571,
+     0.76
+    ],
+    "hazard_sensitivity_unweighted": 0.667,
+    "hazard_sensitivity_unweighted_ci": [
+     0.571,
+     0.76
+    ],
+    "escalation_no_hazard_per_1000_weighted": 289.0,
+    "escalation_no_hazard_weighted_ci": [
+     260.3,
+     318.4
+    ],
+    "escalation_no_hazard_per_1000_unweighted": 283.1,
+    "escalation_no_hazard_unweighted_ci": [
+     256.9,
+     310.6
+    ],
+    "call_911_escalated_mean": 5.0
+   },
+   "v22+layer": {
+    "texts": 949,
+    "safety_positive": 79,
+    "no_hazard": 571,
+    "call_911": 5,
+    "hazard_sensitivity_weighted": 0.696,
+    "hazard_sensitivity_weighted_ci": [
+     0.604,
+     0.788
+    ],
+    "hazard_sensitivity_unweighted": 0.696,
+    "hazard_sensitivity_unweighted_ci": [
+     0.604,
+     0.788
+    ],
+    "escalation_no_hazard_per_1000_weighted": 157.7,
+    "escalation_no_hazard_weighted_ci": [
+     130.4,
+     186.5
+    ],
+    "escalation_no_hazard_per_1000_unweighted": 164.0,
+    "escalation_no_hazard_unweighted_ci": [
+     136.8,
+     191.4
+    ],
+    "call_911_escalated_mean": 5.0
+   },
+   "raw_llm+layer": {
+    "texts": 949,
+    "safety_positive": 79,
+    "no_hazard": 571,
+    "call_911": 5,
+    "hazard_sensitivity_weighted": 0.578,
+    "hazard_sensitivity_weighted_ci": [
+     0.475,
+     0.675
+    ],
+    "hazard_sensitivity_unweighted": 0.578,
+    "hazard_sensitivity_unweighted_ci": [
+     0.475,
+     0.675
+    ],
+    "escalation_no_hazard_per_1000_weighted": 139.5,
+    "escalation_no_hazard_weighted_ci": [
+     113.7,
+     166.9
+    ],
+    "escalation_no_hazard_per_1000_unweighted": 143.0,
+    "escalation_no_hazard_unweighted_ci": [
+     118.5,
+     167.3
+    ],
+    "call_911_escalated_mean": 5.0
+   }
+  },
+  "paired_diffs": {
+   "ours - amie_style+layer": {
+    "sens_diff_weighted": -0.118,
+    "sens_diff_weighted_ci": [
+     -0.197,
+     -0.04
+    ],
+    "nohaz_diff_per1000_weighted": -71.5,
+    "nohaz_diff_weighted_ci": [
+     -95.2,
+     -47.6
+    ],
+    "sens_diff_unweighted": -0.118,
+    "sens_diff_unweighted_ci": [
+     -0.197,
+     -0.04
+    ],
+    "nohaz_diff_per1000_unweighted": -60.7,
+    "nohaz_diff_unweighted_ci": [
+     -82.8,
+     -38.6
+    ]
+   },
+   "ours - mai_dxo_style+layer": {
+    "sens_diff_weighted": -0.089,
+    "sens_diff_weighted_ci": [
+     -0.163,
+     -0.018
+    ],
+    "nohaz_diff_per1000_weighted": -149.5,
+    "nohaz_diff_weighted_ci": [
+     -174.9,
+     -122.9
+    ],
+    "sens_diff_unweighted": -0.089,
+    "sens_diff_unweighted_ci": [
+     -0.163,
+     -0.018
+    ],
+    "nohaz_diff_per1000_unweighted": -140.1,
+    "nohaz_diff_unweighted_ci": [
+     -164.3,
+     -115.4
+    ]
+   },
+   "ours - v22+layer": {
+    "sens_diff_weighted": -0.118,
+    "sens_diff_weighted_ci": [
+     -0.209,
+     -0.034
+    ],
+    "nohaz_diff_per1000_weighted": -18.2,
+    "nohaz_diff_weighted_ci": [
+     -38.6,
+     0.6
+    ],
+    "sens_diff_unweighted": -0.118,
+    "sens_diff_unweighted_ci": [
+     -0.209,
+     -0.034
+    ],
+    "nohaz_diff_per1000_unweighted": -21.0,
+    "nohaz_diff_unweighted_ci": [
+     -41.1,
+     -1.2
+    ]
+   }
+  }
+ },
+ "registered_hypotheses_v22": {
+  "population": "79 safety-positive texts (S. Basu labels) of 949",
+  "v22_escalation": "own reply urgency routine_followup or higher; no gate, no check",
+  "paired_diffs_mean_over_repeats": {
+   "v22 - raw_llm": {
+    "sens_diff_weighted": 0.236,
+    "sens_diff_weighted_ci": [
+     0.131,
+     0.347
+    ],
+    "nohaz_diff_per1000_weighted": 26.3,
+    "nohaz_diff_weighted_ci": [
+     7.5,
+     46.2
+    ],
+    "sens_diff_unweighted": 0.236,
+    "sens_diff_unweighted_ci": [
+     0.131,
+     0.347
+    ],
+    "nohaz_diff_per1000_unweighted": 28.0,
+    "nohaz_diff_unweighted_ci": [
+     8.4,
+     47.5
+    ]
+   },
+   "v22 - mai_dxo_style": {
+    "sens_diff_weighted": 0.131,
+    "sens_diff_weighted_ci": [
+     0.039,
+     0.227
+    ],
+    "nohaz_diff_per1000_weighted": -31.8,
+    "nohaz_diff_weighted_ci": [
+     -56.6,
+     -5.4
+    ],
+    "sens_diff_unweighted": 0.131,
+    "sens_diff_unweighted_ci": [
+     0.039,
+     0.227
+    ],
+    "nohaz_diff_per1000_unweighted": -16.9,
+    "nohaz_diff_unweighted_ci": [
+     -39.9,
+     6.9
+    ]
+   },
+   "v22 - amie_style": {
+    "sens_diff_weighted": 0.076,
+    "sens_diff_weighted_ci": [
+     -0.012,
+     0.172
+    ],
+    "nohaz_diff_per1000_weighted": -9.5,
+    "nohaz_diff_weighted_ci": [
+     -31.4,
+     15.4
+    ],
+    "sens_diff_unweighted": 0.076,
+    "sens_diff_unweighted_ci": [
+     -0.012,
+     0.172
+    ],
+    "nohaz_diff_per1000_unweighted": 1.2,
+    "nohaz_diff_unweighted_ci": [
+     -19.7,
+     23.7
+    ]
+   }
+  },
+  "H1a": {
+   "comparator": "raw_llm",
+   "majority_sens_v22": 0.595,
+   "majority_sens_comparator": 0.342,
+   "majority_diff": 0.253,
+   "majority_diff_ci95": [
+    0.119,
+    0.383
+   ],
+   "discordant_v22_only": 26,
+   "discordant_comparator_only": 6,
+   "mcnemar_exact_two_sided_p": 0.0005350527353584766,
+   "p_holm_3_tested": 0.00160515820607543,
+   "p_holm_6_with_H2_as_p1": 0.00321031641215086,
+   "reject_holm_3": true,
+   "reject_holm_6": true
+  },
+  "H1b": {
+   "comparator": "mai_dxo_style",
+   "majority_sens_v22": 0.595,
+   "majority_sens_comparator": 0.468,
+   "majority_diff": 0.127,
+   "majority_diff_ci95": [
+    0.012,
+    0.247
+   ],
+   "discordant_v22_only": 17,
+   "discordant_comparator_only": 7,
+   "mcnemar_exact_two_sided_p": 0.06391465663909912,
+   "p_holm_3_tested": 0.06391465663909912,
+   "p_holm_6_with_H2_as_p1": 0.2556586265563965,
+   "reject_holm_3": false,
+   "reject_holm_6": false
+  },
+  "H1c": {
+   "comparator": "amie_style",
+   "majority_sens_v22": 0.595,
+   "majority_sens_comparator": 0.519,
+   "majority_diff": 0.076,
+   "majority_diff_ci95": [
+    -0.044,
+    0.203
+   ],
+   "discordant_v22_only": 15,
+   "discordant_comparator_only": 9,
+   "mcnemar_exact_two_sided_p": 0.30745625495910645,
+   "non_inferiority": {
+    "margin": -0.1,
+    "majority_unweighted_lower_bound": -0.044,
+    "mean_over_repeats_weighted_lower_bound": -0.012,
+    "mean_over_repeats_unweighted_lower_bound": -0.012,
+    "one_sided_bootstrap_p": 0.002,
+    "met_majority_unweighted": true,
+    "met_weighted": true,
+    "met_unweighted": true
+   },
+   "p_holm_3_tested": 0.004,
+   "p_holm_6_with_H2_as_p1": 0.01,
+   "reject_holm_3": true,
+   "reject_holm_6": true
+  },
+  "H2a": "not run",
+  "H2b": "not run",
+  "H2c": "not run (simulation outcomes not completed)",
+  "holm_note": "Primary family: the 3 tested hypotheses (H1a, H1b McNemar p; H1c one-sided non-inferiority bootstrap p). Sensitivity: Holm over the registered 6 with the untested H2a-c entered as p = 1, which is the most conservative reading."
+ },
+ "by_stratum": {
+  "random": {
+   "metrics": {
+    "amie_style": {
+     "texts": 600,
+     "safety_positive": 16,
+     "no_hazard": 459,
+     "call_911": 1,
+     "hazard_sensitivity_weighted": 0.417,
+     "hazard_sensitivity_weighted_ci": [
+      0.205,
+      0.633
+     ],
+     "hazard_sensitivity_unweighted": 0.417,
+     "hazard_sensitivity_unweighted_ci": [
+      0.205,
+      0.633
+     ],
+     "escalation_no_hazard_per_1000_weighted": 159.7,
+     "escalation_no_hazard_weighted_ci": [
+      133.3,
+      186.9
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 159.8,
+     "escalation_no_hazard_unweighted_ci": [
+      134.1,
+      186.8
+     ],
+     "call_911_escalated_mean": 1.0
+    },
+    "mai_dxo_style": {
+     "texts": 600,
+     "safety_positive": 16,
+     "no_hazard": 459,
+     "call_911": 1,
+     "hazard_sensitivity_weighted": 0.354,
+     "hazard_sensitivity_weighted_ci": [
+      0.137,
+      0.579
+     ],
+     "hazard_sensitivity_unweighted": 0.354,
+     "hazard_sensitivity_unweighted_ci": [
+      0.137,
+      0.579
+     ],
+     "escalation_no_hazard_per_1000_weighted": 183.0,
+     "escalation_no_hazard_weighted_ci": [
+      155.0,
+      210.8
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 180.8,
+     "escalation_no_hazard_unweighted_ci": [
+      153.7,
+      207.9
+     ],
+     "call_911_escalated_mean": 1.0
+    },
+    "raw_llm": {
+     "texts": 600,
+     "safety_positive": 16,
+     "no_hazard": 459,
+     "call_911": 1,
+     "hazard_sensitivity_weighted": 0.292,
+     "hazard_sensitivity_weighted_ci": [
+      0.102,
+      0.5
+     ],
+     "hazard_sensitivity_unweighted": 0.292,
+     "hazard_sensitivity_unweighted_ci": [
+      0.102,
+      0.5
+     ],
+     "escalation_no_hazard_per_1000_weighted": 121.2,
+     "escalation_no_hazard_weighted_ci": [
+      95.2,
+      147.8
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 124.2,
+     "escalation_no_hazard_unweighted_ci": [
+      98.5,
+      150.4
+     ],
+     "call_911_escalated_mean": 1.0
+    },
+    "v22": {
+     "texts": 600,
+     "safety_positive": 16,
+     "no_hazard": 459,
+     "call_911": 1,
+     "hazard_sensitivity_weighted": 0.5,
+     "hazard_sensitivity_weighted_ci": [
+      0.256,
+      0.733
+     ],
+     "hazard_sensitivity_unweighted": 0.5,
+     "hazard_sensitivity_unweighted_ci": [
+      0.256,
+      0.733
+     ],
+     "escalation_no_hazard_per_1000_weighted": 145.2,
+     "escalation_no_hazard_weighted_ci": [
+      117.0,
+      175.0
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 143.8,
+     "escalation_no_hazard_unweighted_ci": [
+      115.5,
+      172.8
+     ],
+     "call_911_escalated_mean": 1.0
+    },
+    "ours": {
+     "texts": 600,
+     "safety_positive": 16,
+     "no_hazard": 459,
+     "call_911": 1,
+     "hazard_sensitivity_weighted": 0.438,
+     "hazard_sensitivity_weighted_ci": [
+      0.205,
+      0.688
+     ],
+     "hazard_sensitivity_unweighted": 0.438,
+     "hazard_sensitivity_unweighted_ci": [
+      0.205,
+      0.688
+     ],
+     "escalation_no_hazard_per_1000_weighted": 139.3,
+     "escalation_no_hazard_weighted_ci": [
+      112.2,
+      168.3
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 143.1,
+     "escalation_no_hazard_unweighted_ci": [
+      116.2,
+      171.4
+     ],
+     "call_911_escalated_mean": 1.0
+    },
+    "writer_alone": {
+     "texts": 600,
+     "safety_positive": 16,
+     "no_hazard": 459,
+     "call_911": 1,
+     "hazard_sensitivity_weighted": 0.292,
+     "hazard_sensitivity_weighted_ci": [
+      0.102,
+      0.5
+     ],
+     "hazard_sensitivity_unweighted": 0.292,
+     "hazard_sensitivity_unweighted_ci": [
+      0.102,
+      0.5
+     ],
+     "escalation_no_hazard_per_1000_weighted": 136.6,
+     "escalation_no_hazard_weighted_ci": [
+      110.2,
+      164.8
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 139.4,
+     "escalation_no_hazard_unweighted_ci": [
+      112.6,
+      167.4
+     ],
+     "call_911_escalated_mean": 1.0
+    },
+    "gate_alone": {
+     "texts": 600,
+     "safety_positive": 16,
+     "no_hazard": 459,
+     "call_911": 1,
+     "hazard_sensitivity_weighted": 0.25,
+     "hazard_sensitivity_weighted_ci": [
+      0.059,
+      0.5
+     ],
+     "hazard_sensitivity_unweighted": 0.25,
+     "hazard_sensitivity_unweighted_ci": [
+      0.059,
+      0.5
+     ],
+     "escalation_no_hazard_per_1000_weighted": 8.0,
+     "escalation_no_hazard_weighted_ci": [
+      1.1,
+      16.8
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 10.9,
+     "escalation_no_hazard_unweighted_ci": [
+      2.2,
+      21.5
+     ],
+     "call_911_escalated_mean": 1.0
+    },
+    "clinician_first_any_hit_held": {
+     "texts": 600,
+     "safety_positive": 16,
+     "no_hazard": 459,
+     "call_911": 1,
+     "hazard_sensitivity_weighted": 0.583,
+     "hazard_sensitivity_weighted_ci": [
+      0.351,
+      0.81
+     ],
+     "hazard_sensitivity_unweighted": 0.583,
+     "hazard_sensitivity_unweighted_ci": [
+      0.351,
+      0.81
+     ],
+     "escalation_no_hazard_per_1000_weighted": 772.6,
+     "escalation_no_hazard_weighted_ci": [
+      738.5,
+      806.9
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 758.2,
+     "escalation_no_hazard_unweighted_ci": [
+      723.5,
+      792.9
+     ],
+     "call_911_escalated_mean": 1.0
+    }
+   },
+   "paired_diffs": {
+    "ours - amie_style": {
+     "sens_diff_weighted": 0.021,
+     "sens_diff_weighted_ci": [
+      -0.275,
+      0.333
+     ],
+     "nohaz_diff_per1000_weighted": -20.4,
+     "nohaz_diff_weighted_ci": [
+      -45.1,
+      5.0
+     ],
+     "sens_diff_unweighted": 0.021,
+     "sens_diff_unweighted_ci": [
+      -0.275,
+      0.333
+     ],
+     "nohaz_diff_per1000_unweighted": -16.7,
+     "nohaz_diff_unweighted_ci": [
+      -41.1,
+      8.4
+     ]
+    },
+    "ours - mai_dxo_style": {
+     "sens_diff_weighted": 0.083,
+     "sens_diff_weighted_ci": [
+      -0.167,
+      0.351
+     ],
+     "nohaz_diff_per1000_weighted": -43.7,
+     "nohaz_diff_weighted_ci": [
+      -70.2,
+      -18.0
+     ],
+     "sens_diff_unweighted": 0.083,
+     "sens_diff_unweighted_ci": [
+      -0.167,
+      0.351
+     ],
+     "nohaz_diff_per1000_unweighted": -37.8,
+     "nohaz_diff_unweighted_ci": [
+      -64.8,
+      -12.2
+     ]
+    }
+   }
+  },
+  "enriched": {
+   "metrics": {
+    "amie_style": {
+     "texts": 349,
+     "safety_positive": 63,
+     "no_hazard": 112,
+     "call_911": 4,
+     "hazard_sensitivity_weighted": 0.545,
+     "hazard_sensitivity_weighted_ci": [
+      0.443,
+      0.642
+     ],
+     "hazard_sensitivity_unweighted": 0.545,
+     "hazard_sensitivity_unweighted_ci": [
+      0.443,
+      0.642
+     ],
+     "escalation_no_hazard_per_1000_weighted": 107.1,
+     "escalation_no_hazard_weighted_ci": [
+      59.3,
+      158.1
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 107.1,
+     "escalation_no_hazard_unweighted_ci": [
+      59.3,
+      158.1
+     ],
+     "call_911_escalated_mean": 4.0
+    },
+    "mai_dxo_style": {
+     "texts": 349,
+     "safety_positive": 63,
+     "no_hazard": 112,
+     "call_911": 4,
+     "hazard_sensitivity_weighted": 0.492,
+     "hazard_sensitivity_weighted_ci": [
+      0.383,
+      0.595
+     ],
+     "hazard_sensitivity_unweighted": 0.492,
+     "hazard_sensitivity_unweighted_ci": [
+      0.383,
+      0.595
+     ],
+     "escalation_no_hazard_per_1000_weighted": 113.1,
+     "escalation_no_hazard_weighted_ci": [
+      69.4,
+      162.1
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 113.1,
+     "escalation_no_hazard_unweighted_ci": [
+      69.4,
+      162.1
+     ],
+     "call_911_escalated_mean": 4.0
+    },
+    "raw_llm": {
+     "texts": 349,
+     "safety_positive": 63,
+     "no_hazard": 112,
+     "call_911": 4,
+     "hazard_sensitivity_weighted": 0.376,
+     "hazard_sensitivity_weighted_ci": [
+      0.269,
+      0.478
+     ],
+     "hazard_sensitivity_unweighted": 0.376,
+     "hazard_sensitivity_unweighted_ci": [
+      0.269,
+      0.478
+     ],
+     "escalation_no_hazard_per_1000_weighted": 116.1,
+     "escalation_no_hazard_weighted_ci": [
+      64.7,
+      169.9
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 116.1,
+     "escalation_no_hazard_unweighted_ci": [
+      64.7,
+      169.9
+     ],
+     "call_911_escalated_mean": 4.0
+    },
+    "v22": {
+     "texts": 349,
+     "safety_positive": 63,
+     "no_hazard": 112,
+     "call_911": 4,
+     "hazard_sensitivity_weighted": 0.619,
+     "hazard_sensitivity_weighted_ci": [
+      0.51,
+      0.725
+     ],
+     "hazard_sensitivity_unweighted": 0.619,
+     "hazard_sensitivity_unweighted_ci": [
+      0.51,
+      0.725
+     ],
+     "escalation_no_hazard_per_1000_weighted": 178.6,
+     "escalation_no_hazard_weighted_ci": [
+      111.9,
+      248.1
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 178.6,
+     "escalation_no_hazard_unweighted_ci": [
+      111.9,
+      248.1
+     ],
+     "call_911_escalated_mean": 4.0
+    },
+    "ours": {
+     "texts": 349,
+     "safety_positive": 63,
+     "no_hazard": 112,
+     "call_911": 4,
+     "hazard_sensitivity_weighted": 0.614,
+     "hazard_sensitivity_weighted_ci": [
+      0.5,
+      0.726
+     ],
+     "hazard_sensitivity_unweighted": 0.614,
+     "hazard_sensitivity_unweighted_ci": [
+      0.5,
+      0.726
+     ],
+     "escalation_no_hazard_per_1000_weighted": 142.9,
+     "escalation_no_hazard_weighted_ci": [
+      86.0,
+      203.3
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 142.9,
+     "escalation_no_hazard_unweighted_ci": [
+      86.0,
+      203.3
+     ],
+     "call_911_escalated_mean": 4.0
+    },
+    "writer_alone": {
+     "texts": 349,
+     "safety_positive": 63,
+     "no_hazard": 112,
+     "call_911": 4,
+     "hazard_sensitivity_weighted": 0.386,
+     "hazard_sensitivity_weighted_ci": [
+      0.278,
+      0.488
+     ],
+     "hazard_sensitivity_unweighted": 0.386,
+     "hazard_sensitivity_unweighted_ci": [
+      0.278,
+      0.488
+     ],
+     "escalation_no_hazard_per_1000_weighted": 122.0,
+     "escalation_no_hazard_weighted_ci": [
+      70.0,
+      176.5
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 122.0,
+     "escalation_no_hazard_unweighted_ci": [
+      70.0,
+      176.5
+     ],
+     "call_911_escalated_mean": 4.0
+    },
+    "gate_alone": {
+     "texts": 349,
+     "safety_positive": 63,
+     "no_hazard": 112,
+     "call_911": 4,
+     "hazard_sensitivity_weighted": 0.413,
+     "hazard_sensitivity_weighted_ci": [
+      0.293,
+      0.545
+     ],
+     "hazard_sensitivity_unweighted": 0.413,
+     "hazard_sensitivity_unweighted_ci": [
+      0.293,
+      0.545
+     ],
+     "escalation_no_hazard_per_1000_weighted": 44.6,
+     "escalation_no_hazard_weighted_ci": [
+      9.5,
+      87.7
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 44.6,
+     "escalation_no_hazard_unweighted_ci": [
+      9.5,
+      87.7
+     ],
+     "call_911_escalated_mean": 4.0
+    },
+    "clinician_first_any_hit_held": {
+     "texts": 349,
+     "safety_positive": 63,
+     "no_hazard": 112,
+     "call_911": 4,
+     "hazard_sensitivity_weighted": 0.741,
+     "hazard_sensitivity_weighted_ci": [
+      0.637,
+      0.842
+     ],
+     "hazard_sensitivity_unweighted": 0.741,
+     "hazard_sensitivity_unweighted_ci": [
+      0.637,
+      0.842
+     ],
+     "escalation_no_hazard_per_1000_weighted": 419.6,
+     "escalation_no_hazard_weighted_ci": [
+      336.2,
+      498.4
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 419.6,
+     "escalation_no_hazard_unweighted_ci": [
+      336.2,
+      498.4
+     ],
+     "call_911_escalated_mean": 4.0
+    }
+   },
+   "paired_diffs": {
+    "ours - amie_style": {
+     "sens_diff_weighted": 0.069,
+     "sens_diff_weighted_ci": [
+      -0.057,
+      0.206
+     ],
+     "nohaz_diff_per1000_weighted": 35.7,
+     "nohaz_diff_weighted_ci": [
+      -6.4,
+      82.7
+     ],
+     "sens_diff_unweighted": 0.069,
+     "sens_diff_unweighted_ci": [
+      -0.057,
+      0.206
+     ],
+     "nohaz_diff_per1000_unweighted": 35.7,
+     "nohaz_diff_unweighted_ci": [
+      -6.4,
+      82.7
+     ]
+    },
+    "ours - mai_dxo_style": {
+     "sens_diff_weighted": 0.122,
+     "sens_diff_weighted_ci": [
+      0.0,
+      0.255
+     ],
+     "nohaz_diff_per1000_weighted": 29.8,
+     "nohaz_diff_weighted_ci": [
+      -25.2,
+      86.0
+     ],
+     "sens_diff_unweighted": 0.122,
+     "sens_diff_unweighted_ci": [
+      0.0,
+      0.255
+     ],
+     "nohaz_diff_per1000_unweighted": 29.8,
+     "nohaz_diff_unweighted_ci": [
+      -25.2,
+      86.0
+     ]
+    }
+   }
+  }
+ },
+ "second_physician": {
+  "n_double_labeled": 200,
+  "strata": {
+   "random": 126,
+   "enriched": 74
+  },
+  "basu_labels_on_200": {
+   "amie_style": {
+    "texts": 200,
+    "safety_positive": 18,
+    "no_hazard": 125,
+    "call_911": 1,
+    "hazard_sensitivity_weighted": 0.537,
+    "hazard_sensitivity_weighted_ci": [
+     0.333,
+     0.742
+    ],
+    "hazard_sensitivity_unweighted": 0.537,
+    "hazard_sensitivity_unweighted_ci": [
+     0.333,
+     0.742
+    ],
+    "escalation_no_hazard_per_1000_weighted": 175.5,
+    "escalation_no_hazard_weighted_ci": [
+     123.6,
+     238.3
+    ],
+    "escalation_no_hazard_per_1000_unweighted": 184.0,
+    "escalation_no_hazard_unweighted_ci": [
+     132.8,
+     241.2
+    ],
+    "call_911_escalated_mean": 1.0
+   },
+   "mai_dxo_style": {
+    "texts": 200,
+    "safety_positive": 18,
+    "no_hazard": 125,
+    "call_911": 1,
+    "hazard_sensitivity_weighted": 0.537,
+    "hazard_sensitivity_weighted_ci": [
+     0.317,
+     0.746
+    ],
+    "hazard_sensitivity_unweighted": 0.537,
+    "hazard_sensitivity_unweighted_ci": [
+     0.317,
+     0.746
+    ],
+    "escalation_no_hazard_per_1000_weighted": 147.0,
+    "escalation_no_hazard_weighted_ci": [
+     97.4,
+     204.5
+    ],
+    "escalation_no_hazard_per_1000_unweighted": 154.7,
+    "escalation_no_hazard_unweighted_ci": [
+     104.2,
+     208.3
+    ],
+    "call_911_escalated_mean": 1.0
+   },
+   "raw_llm": {
+    "texts": 200,
+    "safety_positive": 18,
+    "no_hazard": 125,
+    "call_911": 1,
+    "hazard_sensitivity_weighted": 0.426,
+    "hazard_sensitivity_weighted_ci": [
+     0.222,
+     0.651
+    ],
+    "hazard_sensitivity_unweighted": 0.426,
+    "hazard_sensitivity_unweighted_ci": [
+     0.222,
+     0.651
+    ],
+    "escalation_no_hazard_per_1000_weighted": 104.6,
+    "escalation_no_hazard_weighted_ci": [
+     59.3,
+     157.1
+    ],
+    "escalation_no_hazard_per_1000_unweighted": 120.0,
+    "escalation_no_hazard_unweighted_ci": [
+     73.2,
+     174.6
+    ],
+    "call_911_escalated_mean": 1.0
+   },
+   "v22": {
+    "texts": 200,
+    "safety_positive": 18,
+    "no_hazard": 125,
+    "call_911": 1,
+    "hazard_sensitivity_weighted": 0.537,
+    "hazard_sensitivity_weighted_ci": [
+     0.333,
+     0.745
+    ],
+    "hazard_sensitivity_unweighted": 0.537,
+    "hazard_sensitivity_unweighted_ci": [
+     0.333,
+     0.745
+    ],
+    "escalation_no_hazard_per_1000_weighted": 163.2,
+    "escalation_no_hazard_weighted_ci": [
+     99.9,
+     229.1
+    ],
+    "escalation_no_hazard_per_1000_unweighted": 176.0,
+    "escalation_no_hazard_unweighted_ci": [
+     114.4,
+     239.3
+    ],
+    "call_911_escalated_mean": 1.0
+   },
+   "ours": {
+    "texts": 200,
+    "safety_positive": 18,
+    "no_hazard": 125,
+    "call_911": 1,
+    "hazard_sensitivity_weighted": 0.5,
+    "hazard_sensitivity_weighted_ci": [
+     0.286,
+     0.727
+    ],
+    "hazard_sensitivity_unweighted": 0.5,
+    "hazard_sensitivity_unweighted_ci": [
+     0.286,
+     0.727
+    ],
+    "escalation_no_hazard_per_1000_weighted": 114.3,
+    "escalation_no_hazard_weighted_ci": [
+     65.8,
+     169.4
+    ],
+    "escalation_no_hazard_per_1000_unweighted": 136.0,
+    "escalation_no_hazard_unweighted_ci": [
+     86.0,
+     193.6
+    ],
+    "call_911_escalated_mean": 1.0
+   },
+   "writer_alone": {
+    "texts": 200,
+    "safety_positive": 18,
+    "no_hazard": 125,
+    "call_911": 1,
+    "hazard_sensitivity_weighted": 0.426,
+    "hazard_sensitivity_weighted_ci": [
+     0.222,
+     0.651
+    ],
+    "hazard_sensitivity_unweighted": 0.426,
+    "hazard_sensitivity_unweighted_ci": [
+     0.222,
+     0.651
+    ],
+    "escalation_no_hazard_per_1000_weighted": 112.7,
+    "escalation_no_hazard_weighted_ci": [
+     64.1,
+     167.1
+    ],
+    "escalation_no_hazard_per_1000_unweighted": 130.7,
+    "escalation_no_hazard_unweighted_ci": [
+     82.7,
+     186.9
+    ],
+    "call_911_escalated_mean": 1.0
+   },
+   "gate_alone": {
+    "texts": 200,
+    "safety_positive": 18,
+    "no_hazard": 125,
+    "call_911": 1,
+    "hazard_sensitivity_weighted": 0.389,
+    "hazard_sensitivity_weighted_ci": [
+     0.167,
+     0.625
+    ],
+    "hazard_sensitivity_unweighted": 0.389,
+    "hazard_sensitivity_unweighted_ci": [
+     0.167,
+     0.625
+    ],
+    "escalation_no_hazard_per_1000_weighted": 16.8,
+    "escalation_no_hazard_weighted_ci": [
+     2.2,
+     41.5
+    ],
+    "escalation_no_hazard_per_1000_unweighted": 32.0,
+    "escalation_no_hazard_unweighted_ci": [
+     7.6,
+     67.2
+    ],
+    "call_911_escalated_mean": 1.0
+   },
+   "clinician_first_any_hit_held": {
+    "texts": 200,
+    "safety_positive": 18,
+    "no_hazard": 125,
+    "call_911": 1,
+    "hazard_sensitivity_weighted": 0.704,
+    "hazard_sensitivity_weighted_ci": [
+     0.483,
+     0.905
+    ],
+    "hazard_sensitivity_unweighted": 0.704,
+    "hazard_sensitivity_unweighted_ci": [
+     0.483,
+     0.905
+    ],
+    "escalation_no_hazard_per_1000_weighted": 707.0,
+    "escalation_no_hazard_weighted_ci": [
+     623.1,
+     782.3
+    ],
+    "escalation_no_hazard_per_1000_unweighted": 677.3,
+    "escalation_no_hazard_unweighted_ci": [
+     597.9,
+     750.6
+    ],
+    "call_911_escalated_mean": 1.0
+   }
+  },
+  "morgan_labels_on_200": {
+   "amie_style": {
+    "texts": 200,
+    "safety_positive": 15,
+    "no_hazard": 127,
+    "call_911": 1,
+    "hazard_sensitivity_weighted": 0.422,
+    "hazard_sensitivity_weighted_ci": [
+     0.194,
+     0.646
+    ],
+    "hazard_sensitivity_unweighted": 0.422,
+    "hazard_sensitivity_unweighted_ci": [
+     0.194,
+     0.646
+    ],
+    "escalation_no_hazard_per_1000_weighted": 176.8,
+    "escalation_no_hazard_weighted_ci": [
+     123.1,
+     239.0
+    ],
+    "escalation_no_hazard_per_1000_unweighted": 181.1,
+    "escalation_no_hazard_unweighted_ci": [
+     129.2,
+     237.7
+    ],
+    "call_911_escalated_mean": 1.0
+   },
+   "mai_dxo_style": {
+    "texts": 200,
+    "safety_positive": 15,
+    "no_hazard": 127,
+    "call_911": 1,
+    "hazard_sensitivity_weighted": 0.444,
+    "hazard_sensitivity_weighted_ci": [
+     0.229,
+     0.667
+    ],
+    "hazard_sensitivity_unweighted": 0.444,
+    "hazard_sensitivity_unweighted_ci": [
+     0.229,
+     0.667
+    ],
+    "escalation_no_hazard_per_1000_weighted": 149.3,
+    "escalation_no_hazard_weighted_ci": [
+     98.4,
+     209.1
+    ],
+    "escalation_no_hazard_per_1000_unweighted": 152.2,
+    "escalation_no_hazard_unweighted_ci": [
+     103.6,
+     207.4
+    ],
+    "call_911_escalated_mean": 1.0
+   },
+   "raw_llm": {
+    "texts": 200,
+    "safety_positive": 15,
+    "no_hazard": 127,
+    "call_911": 1,
+    "hazard_sensitivity_weighted": 0.378,
+    "hazard_sensitivity_weighted_ci": [
+     0.154,
+     0.614
+    ],
+    "hazard_sensitivity_unweighted": 0.378,
+    "hazard_sensitivity_unweighted_ci": [
+     0.154,
+     0.614
+    ],
+    "escalation_no_hazard_per_1000_weighted": 108.3,
+    "escalation_no_hazard_weighted_ci": [
+     63.8,
+     159.4
+    ],
+    "escalation_no_hazard_per_1000_unweighted": 118.1,
+    "escalation_no_hazard_unweighted_ci": [
+     73.1,
+     169.2
+    ],
+    "call_911_escalated_mean": 1.0
+   },
+   "v22": {
+    "texts": 200,
+    "safety_positive": 15,
+    "no_hazard": 127,
+    "call_911": 1,
+    "hazard_sensitivity_weighted": 0.533,
+    "hazard_sensitivity_weighted_ci": [
+     0.31,
+     0.767
+    ],
+    "hazard_sensitivity_unweighted": 0.533,
+    "hazard_sensitivity_unweighted_ci": [
+     0.31,
+     0.767
+    ],
+    "escalation_no_hazard_per_1000_weighted": 162.7,
+    "escalation_no_hazard_weighted_ci": [
+     100.2,
+     225.8
+    ],
+    "escalation_no_hazard_per_1000_unweighted": 165.4,
+    "escalation_no_hazard_unweighted_ci": [
+     106.7,
+     226.6
+    ],
+    "call_911_escalated_mean": 1.0
+   },
+   "ours": {
+    "texts": 200,
+    "safety_positive": 15,
+    "no_hazard": 127,
+    "call_911": 1,
+    "hazard_sensitivity_weighted": 0.4,
+    "hazard_sensitivity_weighted_ci": [
+     0.167,
+     0.667
+    ],
+    "hazard_sensitivity_unweighted": 0.4,
+    "hazard_sensitivity_unweighted_ci": [
+     0.167,
+     0.667
+    ],
+    "escalation_no_hazard_per_1000_weighted": 119.3,
+    "escalation_no_hazard_weighted_ci": [
+     71.0,
+     172.0
+    ],
+    "escalation_no_hazard_per_1000_unweighted": 131.2,
+    "escalation_no_hazard_unweighted_ci": [
+     83.9,
+     184.3
+    ],
+    "call_911_escalated_mean": 1.0
+   },
+   "writer_alone": {
+    "texts": 200,
+    "safety_positive": 15,
+    "no_hazard": 127,
+    "call_911": 1,
+    "hazard_sensitivity_weighted": 0.378,
+    "hazard_sensitivity_weighted_ci": [
+     0.154,
+     0.614
+    ],
+    "hazard_sensitivity_unweighted": 0.378,
+    "hazard_sensitivity_unweighted_ci": [
+     0.154,
+     0.614
+    ],
+    "escalation_no_hazard_per_1000_weighted": 119.3,
+    "escalation_no_hazard_weighted_ci": [
+     71.0,
+     172.0
+    ],
+    "escalation_no_hazard_per_1000_unweighted": 131.2,
+    "escalation_no_hazard_unweighted_ci": [
+     83.9,
+     184.3
+    ],
+    "call_911_escalated_mean": 1.0
+   },
+   "gate_alone": {
+    "texts": 200,
+    "safety_positive": 15,
+    "no_hazard": 127,
+    "call_911": 1,
+    "hazard_sensitivity_weighted": 0.267,
+    "hazard_sensitivity_weighted_ci": [
+     0.062,
+     0.5
+    ],
+    "hazard_sensitivity_unweighted": 0.267,
+    "hazard_sensitivity_unweighted_ci": [
+     0.062,
+     0.5
+    ],
+    "escalation_no_hazard_per_1000_weighted": 11.7,
+    "escalation_no_hazard_weighted_ci": [
+     0.0,
+     34.2
+    ],
+    "escalation_no_hazard_per_1000_unweighted": 15.7,
+    "escalation_no_hazard_unweighted_ci": [
+     0.0,
+     39.7
+    ],
+    "call_911_escalated_mean": 1.0
+   },
+   "clinician_first_any_hit_held": {
+    "texts": 200,
+    "safety_positive": 15,
+    "no_hazard": 127,
+    "call_911": 1,
+    "hazard_sensitivity_weighted": 0.578,
+    "hazard_sensitivity_weighted_ci": [
+     0.333,
+     0.813
+    ],
+    "hazard_sensitivity_unweighted": 0.578,
+    "hazard_sensitivity_unweighted_ci": [
+     0.333,
+     0.813
+    ],
+    "escalation_no_hazard_per_1000_weighted": 703.2,
+    "escalation_no_hazard_weighted_ci": [
+     622.0,
+     778.8
+    ],
+    "escalation_no_hazard_per_1000_unweighted": 677.2,
+    "escalation_no_hazard_unweighted_ci": [
+     598.9,
+     748.6
+    ],
+    "call_911_escalated_mean": 1.0
+   }
+  },
+  "both_agree": {
+   "definition": "texts where both physicians give the same safety_positive and the same any-hazard label",
+   "n": 183,
+   "metrics": {
+    "amie_style": {
+     "texts": 183,
+     "safety_positive": 13,
+     "no_hazard": 120,
+     "call_911": 1,
+     "hazard_sensitivity_weighted": 0.462,
+     "hazard_sensitivity_weighted_ci": [
+      0.205,
+      0.727
+     ],
+     "hazard_sensitivity_unweighted": 0.462,
+     "hazard_sensitivity_unweighted_ci": [
+      0.205,
+      0.727
+     ],
+     "escalation_no_hazard_per_1000_weighted": 175.7,
+     "escalation_no_hazard_weighted_ci": [
+      119.9,
+      241.0
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 180.6,
+     "escalation_no_hazard_unweighted_ci": [
+      126.4,
+      243.2
+     ],
+     "call_911_escalated_mean": 1.0
+    },
+    "mai_dxo_style": {
+     "texts": 183,
+     "safety_positive": 13,
+     "no_hazard": 120,
+     "call_911": 1,
+     "hazard_sensitivity_weighted": 0.513,
+     "hazard_sensitivity_weighted_ci": [
+      0.256,
+      0.769
+     ],
+     "hazard_sensitivity_unweighted": 0.513,
+     "hazard_sensitivity_unweighted_ci": [
+      0.256,
+      0.769
+     ],
+     "escalation_no_hazard_per_1000_weighted": 147.5,
+     "escalation_no_hazard_weighted_ci": [
+      96.1,
+      205.3
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 152.8,
+     "escalation_no_hazard_unweighted_ci": [
+      103.4,
+      208.7
+     ],
+     "call_911_escalated_mean": 1.0
+    },
+    "raw_llm": {
+     "texts": 183,
+     "safety_positive": 13,
+     "no_hazard": 120,
+     "call_911": 1,
+     "hazard_sensitivity_weighted": 0.436,
+     "hazard_sensitivity_weighted_ci": [
+      0.19,
+      0.667
+     ],
+     "hazard_sensitivity_unweighted": 0.436,
+     "hazard_sensitivity_unweighted_ci": [
+      0.19,
+      0.667
+     ],
+     "escalation_no_hazard_per_1000_weighted": 104.3,
+     "escalation_no_hazard_weighted_ci": [
+      56.7,
+      161.6
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 116.7,
+     "escalation_no_hazard_unweighted_ci": [
+      66.7,
+      170.8
+     ],
+     "call_911_escalated_mean": 1.0
+    },
+    "v22": {
+     "texts": 183,
+     "safety_positive": 13,
+     "no_hazard": 120,
+     "call_911": 1,
+     "hazard_sensitivity_weighted": 0.538,
+     "hazard_sensitivity_weighted_ci": [
+      0.286,
+      0.778
+     ],
+     "hazard_sensitivity_unweighted": 0.538,
+     "hazard_sensitivity_unweighted_ci": [
+      0.286,
+      0.778
+     ],
+     "escalation_no_hazard_per_1000_weighted": 161.6,
+     "escalation_no_hazard_weighted_ci": [
+      100.2,
+      235.2
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 166.7,
+     "escalation_no_hazard_unweighted_ci": [
+      106.1,
+      235.1
+     ],
+     "call_911_escalated_mean": 1.0
+    },
+    "ours": {
+     "texts": 183,
+     "safety_positive": 13,
+     "no_hazard": 120,
+     "call_911": 1,
+     "hazard_sensitivity_weighted": 0.462,
+     "hazard_sensitivity_weighted_ci": [
+      0.208,
+      0.722
+     ],
+     "hazard_sensitivity_unweighted": 0.462,
+     "hazard_sensitivity_unweighted_ci": [
+      0.208,
+      0.722
+     ],
+     "escalation_no_hazard_per_1000_weighted": 111.7,
+     "escalation_no_hazard_weighted_ci": [
+      63.4,
+      169.9
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 125.0,
+     "escalation_no_hazard_unweighted_ci": [
+      73.8,
+      181.3
+     ],
+     "call_911_escalated_mean": 1.0
+    },
+    "writer_alone": {
+     "texts": 183,
+     "safety_positive": 13,
+     "no_hazard": 120,
+     "call_911": 1,
+     "hazard_sensitivity_weighted": 0.436,
+     "hazard_sensitivity_weighted_ci": [
+      0.19,
+      0.667
+     ],
+     "hazard_sensitivity_unweighted": 0.436,
+     "hazard_sensitivity_unweighted_ci": [
+      0.19,
+      0.667
+     ],
+     "escalation_no_hazard_per_1000_weighted": 111.7,
+     "escalation_no_hazard_weighted_ci": [
+      63.4,
+      169.9
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 125.0,
+     "escalation_no_hazard_unweighted_ci": [
+      73.8,
+      181.3
+     ],
+     "call_911_escalated_mean": 1.0
+    },
+    "gate_alone": {
+     "texts": 183,
+     "safety_positive": 13,
+     "no_hazard": 120,
+     "call_911": 1,
+     "hazard_sensitivity_weighted": 0.308,
+     "hazard_sensitivity_weighted_ci": [
+      0.071,
+      0.588
+     ],
+     "hazard_sensitivity_unweighted": 0.308,
+     "hazard_sensitivity_unweighted_ci": [
+      0.071,
+      0.588
+     ],
+     "escalation_no_hazard_per_1000_weighted": 12.4,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      37.6
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 16.7,
+     "escalation_no_hazard_unweighted_ci": [
+      0.0,
+      42.7
+     ],
+     "call_911_escalated_mean": 1.0
+    },
+    "clinician_first_any_hit_held": {
+     "texts": 183,
+     "safety_positive": 13,
+     "no_hazard": 120,
+     "call_911": 1,
+     "hazard_sensitivity_weighted": 0.667,
+     "hazard_sensitivity_weighted_ci": [
+      0.407,
+      0.911
+     ],
+     "hazard_sensitivity_unweighted": 0.667,
+     "hazard_sensitivity_unweighted_ci": [
+      0.407,
+      0.911
+     ],
+     "escalation_no_hazard_per_1000_weighted": 716.0,
+     "escalation_no_hazard_weighted_ci": [
+      638.2,
+      791.1
+     ],
+     "escalation_no_hazard_per_1000_unweighted": 688.9,
+     "escalation_no_hazard_unweighted_ci": [
+      614.9,
+      763.4
+     ],
+     "call_911_escalated_mean": 1.0
+    }
+   }
+  },
+  "agreement": {
+   "safety_positive": {
+    "n": 200,
+    "observed_agreement": 0.965,
+    "kappa": 0.769,
+    "positives_basu": 18,
+    "positives_morgan": 15,
+    "both_positive": 13
+   },
+   "call_911": {
+    "n": 200,
+    "observed_agreement": 1.0,
+    "kappa": 1.0,
+    "positives_basu": 1,
+    "positives_morgan": 1,
+    "both_positive": 1
+   },
+   "any_hazard": {
+    "n": 200,
+    "observed_agreement": 0.94,
+    "kappa": 0.871,
+    "positives_basu": 75,
+    "positives_morgan": 73,
+    "both_positive": 68
+   },
+   "action_4_class": {
+    "n": 200,
+    "observed_agreement": 0.93,
+    "kappa": 0.864,
+    "positives_basu": null,
+    "positives_morgan": null,
+    "both_positive": null
+   },
+   "kappa": "Cohen's kappa, unweighted"
+  }
+ },
+ "repeat_consistency": {
+  "amie_style": {
+   "texts_with_3_repeats": 949,
+   "share_all_3_agree": 0.769,
+   "share_all_3_agree_weighted": 0.786,
+   "share_all_3_agree_safety_positive": 0.671
+  },
+  "mai_dxo_style": {
+   "texts_with_3_repeats": 949,
+   "share_all_3_agree": 0.751,
+   "share_all_3_agree_weighted": 0.755,
+   "share_all_3_agree_safety_positive": 0.734
+  },
+  "raw_llm": {
+   "texts_with_3_repeats": 949,
+   "share_all_3_agree": 0.862,
+   "share_all_3_agree_weighted": 0.877,
+   "share_all_3_agree_safety_positive": 0.772
+  },
+  "v22": {
+   "texts_with_3_repeats": 949,
+   "share_all_3_agree": 0.869,
+   "share_all_3_agree_weighted": 0.87,
+   "share_all_3_agree_safety_positive": 0.772
+  },
+  "ours": {
+   "texts_with_3_repeats": 949,
+   "share_all_3_agree": 0.864,
+   "share_all_3_agree_weighted": 0.866,
+   "share_all_3_agree_safety_positive": 0.848
+  },
+  "writer_alone": {
+   "texts_with_3_repeats": 949,
+   "share_all_3_agree": 0.845,
+   "share_all_3_agree_weighted": 0.859,
+   "share_all_3_agree_safety_positive": 0.759
+  },
+  "gate_alone": {
+   "texts_with_3_repeats": 949,
+   "share_all_3_agree": 1.0,
+   "share_all_3_agree_weighted": 1.0,
+   "share_all_3_agree_safety_positive": 1.0
+  },
+  "clinician_first_any_hit_held": {
+   "texts_with_3_repeats": 949,
+   "share_all_3_agree": 0.861,
+   "share_all_3_agree_weighted": 0.861,
+   "share_all_3_agree_safety_positive": 0.886
+  }
+ },
+ "gate_writer_contributions": {
+  "definition": "per text, expected share over repeats; gate is constant across repeats",
+  "texts_paged": 68,
+  "texts_paged_emergency_threshold": 33,
+  "texts_paged_weighted_share": 0.0319,
+  "among_safety_positive_weighted": {
+   "gate_and_writer": 0.169,
+   "gate_only": 0.211,
+   "writer_only": 0.198,
+   "neither": 0.422
+  },
+  "among_safety_positive_unweighted": {
+   "gate_and_writer": 0.169,
+   "gate_only": 0.211,
+   "writer_only": 0.198,
+   "neither": 0.422
+  },
+  "among_no_hazard_per_1000_weighted": {
+   "gate_and_writer": 6.4,
+   "gate_only": 3.7,
+   "writer_only": 129.4,
+   "neither": 860.5
+  },
+  "ours_sensitivity_weighted": 0.578,
+  "check": "gate_and_writer + gate_only + writer_only equals ours"
+ },
+ "ai_emergency_instructions": {
+  "definition": "check() any disallowed instruction; check_unconditional() sentence without a conditional word; per-text mean over repeats",
+  "amie_style": {
+   "any_instruction_per_1000_replies": 713.4,
+   "unconditional_instruction_per_1000_replies": 55.5
+  },
+  "mai_dxo_style": {
+   "any_instruction_per_1000_replies": 658.6,
+   "unconditional_instruction_per_1000_replies": 146.8
+  },
+  "raw_llm": {
+   "any_instruction_per_1000_replies": 556.4,
+   "unconditional_instruction_per_1000_replies": 25.3
+  },
+  "v22": {
+   "any_instruction_per_1000_replies": 159.5,
+   "unconditional_instruction_per_1000_replies": 35.8
+  },
+  "ours_writer_replies_held_per_1000": 25.3
+ }
+}

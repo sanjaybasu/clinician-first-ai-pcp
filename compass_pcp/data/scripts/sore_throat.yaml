@@ -1,0 +1,85 @@
+# Illness script: sore throat in adults (URI lane).
+# Signed by a physician on 2026-10-28. Every value and its table location is listed in
+# docs/clinical/SCRIPT_SOURCES.md. Priors are literature values; a later version replaces them with Waymark claims rates. Thresholds were drafted and accepted at physician review; they are not from a formal decision analysis.
+#
+# Centor components share group "centor": Aalbers 2011 Table 3 reports LR+ 3.85
+# for Centor score 4, while the product of the four single-sign LR+ values in
+# Table 2 is about 8.7, so the signs are not conditionally independent. Only the
+# strongest component counts. Combined Centor-score LRs are listed in
+# SCRIPT_SOURCES.md for the reviewer but are not features here.
+#
+# Not candidate diagnoses (no sourced likelihood ratios; see SCRIPT_SOURCES.md):
+#   - epiglottitis / supraglottitis
+#   - deep neck space infection beyond the peritonsillar space (parapharyngeal,
+#     retropharyngeal); Voruz 2025 excluded these patients.
+# Red-flag symptoms for those conditions (drooling, stridor, cannot swallow
+# saliva, neck swelling, trouble breathing) belong in the lane gate as hard
+# escalation rules, not in this Bayesian script.
+complaint: sore_throat
+version: "1.0.0"
+lane: uri
+clinical_review:
+  approved_by: "Sanjay Basu, MD, PhD"
+  approved_on: "2026-10-28"
+# must_ask: abscess red flags; signed 2026-10-28
+must_ask: [trismus, muffled_voice]
+features:
+  - id: no_cough
+    question: "Is it true that you have no cough at all? (Answer yes if you do not cough.)"
+    remote_askable: true
+  - id: fever_history
+    question: "Have you had a fever (temperature of 100.4 F or higher) with this sore throat?"
+    remote_askable: true
+  - id: tender_anterior_cervical_nodes
+    question: "Gently press the front sides of your neck, under your jaw. Are there sore, swollen lumps?"
+    remote_askable: true   # guided self-exam; source studies used clinician exam
+  - id: tonsillar_exudate
+    question: "Look at the back of your throat with a phone light and mirror. Do you see white or yellow spots or patches?"
+    remote_askable: true   # guided self-exam or photo; source studies used clinician exam
+  - id: trismus
+    question: "Can you open your mouth wide enough to fit two fingers, stacked, between your front teeth?"
+    remote_askable: true   # guided self-exam; source defined trismus as < 2 cm on ENT exam
+  - id: muffled_voice
+    question: "Does your voice sound muffled, like you are talking with a hot potato in your mouth?"
+    remote_askable: true   # patient or family report; source used ENT assessment
+  - id: uvula_deviation
+    question: "Uvula pushed away from the midline on clinician exam"
+    remote_askable: false  # in-person exam
+  - id: pharynx_immobility
+    question: "Tonsillar area does not move when saying 'ah' on clinician exam"
+    remote_askable: false  # in-person exam
+diagnoses:
+  - id: group_a_strep_pharyngitis
+    label: "Group A streptococcal pharyngitis"
+    cannot_miss: false
+    prior:
+      p: 0.10
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Aalbers J et al. BMC Med 2011;9:67 (PMID 21631919), Background: GABHS prevalence in adults 5% to 10% (upper value used)"
+    lrs:
+      no_cough: {lr_pos: 1.46, lr_neg: 0.53, lr_pos_ci: [1.28, 1.66], lr_neg_ci: [0.46, 0.61], group: centor, source: "Aalbers 2011 BMC Med (PMID 21631919) Table 2, Absence of cough"}
+      fever_history: {lr_pos: 1.65, lr_neg: 0.71, lr_pos_ci: [1.40, 1.95], lr_neg_ci: [0.64, 0.80], group: centor, source: "Aalbers 2011 BMC Med (PMID 21631919) Table 2, Fever"}
+      tender_anterior_cervical_nodes: {lr_pos: 1.65, lr_neg: 0.56, lr_pos_ci: [1.41, 1.92], lr_neg_ci: [0.41, 0.76], group: centor, source: "Aalbers 2011 BMC Med (PMID 21631919) Table 2, Tender anterior cervical adenopathy"}
+      tonsillar_exudate: {lr_pos: 2.20, lr_neg: 0.58, lr_pos_ci: [1.76, 2.74], lr_neg_ci: [0.47, 0.72], group: centor, source: "Aalbers 2011 BMC Med (PMID 21631919) Table 2, Any exudates"}
+  - id: non_gas_pharyngitis
+    label: "Non-group-A-strep sore throat (viral pharyngitis or URI, or other)"
+    cannot_miss: false
+    prior:
+      p: 0.90
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Aalbers J et al. BMC Med 2011 (PMID 21631919), complement of adult GABHS prevalence 5% to 10%"
+    lrs:
+      no_cough: {lr_pos: 0.68, lr_neg: 1.89, lr_pos_ci: [0.60, 0.78], lr_neg_ci: [1.64, 2.17], group: centor, source: "DERIVED as reciprocal of Aalbers 2011 (PMID 21631919) Table 2 GABHS LRs (non-GABHS = complement)"}
+      fever_history: {lr_pos: 0.61, lr_neg: 1.41, lr_pos_ci: [0.51, 0.71], lr_neg_ci: [1.25, 1.56], group: centor, source: "DERIVED as reciprocal of Aalbers 2011 (PMID 21631919) Table 2 GABHS LRs (non-GABHS = complement)"}
+      tender_anterior_cervical_nodes: {lr_pos: 0.61, lr_neg: 1.79, lr_pos_ci: [0.52, 0.71], lr_neg_ci: [1.32, 2.44], group: centor, source: "DERIVED as reciprocal of Aalbers 2011 (PMID 21631919) Table 2 GABHS LRs (non-GABHS = complement)"}
+      tonsillar_exudate: {lr_pos: 0.45, lr_neg: 1.72, lr_pos_ci: [0.36, 0.57], lr_neg_ci: [1.39, 2.13], group: centor, source: "DERIVED as reciprocal of Aalbers 2011 (PMID 21631919) Table 2 GABHS LRs (non-GABHS = complement)"}
+  - id: peritonsillar_abscess
+    label: "Peritonsillar abscess"
+    cannot_miss: true
+    prior:
+      p: 0.0035
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Little P et al. BMJ 2013;347:f6867 (PMID 24277339), Table 1: quinsy within 1 month in 47 of 13,288 adults with acute sore throat (11/4974 + 30/5932 + 6/2382)"
+    thresholds: {benefit: 100, harm: 1, test_se: 0.974, test_sp: 0.125, test_harm: 0.02, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs:
+      trismus: {lr_pos: 3.15, lr_neg: 0.86, lr_pos_ci: [0.46, 21.73], lr_neg_ci: [0.73, 1.00], group: pta_signs, source: "DERIVED from Voruz F et al. Diagnostics 2025;15(2):228 (PMID 39857112) Table 2 counts TP23 FN94 FP1 TN15; suspected-PTA ED population; log-method 95% CI"}
+      muffled_voice: {lr_pos: 1.29, lr_neg: 0.87, lr_pos_ci: [0.60, 2.75], lr_neg_ci: [0.61, 1.25], group: pta_signs, source: "DERIVED from Voruz 2025 Diagnostics (PMID 39857112) Table 2 counts, hot potato voice TP47 FN70 FP5 TN11; log-method 95% CI"}
+      uvula_deviation: {lr_pos: 1.89, lr_neg: 0.60, lr_pos_ci: [0.90, 3.96], lr_neg_ci: [0.40, 0.89], group: pta_signs, source: "DERIVED from Voruz 2025 Diagnostics (PMID 39857112) Table 2 counts TP69 FN48 FP5 TN11; log-method 95% CI"}
+      pharynx_immobility: {lr_pos: 1.50, lr_neg: 0.61, lr_pos_ci: [0.85, 2.66], lr_neg_ci: [0.37, 1.00], group: pta_signs, source: "DERIVED from Voruz 2025 Diagnostics (PMID 39857112) Table 2 counts TP77 FN40 FP7 TN9; log-method 95% CI"}

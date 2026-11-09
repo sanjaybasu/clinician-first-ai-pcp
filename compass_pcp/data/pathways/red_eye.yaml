@@ -1,0 +1,38 @@
+# Guideline pathway: red eye in adults (always defers to a clinician; S. Basu decision of 2026-11-03).
+# Paper 2 development pathway, signed by S. Basu on 2026-11-05 (design/pathway_schema.md). Every source resolved in PubMed on 2026-11-04;
+# section-level support for each node stays unverified until the signing physician checks the cited section.
+pathway: red_eye
+version: "0.1.0-dev"
+script: red_eye@1.0.0
+status: signed
+signed_by: "S. Basu 2026-11-05"
+sources:
+  cheung2024:
+    citation: "Cheung AY, et al. Conjunctivitis Preferred Practice Pattern. Ophthalmology. 2024;131(4):P134-P204"
+    pmid: "38349304"
+  rhee2024:
+    citation: "Rhee MK, et al. Bacterial Keratitis Preferred Practice Pattern. Ophthalmology. 2024;131(4):P87-P133"
+    pmid: "38349295"
+  judgment:
+    citation: "Development judgment (S. Basu decision of 2026-11-03: red eye always defers to a clinician)"
+nodes:
+  - id: escalate
+    when: {kinds: [escalate]}
+    disposition: {level: urgent_same_day, within_hours: 24}
+    proposals:
+      - {kind: referral, name: "Same-day ophthalmology examination", source: [cheung2024]}
+    source: [cheung2024]
+  - id: contact_lens
+    when: {kinds: [defer], red_flags_any: [contact_lens_wearer]}
+    disposition: {level: urgent_same_day, within_hours: 24}
+    proposals:
+      - {kind: referral, name: "Same-day eye examination to exclude keratitis", source: [rhee2024]}
+    source: [rhee2024, cheung2024]
+  - id: open
+    when: {kinds: [ask]}
+    standing: {level: clinician_review, within_hours: 24}
+    source: [judgment]
+  - id: defer
+    when: {kinds: [defer]}
+    disposition: {level: clinician_review, within_hours: 24}
+    source: [cheung2024, judgment]

@@ -1,0 +1,30 @@
+{
+ "compass_pro_edit - compass_pro_opusonly": {
+  "n": 175,
+  "diff": -2.7,
+  "ci95": [
+   -8.3,
+   3.1
+  ]
+ }
+}
+{
+ "compass_pro_edit - opus_search_edit": {
+  "n": 175,
+  "diff": 0.6,
+  "ci95": [
+   -5.4,
+   6.9
+  ]
+ }
+}
+{
+ "compass_pro_edit - amie_style": {
+  "n": 175,
+  "diff": 4.6,
+  "ci95": [
+   -1.0,
+   10.1
+  ]
+ }
+}

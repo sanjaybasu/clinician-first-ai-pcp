@@ -1,0 +1,25 @@
+# COMPASS v4 review score (B3): protected floors plus a monotone logistic score over at most 3 nonnegative predictors.
+#
+# ######################################################################################################
+# PLACEHOLDER, NOT FITTED. These coefficients and the threshold are arbitrary values so the code runs. They are
+# replaced by the output of compass_pcp.review_score.fit_review_score (nested grouped cross-validation on the Cohort A
+# tuning half, v4_spec.md Development and test, step 3) and then frozen.
+# ######################################################################################################
+#
+# Features (computed in compass_pcp/arms/ai_pcp_v4.py):
+#   anthropic_tier   Anthropic screen tier / 4 (0 none ... 1 emergency_now), or the K = 3 vote fraction if selected
+#   kev_urgent       Kev cumulative probability of urgent_same_day or higher
+#   classifier_max   highest B2 crisis-classifier family probability (0 with the null classifier)
+# The score sets the review flag only, never urgency.
+version: "0.0.1-placeholder"
+status: placeholder_unfitted
+source: "PLACEHOLDER: replace with fit_review_score output"
+features: [anthropic_tier, kev_urgent, classifier_max]
+intercept: -3.0
+coefficients:
+  anthropic_tier: 3.0
+  kev_urgent: 3.0
+  classifier_max: 0.0
+threshold: 0.5
+floor_screen_tier: POSSIBLE_EMERGENCY
+cap_per_1000: 480

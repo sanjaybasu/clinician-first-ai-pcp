@@ -1,0 +1,32 @@
+# Guideline pathway: chest pain in adults (high-risk lane; never closes remotely).
+# Paper 2 development pathway, signed by S. Basu on 2026-11-05 (design/pathway_schema.md). Every source resolved in PubMed on 2026-11-04;
+# section-level support for each node stays unverified until the signing physician checks the cited section.
+pathway: chest_pain
+version: "0.1.0-dev"
+script: chest_pain@1.0.0
+status: signed
+signed_by: "S. Basu 2026-11-05"
+sources:
+  gulati2021:
+    citation: "Gulati M, et al. 2021 AHA/ACC/ASE/CHEST/SAEM/SCCT/SCMR Guideline for the Evaluation and Diagnosis of Chest Pain. Circulation. 2021;144(22):e368-e454"
+    pmid: "34709879"
+  konstantinides2020:
+    citation: "Konstantinides SV, et al. 2019 ESC Guidelines for the diagnosis and management of acute pulmonary embolism. Eur Heart J. 2020;41(4):543-603"
+    pmid: "31504429"
+  judgment:
+    citation: "Development judgment (S. Basu decision of 2026-11-03: clinician workload is acceptable for open cannot-miss workups)"
+nodes:
+  - id: escalate
+    when: {kinds: [escalate]}
+    disposition: {level: emergency_now, within_hours: 0}
+    source: [gulati2021, konstantinides2020]
+  - id: open
+    when: {kinds: [ask]}
+    standing: {level: urgent_same_day, within_hours: 24}
+    source: [gulati2021, konstantinides2020, judgment]
+  - id: defer
+    when: {kinds: [defer]}
+    disposition: {level: urgent_same_day, within_hours: 24}
+    proposals:
+      - {kind: test, name: "12-lead ECG at the visit", source: [gulati2021]}
+    source: [gulati2021]

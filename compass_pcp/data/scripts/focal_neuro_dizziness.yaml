@@ -1,0 +1,88 @@
+# Illness script: dizziness or a new focal neurologic symptom in adults
+# (undifferentiated high-risk lane).
+# Signed by a physician on 2026-10-28. Every value and its table location is listed in
+# docs/clinical/SCRIPT_SOURCES_neuro_back_abd.md. Priors are literature values; a later version replaces them with Waymark claims rates. Thresholds were drafted and accepted at physician review; they are not from a formal decision analysis. The AI takes the history and escalates; it does not treat.
+#
+# Reference standard caution: the history and general-exam LRs come from Navi
+# 2012, whose target was a composite of serious central causes (37 of 49 were
+# cerebrovascular: 24 ischemic stroke, 8 TIA, 5 intracerebral hemorrhage; the
+# rest were tumor, seizure, demyelination). The prior below is the
+# cerebrovascular share only. The HINTS LRs come from Tarnutzer 2011 and apply
+# to acute vestibular syndrome (continuous vertigo for hours to days), not to
+# all dizziness.
+#
+# Groups (only the strongest finding in a group counts):
+#   - focal_symptoms: one-sided weakness, speech trouble, double vision.
+#   - neuro_exam: any focal exam finding and limb ataxia (ataxia is one of the
+#     focal findings counted in "any").
+#   - hints: head impulse test, direction-changing nystagmus, skew deviation.
+# Gait trouble and prior stroke have no group.
+#
+# Peripheral vertigo carries a prior only (no sourced history LRs).
+complaint: focal_neuro_dizziness
+version: "1.0.0"
+lane: undifferentiated_high_risk
+clinical_review:
+  approved_by: "Sanjay Basu, MD, PhD"
+  approved_on: "2026-10-28"
+# must_ask: stroke/TIA history red flags, including posterior circulation; signed 2026-10-28
+must_ask: [unilateral_weakness, speech_disturbance, diplopia, gait_disturbance]
+# Gait trouble is common in peripheral vertigo (LR+ 3.1): clinician review, not escalation. signed 2026-10-28
+red_flag_action: {gait_disturbance: defer}
+features:
+  - id: unilateral_weakness
+    question: "Is one side of your body (face, arm, or leg) weak or hard to move?"
+    remote_askable: true
+  - id: speech_disturbance
+    question: "Is it hard to talk, or does your speech sound slurred or wrong?"
+    remote_askable: true
+  - id: diplopia
+    question: "Are you seeing double?"
+    remote_askable: true
+  - id: gait_disturbance
+    question: "Is it hard to walk without falling or holding on to something?"
+    remote_askable: true
+  - id: previous_stroke
+    question: "Have you ever had a stroke?"
+    remote_askable: true
+  - id: any_focal_exam_finding
+    question: "Any focal abnormality on clinician neurologic exam"
+    remote_askable: false  # in-person exam
+  - id: limb_ataxia_exam
+    question: "Limb ataxia on clinician exam"
+    remote_askable: false  # in-person exam
+  - id: head_impulse_test_normal
+    question: "Normal horizontal head impulse test in acute vestibular syndrome, clinician exam"
+    remote_askable: false  # in-person exam
+  - id: direction_changing_nystagmus
+    question: "Direction-changing gaze-evoked nystagmus, clinician exam"
+    remote_askable: false  # in-person exam
+  - id: skew_deviation
+    question: "Skew deviation on alternate cover test, clinician exam"
+    remote_askable: false  # in-person exam
+diagnoses:
+  - id: stroke_tia
+    label: "Stroke or TIA (including posterior circulation)"
+    cannot_miss: true
+    prior:
+      p: 0.041
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Navi BB et al. Mayo Clin Proc 2012;87(11):1080-1088 (PMID 23063099), abstract: 37 cerebrovascular events among 907 adult ED patients with dizziness, vertigo or imbalance (4.1%)"
+    thresholds: {benefit: 30, harm: 1, test_se: 0.9, test_sp: 0.9, test_harm: 0.05, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs:
+      unilateral_weakness: {lr_pos: 19.70, lr_neg: 0.82, lr_pos_ci: [7.95, 48.83], lr_neg_ci: [0.72, 0.94], group: focal_symptoms, source: "DERIVED from Navi 2012 Mayo Clin Proc (PMID 23063099) Table 2 counts TP9 FN40 FP8 TN850; target = serious neurologic cause; log-method 95% CI"}
+      speech_disturbance: {lr_pos: 11.67, lr_neg: 0.81, lr_pos_ci: [5.53, 24.63], lr_neg_ci: [0.70, 0.93], group: focal_symptoms, source: "DERIVED from Navi 2012 (PMID 23063099) Table 2 counts TP10 FN39 FP15 TN843; log-method 95% CI"}
+      diplopia: {lr_pos: 7.66, lr_neg: 0.87, lr_pos_ci: [3.31, 17.75], lr_neg_ci: [0.78, 0.98], group: focal_symptoms, source: "DERIVED from Navi 2012 (PMID 23063099) Table 2 counts TP7 FN42 FP16 TN842; log-method 95% CI"}
+      gait_disturbance: {lr_pos: 3.10, lr_neg: 0.63, lr_pos_ci: [2.21, 4.34], lr_neg_ci: [0.48, 0.82], source: "DERIVED from Navi 2012 (PMID 23063099) Table 2 counts TP23 FN26 FP130 TN728; log-method 95% CI"}
+      previous_stroke: {lr_pos: 3.05, lr_neg: 0.88, lr_pos_ci: [1.52, 6.09], lr_neg_ci: [0.78, 1.00], source: "DERIVED from Navi 2012 (PMID 23063099) Table 1 counts TP8 FN41 FP46 TN812; log-method 95% CI"}
+      any_focal_exam_finding: {lr_pos: 3.74, lr_neg: 0.44, lr_pos_ci: [2.89, 4.85], lr_neg_ci: [0.31, 0.64], group: neuro_exam, source: "DERIVED from Navi 2012 (PMID 23063099) Table 3 counts TP31 FN18 FP145 TN713; log-method 95% CI"}
+      limb_ataxia_exam: {lr_pos: 9.22, lr_neg: 0.81, lr_pos_ci: [4.53, 18.74], lr_neg_ci: [0.71, 0.94], group: neuro_exam, source: "DERIVED from Navi 2012 (PMID 23063099) Table 3 counts TP10 FN39 FP19 TN839; log-method 95% CI"}
+      head_impulse_test_normal: {lr_pos: 18.39, lr_neg: 0.16, lr_pos_ci: [6.08, 55.64], lr_neg_ci: [0.11, 0.23], group: hints, source: "Tarnutzer AA et al. CMAJ 2011;183(9):E571-E592 (PMID 21576300) Table 4, normal horizontal head impulse test, all central causes; acute vestibular syndrome population"}
+      direction_changing_nystagmus: {lr_pos: 4.51, lr_neg: 0.68, lr_pos_ci: [2.18, 9.34], lr_neg_ci: [0.60, 0.76], group: hints, source: "Tarnutzer 2011 CMAJ (PMID 21576300) Table 4, direction-changing nystagmus"}
+      skew_deviation: {lr_pos: 19.66, lr_neg: 0.71, lr_pos_ci: [2.76, 140.15], lr_neg_ci: [0.63, 0.80], group: hints, source: "Tarnutzer 2011 CMAJ (PMID 21576300) Table 4, skew deviation"}
+  - id: peripheral_vertigo
+    label: "Peripheral vestibular disorder (BPPV, vestibular neuritis, other peripheral vertigo)"
+    cannot_miss: false
+    prior:
+      p: 0.324
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Navi 2012 Mayo Clin Proc (PMID 23063099) Table 4: peripheral vestibular diagnoses 294 of 907 (32%) ED dizziness patients"
+    lrs: {}

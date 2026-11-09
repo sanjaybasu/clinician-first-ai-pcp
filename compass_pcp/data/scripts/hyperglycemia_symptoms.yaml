@@ -1,0 +1,94 @@
+# Illness script: adults with known diabetes who report high blood sugar,
+# thirst, or vomiting.
+# Signed by a physician on 2026-10-28. Every value and its table location is listed in
+# docs/clinical/SCRIPT_SOURCES_gi_fever_dka_ob.md. Priors are literature values; a later version replaces them with Waymark claims rates. Thresholds were drafted and accepted at physician review; they are not from a formal decision analysis.
+#
+# Known gaps (see the sources doc, "Unverified and omitted"):
+#   - HHS has NO sourced remote likelihood ratios. With the drafted
+#     thresholds below its prior sits in the middle zone, so the engine defers
+#     every encounter to a clinician until sourced LRs are added.
+#   - No LR was verified for a home glucose meter value (for example "HI" or
+#     > 600 mg/dL). Put a meter reading of "HI" in the lane gate as a hard rule.
+#
+# Eligibility exclusions (handled by the lane gate, not by this script):
+#   - Pregnancy, age < 18, SGLT2-inhibitor use (euglycemic DKA risk; not
+#     separately studied in the sources), confusion or trouble staying awake.
+complaint: hyperglycemia_symptoms
+version: "1.0.0"
+lane: undifferentiated_high_risk
+clinical_review:
+  approved_by: "Sanjay Basu, MD, PhD"
+  approved_on: "2026-10-28"
+# must_ask: DKA red flags; signed 2026-10-28
+must_ask: [vomiting_or_belly_pain, trouble_breathing]
+features:
+  - id: vomiting_or_belly_pain
+    question: "Do you have an upset stomach, throwing up, or belly pain?"
+    remote_askable: true   # source category: gastrointestinal/hepatobiliary symptoms in the ED record
+  - id: trouble_breathing
+    question: "Are you short of breath, or breathing faster or deeper than usual?"
+    remote_askable: true
+  - id: fever
+    question: "Have you had a fever (temperature of 100.4 F or higher)?"
+    remote_askable: true   # thermometer at home; source recorded fever as a presenting symptom
+  - id: previous_dka
+    question: "Have you ever had DKA (diabetic ketoacidosis) before?"
+    remote_askable: true
+  - id: uses_insulin
+    question: "Do you take insulin?"
+    remote_askable: true   # also available from the medication list
+  - id: type_1_diabetes
+    question: "Has a doctor told you that you have type 1 diabetes?"
+    remote_askable: true   # also available from the problem list
+  - id: missed_diabetes_medicines
+    question: "In the past few days, have you missed or skipped your diabetes medicines or insulin?"
+    remote_askable: true   # source "poor compliance" came from records, history, or HbA1c >= 9%
+  - id: urine_ketones_positive
+    question: "If you have urine ketone strips, test your pee now. Does the strip show any ketones?"
+    remote_askable: true   # only with home urine ketone strips; source read by ED nurses
+  - id: blood_ketone_over_1_5
+    question: "If you have a blood ketone meter, check it now. Is the number above 1.5?"
+    remote_askable: true   # only with a home blood ketone meter; source used Precision Xtra at ED triage
+diagnoses:
+  - id: dka
+    label: "Diabetic ketoacidosis (DKA)"
+    cannot_miss: true
+    prior:
+      p: 0.204
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Yan JW et al. CJEM 2025;27(7):551-8 (PMID 40279059), Table 3: final ED diagnosis DKA in 134 of 657 (20.4%) ED visits for hyperglycemia by adults in Ontario"
+    thresholds: {benefit: 30, harm: 1, test_se: 0.99, test_sp: 0.95, test_harm: 0.05, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs:
+      vomiting_or_belly_pain: {lr_pos: 1.63, lr_neg: 0.79, lr_pos_ci: [1.10, 2.40], lr_neg_ci: [0.63, 0.99], source: "DERIVED from Peamyao W et al. J Clin Med Res 2025;17(3):164-73 (PMID 40115837) Table 1: gastrointestinal/hepatobiliary symptoms 23/56 DKA vs 55/218 simple hyperglycemia; log-method 95% CI"}
+      trouble_breathing: {lr_pos: 2.21, lr_neg: 0.38, lr_pos_ci: [1.74, 2.81], lr_neg_ci: [0.24, 0.60], source: "DERIVED from Peamyao 2025 (PMID 40115837) Table 1: dyspnea 42/56 vs 74/218; log-method 95% CI"}
+      fever: {lr_pos: 1.27, lr_neg: 0.91, lr_pos_ci: [0.82, 1.99], lr_neg_ci: [0.75, 1.10], source: "DERIVED from Peamyao 2025 (PMID 40115837) Table 1: fever 18/56 vs 55/218; log-method 95% CI"}
+      previous_dka: {lr_pos: 6.06, lr_neg: 0.78, lr_pos_ci: [2.76, 13.27], lr_neg_ci: [0.67, 0.91], source: "DERIVED from Peamyao 2025 (PMID 40115837) Table 1: previous DKA 14/56 vs 9/218; log-method 95% CI"}
+      uses_insulin: {lr_pos: 2.37, lr_neg: 0.43, lr_pos_ci: [1.81, 3.10], lr_neg_ci: [0.29, 0.64], group: insulin_dependence, source: "DERIVED from Peamyao 2025 (PMID 40115837) Table 1: insulin usage 39/56 vs 64/218; log-method 95% CI"}
+      type_1_diabetes: {lr_pos: 10.38, lr_neg: 0.87, lr_pos_ci: [2.85, 37.86], lr_neg_ci: [0.78, 0.97], group: insulin_dependence, source: "DERIVED from Peamyao 2025 (PMID 40115837) Table 1: type 1 DM 8/56 vs 3/218; log-method 95% CI"}
+      missed_diabetes_medicines: {lr_pos: 1.69, lr_neg: 0.45, lr_pos_ci: [1.36, 2.08], lr_neg_ci: [0.28, 0.72], source: "DERIVED from Peamyao 2025 (PMID 40115837) Table 1: poor compliance 42/56 vs 97/218; log-method 95% CI"}
+      urine_ketones_positive: {lr_pos: 1.51, lr_neg: 0.053, lr_pos_ci: [1.40, 1.63], lr_neg_ci: [0.0075, 0.37], group: ketone_test, source: "DERIVED from Arora S et al. Diabetes Care 2011;34(4):852-4 (PMID 21307381) Results: urine dipstick sensitivity 98.1% (53/54), specificity 35.1% of 462 (TN 162, FP 300); ED glucose >= 250 mg/dL; log-method 95% CI"}
+      blood_ketone_over_1_5: {lr_pos: 4.58, lr_neg: 0.024, lr_pos_ci: [3.83, 5.47], lr_neg_ci: [0.0034, 0.16], group: ketone_test, source: "DERIVED from Arora 2011 Diabetes Care (PMID 21307381) Results: capillary beta-OHB > 1.5 mmol/L sensitivity 98.1% (53/54), specificity 78.6% of 462 (TN 363, FP 99); log-method 95% CI"}
+  - id: hhs
+    label: "Hyperosmolar hyperglycemic state (HHS)"
+    cannot_miss: true
+    prior:
+      p: 0.041
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Yan JW et al. CJEM 2025 (PMID 40279059), Table 3: final ED diagnosis HHS in 27 of 657 (4.1%) ED visits for hyperglycemia"
+    thresholds: {benefit: 50, harm: 1, test_se: 0.95, test_sp: 0.95, test_harm: 0.05, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    # lrs: none verified for HHS vs other hyperglycemia. See the sources doc.
+    lrs: {}
+  - id: simple_hyperglycemia
+    label: "Hyperglycemia without DKA or HHS"
+    cannot_miss: false
+    prior:
+      p: 0.709
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Yan JW et al. CJEM 2025 (PMID 40279059): final ED diagnosis hyperglycemia/diabetes in 70.9% of 657 ED visits for hyperglycemia"
+    lrs:
+      vomiting_or_belly_pain: {lr_pos: 0.61, lr_neg: 1.27, lr_pos_ci: [0.42, 0.91], lr_neg_ci: [1.01, 1.60], source: "DERIVED as reciprocal of Peamyao 2025 (PMID 40115837) DKA LRs (simple hyperglycemia = complement in that study)"}
+      trouble_breathing: {lr_pos: 0.45, lr_neg: 2.64, lr_pos_ci: [0.36, 0.57], lr_neg_ci: [1.66, 4.20], source: "DERIVED as reciprocal of Peamyao 2025 (PMID 40115837) DKA LRs (simple hyperglycemia = complement in that study)"}
+      fever: {lr_pos: 0.78, lr_neg: 1.10, lr_pos_ci: [0.50, 1.22], lr_neg_ci: [0.91, 1.34], source: "DERIVED as reciprocal of Peamyao 2025 (PMID 40115837) DKA LRs (simple hyperglycemia = complement in that study)"}
+      previous_dka: {lr_pos: 0.17, lr_neg: 1.28, lr_pos_ci: [0.08, 0.36], lr_neg_ci: [1.10, 1.49], source: "DERIVED as reciprocal of Peamyao 2025 (PMID 40115837) DKA LRs (simple hyperglycemia = complement in that study)"}
+      uses_insulin: {lr_pos: 0.42, lr_neg: 2.33, lr_pos_ci: [0.32, 0.55], lr_neg_ci: [1.55, 3.49], group: insulin_dependence, source: "DERIVED as reciprocal of Peamyao 2025 (PMID 40115837) DKA LRs (simple hyperglycemia = complement in that study)"}
+      type_1_diabetes: {lr_pos: 0.10, lr_neg: 1.15, lr_pos_ci: [0.03, 0.35], lr_neg_ci: [1.03, 1.28], group: insulin_dependence, source: "DERIVED as reciprocal of Peamyao 2025 (PMID 40115837) DKA LRs (simple hyperglycemia = complement in that study)"}
+      missed_diabetes_medicines: {lr_pos: 0.59, lr_neg: 2.22, lr_pos_ci: [0.48, 0.73], lr_neg_ci: [1.39, 3.55], source: "DERIVED as reciprocal of Peamyao 2025 (PMID 40115837) DKA LRs (simple hyperglycemia = complement in that study)"}
+      urine_ketones_positive: {lr_pos: 0.66, lr_neg: 18.94, lr_pos_ci: [0.61, 0.71], lr_neg_ci: [2.71, 132.52], group: ketone_test, source: "DERIVED as reciprocal of Arora 2011 (PMID 21307381) DKA LRs (no-DKA group = complement; includes any HHS)"}
+      blood_ketone_over_1_5: {lr_pos: 0.22, lr_neg: 42.43, lr_pos_ci: [0.18, 0.26], lr_neg_ci: [6.08, 295.94], group: ketone_test, source: "DERIVED as reciprocal of Arora 2011 (PMID 21307381) DKA LRs (no-DKA group = complement; includes any HHS)"}

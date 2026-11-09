@@ -1,0 +1,119 @@
+# COMPASS v4 crisis policy (B1): criteria, routes, required instructions, fallbacks, uncertainty policy.
+#
+# ######################################################################################################
+# PLACEHOLDER, NOT SIGNED. Do not deploy and do not use for any case-level error review.
+# This file exists so the v4 code and tests run. The physician-signed file, with a primary clinical source for every
+# criterion and instruction, replaces it (v4_spec.md, Development and test, step 1). Every `source` below says
+# PLACEHOLDER. The loader refuses status values other than placeholder_unsigned or signed, and production code must
+# refuse placeholder_unsigned.
+# ######################################################################################################
+#
+# Schema (compass_pcp/arms/policy_v4.py::CrisisPolicy):
+#   route_precedence      routes from most to least urgent; the router reports the first one that fired.
+#   additions             routes that are added to, never replace, a higher route (Poison Control).
+#   additions_suppressed_by
+#                         routes that suppress the additions (Poison Control never accompanies the 911 endpoint).
+#   instructions          per route: the required clause addressed to the person at risk (text), the clause addressed
+#                         to someone writing about another person (text_other), the signed fallback reply in both
+#                         forms, and whether the route pages the care team.
+#   uncertainty           v4_spec B1: "not mentioned" never sets a floor; within an applicable family an uncertain
+#                         routing-relevant item or an incomplete check sets the uncertain/incomplete route.
+#   families              each with a lexicon (an applicability trigger only, never a floor or a route), a classifier
+#                         cut (B2 applicability trigger only) and its criteria.
+version: "0.0.1-placeholder"
+status: placeholder_unsigned
+signed_by: null
+signed_on: null
+screen:
+  timeout_seconds: 25
+  source: "PLACEHOLDER: operational setting; p95 latency budget about 30 s (v4 panel round 4, section 4)"
+route_precedence: [emergency_911, crisis_988_page, urgent_review, poison_control_addition, none]
+additions: [poison_control_addition]
+additions_suppressed_by: [emergency_911]
+instructions:
+  emergency_911:
+    id: instr_911_v0
+    text: "Please call 911 now or go to the nearest emergency room."
+    text_other: "Please call 911 for them now or get them to the nearest emergency room."
+    fallback: "Please call 911 now or go to the nearest emergency room. Do not wait for a reply to this message."
+    fallback_other: "Please call 911 for them now or get them to the nearest emergency room. Do not wait for a reply to this message."
+    page_care_team: true
+    source: "PLACEHOLDER: wording pending physician sign-off"
+  crisis_988_page:
+    id: instr_988_v0
+    text: "Please call or text 988 now to reach the Suicide and Crisis Lifeline, and call 911 if you might act on these thoughts."
+    text_other: "Please help them call or text 988 now to reach the Suicide and Crisis Lifeline, and call 911 if they might act on these thoughts."
+    fallback: "Please call or text 988 now to reach the Suicide and Crisis Lifeline, and call 911 if you might act on these thoughts. You can keep writing to us here too."
+    fallback_other: "Please help them call or text 988 now to reach the Suicide and Crisis Lifeline, and call 911 if they might act on these thoughts."
+    page_care_team: true
+    source: "PLACEHOLDER: wording pending physician sign-off"
+  poison_control_addition:
+    id: instr_poison_v0
+    text: "You can also call Poison Control at 1-800-222-1222 for advice right now."
+    text_other: "You can also call Poison Control at 1-800-222-1222 for advice right now."
+    fallback: "You can also call Poison Control at 1-800-222-1222 for advice right now."
+    fallback_other: "You can also call Poison Control at 1-800-222-1222 for advice right now."
+    page_care_team: false
+    source: "PLACEHOLDER: wording pending physician sign-off"
+uncertainty:
+  uncertain_route: urgent_review
+  incomplete_route: urgent_review
+  screen_failure_route: urgent_review
+  present_without_valid_quote: uncertain_applicable
+  unknown_currentness: uncertain
+  source: "PLACEHOLDER: v4_spec.md B1 uncertainty and applicability policy, pending physician sign-off"
+families:
+  - id: suicide_self_harm
+    name: Suicide or self-harm
+    lexicon: ["kill myself", "suicide", "suicidal", "end my life", "want to die", "better off dead", "hurt myself"]
+    classifier_cut: 0.5
+    classifier_cut_source: "PLACEHOLDER: set on external and synthetic data only"
+    criteria:
+      - id: ssh_immediate_danger
+        description: "The person at risk has current intent to die by suicide, a plan, has started preparing, has just made an attempt, or is in immediate danger of harming themselves."
+        route: emergency_911
+        routing_relevant: true
+        requires_current: true
+        source: "PLACEHOLDER: primary source pending physician sign-off"
+      - id: ssh_current_ideation
+        description: "The person at risk has current thoughts of suicide or self-harm, including passive wishes to be dead or indirect statements, without the immediate danger above."
+        route: crisis_988_page
+        routing_relevant: true
+        requires_current: true
+        source: "PLACEHOLDER: primary source pending physician sign-off"
+  - id: overdose_poisoning
+    name: Overdose or poisoning
+    lexicon: ["overdose", "overdosed", "took too many", "too many pills", "poison", "swallowed"]
+    classifier_cut: 0.5
+    classifier_cut_source: "PLACEHOLDER: set on external and synthetic data only"
+    criteria:
+      - id: od_emergency
+        description: "The person at risk took or may have taken a harmful amount of a medicine, drug or chemical, and is hard to wake, confused, breathing slowly, having a seizure, or took it on purpose."
+        route: emergency_911
+        routing_relevant: true
+        requires_current: true
+        source: "PLACEHOLDER: primary source pending physician sign-off"
+      - id: od_exposure_below_emergency
+        description: "The person at risk swallowed, breathed in or touched a medicine or chemical by mistake (for example a double dose, or a child got into pills) without the features above. Having no symptoms does not clear an exposure."
+        route: poison_control_addition
+        routing_relevant: true
+        requires_current: true
+        source: "PLACEHOLDER: primary source pending physician sign-off"
+  - id: acute_cardiac
+    name: Possible acute cardiac
+    lexicon: ["chest pain", "chest pressure", "chest tightness", "heart attack"]
+    classifier_cut: 0.5
+    classifier_cut_source: "PLACEHOLDER: set on external and synthetic data only"
+    criteria:
+      - id: cardiac_current_presentation
+        description: "Chest pain, pressure or tightness now or in the last few hours, with shortness of breath, sweating, nausea, fainting, or pain spreading to the arm, jaw or back."
+        route: emergency_911
+        routing_relevant: true
+        requires_current: true
+        source: "PLACEHOLDER: primary source pending physician sign-off"
+      - id: cardiac_atypical_current
+        description: "Sudden new shortness of breath, cold sweat, nausea or unusual weakness without a clear cause, happening now, in a person with heart disease or diabetes."
+        route: emergency_911
+        routing_relevant: true
+        requires_current: true
+        source: "PLACEHOLDER: primary source pending physician sign-off"

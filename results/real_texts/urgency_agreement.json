@@ -1,0 +1,48 @@
+{
+ "_all": {
+  "n": 800,
+  "escalation_agreement": 0.876,
+  "escalation_kappa": 0.648,
+  "five_level_exact": 0.844,
+  "five_level_kappa": 0.592,
+  "sonnet_escalation_rate": 0.204,
+  "g61_escalation_rate": 0.25
+ },
+ "amie_style": {
+  "n": 200,
+  "escalation_agreement": 0.815,
+  "escalation_kappa": 0.486,
+  "five_level_exact": 0.77,
+  "five_level_kappa": 0.41,
+  "sonnet_escalation_rate": 0.195,
+  "g61_escalation_rate": 0.27
+ },
+ "mai_dxo_style": {
+  "n": 200,
+  "escalation_agreement": 0.85,
+  "escalation_kappa": 0.628,
+  "five_level_exact": 0.83,
+  "five_level_kappa": 0.618,
+  "sonnet_escalation_rate": 0.23,
+  "g61_escalation_rate": 0.32
+ },
+ "raw_llm": {
+  "n": 200,
+  "escalation_agreement": 0.925,
+  "escalation_kappa": 0.755,
+  "five_level_exact": 0.89,
+  "five_level_kappa": 0.665,
+  "sonnet_escalation_rate": 0.165,
+  "g61_escalation_rate": 0.21
+ },
+ "v22": {
+  "n": 200,
+  "escalation_agreement": 0.915,
+  "escalation_kappa": 0.746,
+  "five_level_exact": 0.885,
+  "five_level_kappa": 0.681,
+  "sonnet_escalation_rate": 0.225,
+  "g61_escalation_rate": 0.2
+ },
+ "_note": "Sonnet 5.5 = classifier used in the paper; GPT-6.1 Sol low reasoning = second classifier; same prompt."
+}

@@ -1,0 +1,99 @@
+# Illness script: fainting (syncope) in adults (undifferentiated high-risk lane).
+# Signed by a physician on 2026-10-28. Every value and its table location is listed in
+# docs/clinical/SCRIPT_SOURCES_cardiopulm.md. Priors are literature values; a later version replaces them with Waymark claims rates. Thresholds were drafted and accepted at physician review; they are not from a formal decision analysis.
+#
+# The AI takes the history and escalates. Cardiac syncope needs an ECG and often
+# rhythm monitoring or an echocardiogram to rule out; those tests are not
+# features here, so the engine defers whenever cardiac syncope stays open.
+#
+# Most LRs are DERIVED from Berecki-Gisolf 2013 Table 3 counts. The main dataset is
+# the Amsterdam FAST cohort (ED patients with transient loss of consciousness,
+# 44 cardiac vs 419 non-cardiac). syncope_supine is from the Milan STePS ED cohort
+# (37 vs 652) because Amsterdam did not record it. The non-cardiac diagnosis is
+# the complement of cardiac syncope in the same data, so its LRs are reciprocals.
+# Reflex prodrome findings (nausea, sweating, long warning) share group
+# "reflex_prodrome", because they are parts of one prodrome. The two age
+# features share group "age". first_syncope_age_35_plus and history_af_flutter
+# come from the Albassam 2019 JAMA abstract (n = 323) and apply to cardiac
+# syncope only; the non-cardiac diagnosis does not use them.
+#
+# Not candidate diagnoses or features (no sourced LRs; see sources doc):
+#   seizure, PE, aortic dissection, GI bleed, palpitations before the faint,
+#   family history of sudden death, EGSYS and Calgary scores (full text not read).
+# Hard escalation rules for the lane gate (not Bayesian): faint during exercise
+# or while lying down with chest pain or palpitations; injury; new weakness or
+# trouble speaking; black stools or vomiting blood; family history of sudden
+# death under age 50.
+complaint: syncope
+version: "1.0.0"
+lane: undifferentiated_high_risk
+clinical_review:
+  approved_by: "Sanjay Basu, MD, PhD"
+  approved_on: "2026-10-28"
+# must_ask: cardiac-syncope red flags; signed 2026-10-28
+must_ask: [syncope_during_effort, syncope_supine, known_heart_disease, history_af_flutter]
+features:
+  - id: age_60_plus
+    question: "Age 60 or older (from the record)"
+    remote_askable: true   # from the record
+  - id: first_syncope_age_35_plus
+    question: "How old were you the first time you ever fainted? (35 or older counts as yes.)"
+    remote_askable: true
+  - id: history_af_flutter
+    question: "Has a doctor ever told you that you have atrial fibrillation or atrial flutter (an irregular heartbeat)?"
+    remote_askable: true   # patient report or record
+  - id: known_heart_disease
+    question: "Has a doctor ever told you that you have heart disease, such as a weak heart, a valve problem, or a past heart attack?"
+    remote_askable: true   # source: structural heart disease
+  - id: syncope_during_effort
+    question: "Did you faint while you were exercising or doing hard physical work?"
+    remote_askable: true
+  - id: syncope_supine
+    question: "Did you faint while you were lying down?"
+    remote_askable: true
+  - id: few_episodes
+    question: "Is this the first or second time in your life that you have fainted?"
+    remote_askable: true   # source: two spells or less
+  - id: nausea_before
+    question: "Before you fainted, did you feel sick to your stomach?"
+    remote_askable: true
+  - id: sweating_before
+    question: "Before you fainted, did you break out in a sweat?"
+    remote_askable: true
+  - id: long_warning
+    question: "Before you fainted, did you have warning signs for more than a few seconds, like feeling hot, dizzy, or that you were about to pass out?"
+    remote_askable: true   # source: (long) prodrome or awareness of being about to faint
+diagnoses:
+  - id: cardiac_syncope
+    label: "Cardiac syncope (arrhythmia or structural heart disease)"
+    cannot_miss: true
+    prior:
+      p: 0.095
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Berecki-Gisolf J et al. PLoS One 2013;8(9):e75255 (PMID 24223233) Table 3, Amsterdam data: cardiac syncope in 44 of 463 ED patients with transient loss of consciousness"
+    thresholds: {benefit: 50, harm: 1, test_se: 0.90, test_sp: 0.70, test_harm: 0.05, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs:
+      first_syncope_age_35_plus: {lr_pos: 3.3, lr_neg: 0.13, lr_pos_ci: [2.6, 4.1], lr_neg_ci: [0.06, 0.25], group: age, source: "Albassam OT et al. JAMA 2019;321(24):2448-2457 (PMID 31237649) Abstract, age at first syncope >=35 years (LR 3.3) and <35 years (LR 0.13), n = 323"}
+      history_af_flutter: {lr_pos: 7.3, lr_neg: 0.89, lr_pos_ci: [2.4, 22.0], source: "Albassam 2019 JAMA (PMID 31237649) Abstract, history of atrial fibrillation or flutter, n = 323: LR+ 7.3 (2.4-22) VERIFIED; LR- DERIVED from abstract sensitivity 13% and specificity 98% ((1-0.13)/0.98), no CI"}
+      age_60_plus: {lr_pos: 2.38, lr_neg: 0.39, lr_pos_ci: [1.89, 3.00], lr_neg_ci: [0.24, 0.64], group: age, source: "DERIVED from Berecki-Gisolf 2013 (PMID 24223233) Table 3, Amsterdam data, age >=60 TP32 FN12 FP128 TN291; log-method 95% CI"}
+      known_heart_disease: {lr_pos: 5.91, lr_neg: 0.63, lr_pos_ci: [3.59, 9.74], lr_neg_ci: [0.50, 0.81], source: "DERIVED from Berecki-Gisolf 2013 (PMID 24223233) Table 3, Amsterdam data, structural heart disease TP18 FN26 FP29 TN390; log-method 95% CI"}
+      syncope_during_effort: {lr_pos: 2.25, lr_neg: 0.86, lr_pos_ci: [1.22, 4.16], lr_neg_ci: [0.72, 1.01], source: "DERIVED from Berecki-Gisolf 2013 (PMID 24223233) Table 3, Amsterdam data, syncope during effort TP10 FN33 FP42 TN365; log-method 95% CI"}
+      syncope_supine: {lr_pos: 1.66, lr_neg: 0.81, lr_pos_ci: [1.07, 2.56], lr_neg_ci: [0.62, 1.04], source: "DERIVED from Berecki-Gisolf 2013 (PMID 24223233) Table 3, Milan data, supine syncope TP14 FN23 FP149 TN503; log-method 95% CI"}
+      few_episodes: {lr_pos: 1.51, lr_neg: 0.64, lr_pos_ci: [1.16, 1.98], lr_neg_ci: [0.43, 0.96], source: "DERIVED from Berecki-Gisolf 2013 (PMID 24223233) Table 3, Amsterdam data, two spells or less TP26 FN16 FP151 TN218; log-method 95% CI"}
+      nausea_before: {lr_pos: 0.45, lr_neg: 1.25, lr_pos_ci: [0.21, 0.96], lr_neg_ci: [1.09, 1.43], group: reflex_prodrome, source: "DERIVED from Berecki-Gisolf 2013 (PMID 24223233) Table 3, Amsterdam data, nausea TP6 FN37 FP129 TN287; log-method 95% CI"}
+      sweating_before: {lr_pos: 0.61, lr_neg: 1.36, lr_pos_ci: [0.37, 0.99], lr_neg_ci: [1.10, 1.69], group: reflex_prodrome, source: "DERIVED from Berecki-Gisolf 2013 (PMID 24223233) Table 3, Amsterdam data, diaphoresis TP12 FN29 FP200 TN216; log-method 95% CI"}
+      long_warning: {lr_pos: 0.58, lr_neg: 1.23, lr_pos_ci: [0.32, 1.05], lr_neg_ci: [1.04, 1.45], group: reflex_prodrome, source: "DERIVED from Berecki-Gisolf 2013 (PMID 24223233) Table 3, Amsterdam data, (long) prodrome TP9 FN35 FP148 TN271; log-method 95% CI"}
+  - id: reflex_or_orthostatic_syncope
+    label: "Non-cardiac syncope (reflex/vasovagal, orthostatic, or other non-cardiac)"
+    cannot_miss: false
+    prior:
+      p: 0.905
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Berecki-Gisolf 2013 (PMID 24223233) Table 3, Amsterdam data: non-cardiac syncope in 419 of 463 (complement of cardiac syncope)"
+    lrs:
+      age_60_plus: {lr_pos: 0.42, lr_neg: 2.55, lr_pos_ci: [0.33, 0.53], lr_neg_ci: [1.57, 4.14], source: "DERIVED as reciprocal of the unrounded cardiac-syncope LRs from Berecki-Gisolf 2013 (PMID 24223233) Table 3, Amsterdam data (non-cardiac = complement)"}
+      known_heart_disease: {lr_pos: 0.17, lr_neg: 1.58, lr_pos_ci: [0.10, 0.28], lr_neg_ci: [1.23, 2.02], source: "DERIVED as reciprocal of the unrounded cardiac-syncope LRs from Berecki-Gisolf 2013 (PMID 24223233) Table 3, Amsterdam data (non-cardiac = complement)"}
+      syncope_during_effort: {lr_pos: 0.44, lr_neg: 1.17, lr_pos_ci: [0.24, 0.82], lr_neg_ci: [0.99, 1.38], source: "DERIVED as reciprocal of the unrounded cardiac-syncope LRs from Berecki-Gisolf 2013 (PMID 24223233) Table 3, Amsterdam data (non-cardiac = complement)"}
+      syncope_supine: {lr_pos: 0.60, lr_neg: 1.24, lr_pos_ci: [0.39, 0.93], lr_neg_ci: [0.96, 1.60], source: "DERIVED as reciprocal of the unrounded cardiac-syncope LRs from Berecki-Gisolf 2013 (PMID 24223233) Table 3, Milan data (non-cardiac = complement)"}
+      few_episodes: {lr_pos: 0.66, lr_neg: 1.55, lr_pos_ci: [0.51, 0.86], lr_neg_ci: [1.04, 2.30], source: "DERIVED as reciprocal of the unrounded cardiac-syncope LRs from Berecki-Gisolf 2013 (PMID 24223233) Table 3, Amsterdam data (non-cardiac = complement)"}
+      nausea_before: {lr_pos: 2.22, lr_neg: 0.80, lr_pos_ci: [1.04, 4.73], lr_neg_ci: [0.70, 0.92], group: reflex_prodrome, source: "DERIVED as reciprocal of the unrounded cardiac-syncope LRs from Berecki-Gisolf 2013 (PMID 24223233) Table 3, Amsterdam data (non-cardiac = complement)"}
+      sweating_before: {lr_pos: 1.64, lr_neg: 0.73, lr_pos_ci: [1.01, 2.67], lr_neg_ci: [0.59, 0.91], group: reflex_prodrome, source: "DERIVED as reciprocal of the unrounded cardiac-syncope LRs from Berecki-Gisolf 2013 (PMID 24223233) Table 3, Amsterdam data (non-cardiac = complement)"}
+      long_warning: {lr_pos: 1.73, lr_neg: 0.81, lr_pos_ci: [0.95, 3.14], lr_neg_ci: [0.69, 0.96], group: reflex_prodrome, source: "DERIVED as reciprocal of the unrounded cardiac-syncope LRs from Berecki-Gisolf 2013 (PMID 24223233) Table 3, Amsterdam data (non-cardiac = complement)"}

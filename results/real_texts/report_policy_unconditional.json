@@ -1,0 +1,98 @@
+{
+ "amie_style": {
+  "texts": 949,
+  "safety_positive": 79,
+  "call_911": 5,
+  "no_hazard": 571,
+  "hazard_sensitivity_weighted": 0.519,
+  "hazard_sensitivity_ci": [
+   0.426,
+   0.61
+  ],
+  "hazard_sensitivity_unweighted": 0.519,
+  "call_911_escalated_mean": 5.0,
+  "escalation_no_hazard_per_1000_weighted": 156.7,
+  "escalation_no_hazard_ci": [
+   133.0,
+   184.0
+  ],
+  "ai_emergency_instructions_per_1000_replies": 55.5
+ },
+ "clinician_first": {
+  "texts": 949,
+  "safety_positive": 79,
+  "call_911": 5,
+  "no_hazard": 571,
+  "hazard_sensitivity_weighted": 0.578,
+  "hazard_sensitivity_ci": [
+   0.47,
+   0.675
+  ],
+  "hazard_sensitivity_unweighted": 0.578,
+  "call_911_escalated_mean": 5.0,
+  "escalation_no_hazard_per_1000_weighted": 139.5,
+  "escalation_no_hazard_ci": [
+   114.0,
+   166.0
+  ],
+  "ai_emergency_instructions_per_1000_replies": 0.0
+ },
+ "mai_dxo_style": {
+  "texts": 949,
+  "safety_positive": 79,
+  "call_911": 5,
+  "no_hazard": 571,
+  "hazard_sensitivity_weighted": 0.464,
+  "hazard_sensitivity_ci": [
+   0.365,
+   0.558
+  ],
+  "hazard_sensitivity_unweighted": 0.464,
+  "call_911_escalated_mean": 5.0,
+  "escalation_no_hazard_per_1000_weighted": 178.9,
+  "escalation_no_hazard_ci": [
+   153.0,
+   205.0
+  ],
+  "ai_emergency_instructions_per_1000_replies": 146.8
+ },
+ "raw_llm": {
+  "texts": 949,
+  "safety_positive": 79,
+  "call_911": 5,
+  "no_hazard": 571,
+  "hazard_sensitivity_weighted": 0.359,
+  "hazard_sensitivity_ci": [
+   0.268,
+   0.458
+  ],
+  "hazard_sensitivity_unweighted": 0.359,
+  "call_911_escalated_mean": 5.0,
+  "escalation_no_hazard_per_1000_weighted": 120.9,
+  "escalation_no_hazard_ci": [
+   95.0,
+   147.0
+  ],
+  "ai_emergency_instructions_per_1000_replies": 25.3
+ },
+ "v22": {
+  "texts": 949,
+  "safety_positive": 79,
+  "call_911": 5,
+  "no_hazard": 571,
+  "hazard_sensitivity_weighted": 0.595,
+  "hazard_sensitivity_ci": [
+   0.498,
+   0.687
+  ],
+  "hazard_sensitivity_unweighted": 0.595,
+  "call_911_escalated_mean": 5.0,
+  "escalation_no_hazard_per_1000_weighted": 147.2,
+  "escalation_no_hazard_ci": [
+   120.0,
+   175.0
+  ],
+  "ai_emergency_instructions_per_1000_replies": 35.8
+ },
+ "_writer_replies_held_per_1000": 25.3
+}

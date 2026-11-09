@@ -1,0 +1,76 @@
+# Illness script: fever in adults (not pregnant, not immunosuppressed).
+# Signed by a physician on 2026-10-28. Every value and its table location is listed in
+# docs/clinical/SCRIPT_SOURCES_gi_fever_dka_ob.md. Priors are literature values; a later version replaces them with Waymark claims rates. Thresholds were drafted and accepted at physician review; they are not from a formal decision analysis.
+#
+# Sepsis proxy: no study we read gives paired LRs for "sepsis" as a diagnosis
+# from history items. qSOFA validation studies (Seymour 2016) predict death, not
+# the presence of sepsis. This script uses true bacteremia (Komatsu 2025, adult
+# outpatients who had blood cultures) as the cannot-miss target. Bacteremia is
+# not the same as sepsis.
+#
+# Eligibility exclusions (handled by the lane gate, not by this script):
+#   - Pregnancy, neutropenia or chemotherapy, transplant, other immunosuppression.
+#   - Red flags with no sourced remote LR (purple or dark rash that does not fade,
+#     stiff neck, seizure, trouble breathing) are hard escalation rules in the gate.
+complaint: adult_fever
+version: "1.0.0"
+lane: undifferentiated_high_risk
+clinical_review:
+  approved_by: "Sanjay Basu, MD, PhD"
+  approved_on: "2026-10-28"
+# must_ask: bacteremia (shaking chills), qSOFA mental-status item, meningitis (jolt); signed 2026-10-28
+must_ask: [shaking_chills, new_confusion, jolt_headache]
+features:
+  - id: shaking_chills
+    question: "Have you had chills so strong that your whole body shook, even under a thick blanket?"
+    remote_askable: true
+  - id: poor_food_intake
+    question: "At your last meal, did you eat less than most of your usual amount?"
+    remote_askable: true   # source: self-reported last meal before blood culture, poor = less than 80%
+  - id: new_confusion
+    question: "Is the sick person more confused, sleepy, or hard to wake up than usual? (A family member can answer.)"
+    remote_askable: true   # patient or family report; source used Glasgow Coma Scale < 15 measured in hospital
+  - id: sbp_100_or_less
+    question: "If you have a home blood pressure cuff, check your blood pressure now. Is the top number 100 or lower?"
+    remote_askable: true   # only with a home blood pressure cuff; source measured BP in hospital
+  - id: jolt_headache
+    question: "If you have a headache, turn your head quickly to the left and right, 2 or 3 times each second. Does your headache get worse?"
+    remote_askable: true   # guided self-maneuver; source used physician-performed jolt accentuation
+  - id: qsofa_2_or_more
+    question: "qSOFA score of 2 or more (respiratory rate, mental status, systolic BP measured by a clinician)"
+    remote_askable: false  # respiratory rate and mental status exam are not reliable by self-report
+diagnoses:
+  - id: bacteremia_sepsis_risk
+    label: "Bloodstream infection (true bacteremia), used as the sepsis proxy"
+    cannot_miss: true
+    prior:
+      p: 0.127
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Komatsu T et al. PLoS One 2025;20(7):e0327789 (PMID 40627656), Results: true bacteremia in 68 of 534 (12.7%) adult outpatients who had blood cultures drawn in the ED or general medicine clinic"
+    thresholds: {benefit: 30, harm: 1, test_se: 0.9, test_sp: 0.7, test_harm: 0.05, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs:
+      shaking_chills: {lr_pos: 3.74, lr_neg: 0.79, lr_pos_ci: [2.75, 4.73], lr_neg_ci: [0.29, 2.18], source: "Komatsu 2025 PLoS One (PMID 40627656) Table 4, Shaking chills, all patients"}
+      poor_food_intake: {lr_pos: 1.08, lr_neg: 0.66, lr_pos_ci: [0.09, 2.08], lr_neg_ci: [0.23, 1.94], source: "Komatsu 2025 PLoS One (PMID 40627656) Table 4, Poor food consumption, all patients"}
+      new_confusion: {lr_pos: 1.74, lr_neg: 0.75, lr_pos_ci: [1.28, 2.37], lr_neg_ci: [0.60, 0.93], group: qsofa, source: "DERIVED from Komatsu 2025 (PMID 40627656) Table 1: GCS < 15 in 30/68 bacteremia vs 118 (25.4%) non-bacteremia, denominator 465 inferred from the percentage; log-method 95% CI"}
+      sbp_100_or_less: {lr_pos: 1.82, lr_neg: 0.88, lr_pos_ci: [1.12, 2.98], lr_neg_ci: [0.76, 1.01], group: qsofa, source: "DERIVED from Komatsu 2025 (PMID 40627656) Table 1: SBP <= 100 mmHg in 16 (23.9%) bacteremia vs 57 (13.1%) non-bacteremia, denominators 67 and 435 inferred from the percentages; log-method 95% CI"}
+      qsofa_2_or_more: {lr_pos: 2.06, lr_neg: 0.80, lr_pos_ci: [1.07, 3.06], lr_neg_ci: [0.29, 2.19], group: qsofa, source: "Komatsu 2025 PLoS One (PMID 40627656) Table 4, qSOFA score >= 2, all patients"}
+  - id: meningitis
+    label: "Acute meningitis (bacterial or viral; CSF pleocytosis)"
+    cannot_miss: true
+    prior:
+      p: 0.0094
+      source: "Literature value (a later version replaces it with the Waymark claims rate); DERIVED from Komatsu T et al. PLoS One 2025 (PMID 40627656) Table 3: bacterial meningitis 2 + viral meningitis 3 = 5 of 534 adult outpatients with blood cultures"
+    thresholds: {benefit: 100, harm: 1, test_se: 0.95, test_sp: 0.9, test_harm: 0.1, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs:
+      jolt_headache: {lr_pos: 5.36, lr_neg: 0.42, lr_pos_ci: [3.37, 8.52], lr_neg_ci: [0.31, 0.59], source: "Afhami S et al. BMC Res Notes 2017;10:540 (PMID 29084605), Results: jolt positive in 40/64 meningitis vs 19/163 non-meningitis, LR+ 5.36, LR- 0.42; CI DERIVED by log method; adults with fever and headache, suspected meningitis"}
+  - id: non_bacteremic_febrile_illness
+    label: "Febrile illness without bacteremia (viral illness, or a localized infection without bloodstream spread)"
+    cannot_miss: false
+    prior:
+      p: 0.873
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Komatsu 2025 (PMID 40627656), complement of bacteremia 68/534; includes 21 contaminated cultures"
+    lrs:
+      shaking_chills: {lr_pos: 0.27, lr_neg: 1.27, lr_pos_ci: [0.21, 0.36], lr_neg_ci: [0.46, 3.45], source: "DERIVED as reciprocal of Komatsu 2025 (PMID 40627656) Table 4 bacteremia LRs (non-bacteremia = complement); CI limits are reciprocals"}
+      poor_food_intake: {lr_pos: 0.93, lr_neg: 1.52, lr_pos_ci: [0.48, 11.1], lr_neg_ci: [0.52, 4.35], source: "DERIVED as reciprocal of Komatsu 2025 (PMID 40627656) Table 4 bacteremia LRs (non-bacteremia = complement); CI limits are reciprocals"}
+      new_confusion: {lr_pos: 0.58, lr_neg: 1.34, lr_pos_ci: [0.42, 0.78], lr_neg_ci: [1.07, 1.66], group: qsofa, source: "DERIVED as reciprocal of the Komatsu 2025 (PMID 40627656) Table 1 derived bacteremia LRs (non-bacteremia = complement)"}
+      sbp_100_or_less: {lr_pos: 0.55, lr_neg: 1.14, lr_pos_ci: [0.34, 0.90], lr_neg_ci: [0.99, 1.31], group: qsofa, source: "DERIVED as reciprocal of the Komatsu 2025 (PMID 40627656) Table 1 derived bacteremia LRs (non-bacteremia = complement)"}
+      qsofa_2_or_more: {lr_pos: 0.49, lr_neg: 1.25, lr_pos_ci: [0.33, 0.93], lr_neg_ci: [0.46, 3.45], group: qsofa, source: "DERIVED as reciprocal of Komatsu 2025 (PMID 40627656) Table 4 bacteremia LRs (non-bacteremia = complement); CI limits are reciprocals"}

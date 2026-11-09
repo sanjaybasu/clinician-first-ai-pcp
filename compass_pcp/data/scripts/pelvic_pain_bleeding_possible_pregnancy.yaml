@@ -1,0 +1,76 @@
+# Illness script: pelvic pain or vaginal bleeding in a person who is, or may be,
+# in early pregnancy (first trimester, location of pregnancy not yet known).
+# Signed by a physician on 2026-10-28. Every value and its table location is listed in
+# docs/clinical/SCRIPT_SOURCES_gi_fever_dka_ob.md. Priors are literature values; a later version replaces them with Waymark claims rates. Thresholds were drafted and accepted at physician review; they are not from a formal decision analysis.
+#
+# All LRs come from one self-assessment questionnaire study (Mimoun 2016) in
+# hospitalized women: 97 ectopic vs 77 intrauterine pregnancies in the training
+# sample (ectopic prevalence 56%, a selected population). The study reports LRs to
+# one decimal place and no CIs for single items.
+#
+# Feature set: the five items that stayed in the Mimoun multivariable model
+# (unilateral pain, pain on coughing, bleeding > 24 h, brown discharge, frequent
+# pad changes) plus anal pain (univariate LR+ 4.6, kept as a rule-in red flag).
+# The other univariate items in Mimoun Table 1 are left out because they did not
+# add independent information in the model. In a smoke test with all 11 items, the
+# product of the univariate LRs moved ectopic pregnancy below T_test, which the
+# validated score (score < 25, LR- 0.2) does not support.
+#
+# Eligibility and gate rules (handled by the lane gate, not by this script):
+#   - A positive pregnancy test, or a missed period with possible pregnancy.
+#   - Hard escalation without Bayesian scoring: fainting, shoulder-tip pain,
+#     soaking one pad or more per hour, dizziness on standing. No sourced
+#     remote LRs were verified for these items (see the sources doc).
+#
+# Known gap: the miscarriage diagnosis has a prior only. The source LRs compare
+# ectopic with all intrauterine pregnancies, which include ongoing viable ones.
+complaint: pelvic_pain_bleeding_possible_pregnancy
+version: "1.0.0"
+lane: undifferentiated_high_risk
+clinical_review:
+  approved_by: "Sanjay Basu, MD, PhD"
+  approved_on: "2026-10-28"
+# must_ask: ectopic pregnancy history red flags; signed 2026-10-28
+must_ask: [unilateral_pelvic_pain, pain_with_cough, anal_pain]
+features:
+  - id: unilateral_pelvic_pain
+    question: "Is the pain mostly on one side of your lower belly?"
+    remote_askable: true
+  - id: pain_with_cough
+    question: "Does the pain get worse when you cough?"
+    remote_askable: true
+  - id: anal_pain
+    question: "Do you have pain in your bottom (around your anus)?"
+    remote_askable: true
+  - id: bleeding_over_24h
+    question: "Have you been bleeding from your vagina for more than 1 day (24 hours)?"
+    remote_askable: true
+  - id: brown_discharge
+    question: "Is the blood or fluid from your vagina brown?"
+    remote_askable: true
+  - id: heavy_bleeding
+    question: "Do you need to change your pad often because of the bleeding?"
+    remote_askable: true   # source item "frequent need to change sanitary towels"; LRs inverted from the "No" row
+diagnoses:
+  - id: ectopic_pregnancy
+    label: "Ectopic pregnancy"
+    cannot_miss: true
+    prior:
+      p: 0.075
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Stein JC et al. Ann Emerg Med 2010;56(6):674-83 (PMID 20828874), abstract: ectopic pregnancy in 152 of 2,057 (7.5%) ED patients at risk for ectopic pregnancy (10 studies)"
+    thresholds: {benefit: 100, harm: 1, test_se: 0.993, test_sp: 0.9, test_harm: 0.05, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs:
+      unilateral_pelvic_pain: {lr_pos: 1.7, lr_neg: 0.5, source: "Mimoun C et al. PLoS One 2016;11(11):e0155054 (PMID 27832075) Table 1, Unilateral pelvic pain: Yes (Se 67.0, Sp 61.1); no CI"}
+      pain_with_cough: {lr_pos: 1.8, lr_neg: 0.7, source: "Mimoun 2016 PLoS One (PMID 27832075) Table 1, Pain during coughing: Yes (Se 49.5, Sp 72.6); no CI"}
+      anal_pain: {lr_pos: 4.6, lr_neg: 0.8, source: "Mimoun 2016 PLoS One (PMID 27832075) Table 1, Anal pain: Yes (Se 18.9, Sp 95.9); no CI"}
+      bleeding_over_24h: {lr_pos: 2.1, lr_neg: 0.7, source: "Mimoun 2016 PLoS One (PMID 27832075) Table 1, Duration of bleeding > 24 hours (Se 48.9, Sp 76.7); no CI"}
+      brown_discharge: {lr_pos: 2.6, lr_neg: 0.6, source: "Mimoun 2016 PLoS One (PMID 27832075) Table 1, Brown discharge: Yes (Se 48.9, Sp 81.3); no CI"}
+      heavy_bleeding: {lr_pos: 0.4, lr_neg: 1.3, source: "DERIVED by inverting Mimoun 2016 (PMID 27832075) Table 1, Frequent need to change sanitary towels: No (LR+ 1.3, LR- 0.4); presence of frequent changes takes the LR- of the No row"}
+  - id: miscarriage
+    label: "Miscarriage (threatened, incomplete, or complete)"
+    cannot_miss: false
+    prior:
+      p: 0.56
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Fisher S et al. Int J Emerg Med 2024;17(1):110 (PMID 39227764), Results: miscarriage in 107 of 192 (56%) women with vaginal bleeding in early pregnancy at three Canadian EDs"
+    # lrs: none verified for miscarriage vs other outcomes. See the sources doc.
+    lrs: {}

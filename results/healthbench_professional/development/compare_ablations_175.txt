@@ -1,0 +1,40 @@
+{
+ "compass_pro - compass_pro_nosearch": {
+  "n": 175,
+  "diff": -0.5,
+  "ci95": [
+   -5.1,
+   3.9
+  ]
+ }
+}
+{
+ "compass_pro - compass_pro_single": {
+  "n": 175,
+  "diff": -3.7,
+  "ci95": [
+   -8.6,
+   0.8
+  ]
+ }
+}
+{
+ "compass_pro - compass_pro_noreview": {
+  "n": 175,
+  "diff": -1.9,
+  "ci95": [
+   -7.1,
+   4.1
+  ]
+ }
+}
+{
+ "compass_pro - compass_pro_edit": {
+  "n": 175,
+  "diff": -1.3,
+  "ci95": [
+   -2.8,
+   0.5
+  ]
+ }
+}

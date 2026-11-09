@@ -1,0 +1,42 @@
+{
+ "compass_pro_full - amie_style": {
+  "n": 350,
+  "diff": 9.0,
+  "ci95": [
+   4.5,
+   13.9
+  ]
+ },
+ "compass_pro_full - mai_dxo_style": {
+  "n": 350,
+  "diff": 13.8,
+  "ci95": [
+   9.0,
+   18.6
+  ]
+ },
+ "compass_pro_full - gpt61sol": {
+  "n": 350,
+  "diff": 13.5,
+  "ci95": [
+   9.6,
+   17.3
+  ]
+ },
+ "compass_pro_full - opus55": {
+  "n": 350,
+  "diff": 14.6,
+  "ci95": [
+   10.0,
+   19.4
+  ]
+ },
+ "compass_pro_full - physician": {
+  "n": 350,
+  "diff": 34.9,
+  "ci95": [
+   28.7,
+   41.4
+  ]
+ }
+}

@@ -1,0 +1,28 @@
+# Illness script template. Copy to <complaint>.yaml and fill every field.
+# The loader rejects any number without a `source`, and rejects a production
+# load until clinical_review.approved_by is set by a physician.
+# Priors come from Waymark claims (cite the query id), not textbook prevalence.
+# LRs come from a cited primary source; put the CI when the source reports one.
+complaint: dysuria
+version: "0.0.0"
+lane: dysuria
+clinical_review:
+  approved_by: null      # physician name
+  approved_on: null      # YYYY-MM-DD
+features:
+  - id: example_feature
+    question: "Plain-language question the LLM will reword for the patient"
+    remote_askable: true          # false for exam, ECG, imaging
+    leak: null                    # P(positive) with none of the diagnoses present; null derives it from LRs
+    cost: 0.0                     # dollars plus delay, state Medicaid fee schedule
+    harm: 0.0                     # 0-1 patient risk or burden
+diagnoses:
+  - id: example_cannot_miss
+    label: "Example cannot-miss diagnosis"
+    cannot_miss: true
+    prior: {p: 0.01, source: "claims query id"}
+    miss_weight: 10               # u_k; default 10 for cannot-miss, 1 otherwise
+    # Either test/treat directly, or the decision-analysis inputs (preferred):
+    thresholds: {benefit: 50, harm: 1, test_se: 0.0, test_sp: 1.0, test_harm: 0.0, source: "decision-analysis memo id"}
+    lrs:
+      example_feature: {lr_pos: 2.0, lr_neg: 0.5, lr_pos_ci: [1.5, 2.7], lr_neg_ci: [0.4, 0.6], group: null, source: "citation"}

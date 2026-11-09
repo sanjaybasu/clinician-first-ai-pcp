@@ -1,0 +1,109 @@
+# Illness script: acute abdominal pain in adults (undifferentiated high-risk lane).
+# Signed by a physician on 2026-10-28. Every value and its table location is listed in
+# docs/clinical/SCRIPT_SOURCES_neuro_back_abd.md. Priors are literature values; a later version replaces them with Waymark claims rates. Thresholds were drafted and accepted at physician review; they are not from a formal decision analysis. The AI takes the history and escalates; it does not treat.
+#
+# Secondary-source caution: the appendicitis LRs are Wagner 1996 (JAMA Rational
+# Clinical Examination) values as reproduced in a textbook table (Chopra 2015);
+# the bowel-obstruction values are Taylor 2013 and Bohner 1998 as quoted in a
+# narrative review (Catena 2019). We could not read the primary tables. No CIs.
+#
+# Groups (only the strongest finding in a group counts):
+#   - rlq: migration of pain to the right lower quadrant and RLQ pain.
+#   - peritoneal: rigidity, rebound tenderness, psoas sign (exam).
+# Other findings have no group.
+#
+# Ectopic pregnancy: no remote history feature has a sourced paired LR (Crochet
+# 2013: every history item had LR+ < 1.5). `pregnancy_possible` is a rule-only
+# must_ask feature with no LR: a "yes" escalates by the red-flag rule (same-day
+# hCG and ultrasound), not by Bayes. The ectopic prior comes from women of
+# reproductive age and is applied to every caller, which overstates it for men
+# and older women. Because ectopic has no remote rule-out feature, its prior
+# sits in the middle zone and the engine DEFERS every abdominal-pain encounter
+# on the first step (see the sources doc, "Engine behavior").
+#
+# Not candidate diagnoses (see the sources doc): abdominal aortic aneurysm (no
+# sourced prior in an abdominal-pain population; palpation LRs are from
+# screening populations), mesenteric ischemia.
+complaint: abdominal_pain
+version: "1.0.0"
+lane: undifferentiated_high_risk
+clinical_review:
+  approved_by: "Sanjay Basu, MD, PhD"
+  approved_on: "2026-10-28"
+# must_ask: appendicitis, ectopic and obstruction history red flags; signed 2026-10-28
+must_ask: [rlq_pain, pregnancy_possible, prior_abdominal_surgery]
+# RLQ pain and prior surgery are common without disease: clinician review; possible pregnancy escalates. signed 2026-10-28
+red_flag_action: {rlq_pain: defer, prior_abdominal_surgery: defer}
+features:
+  - id: migration_to_rlq
+    question: "Did the pain start around your belly button and then move to the lower right side of your belly?"
+    remote_askable: true
+  - id: rlq_pain
+    question: "Is the pain mostly in the lower right side of your belly?"
+    remote_askable: true
+  - id: no_similar_pain_before
+    question: "Is this the first time you have had pain like this?"
+    remote_askable: true
+  - id: fever
+    question: "Do you have a fever? If you have a thermometer, is your temperature 100.4 F or higher?"
+    remote_askable: true   # home thermometer; source studies used measured temperature
+  - id: rigidity_exam
+    question: "Abdominal rigidity on clinician exam"
+    remote_askable: false  # in-person exam
+  - id: rebound_tenderness_exam
+    question: "Rebound tenderness on clinician exam"
+    remote_askable: false  # in-person exam
+  - id: psoas_sign_exam
+    question: "Positive psoas sign on clinician exam"
+    remote_askable: false  # in-person exam
+  - id: pregnancy_possible
+    question: "Could you be pregnant? For example, a late or missed period, a positive home test, or sex without birth control."
+    remote_askable: true   # gate-only red flag; no sourced LR
+  - id: prior_abdominal_surgery
+    question: "Have you ever had surgery on your belly?"
+    remote_askable: true
+  - id: abdominal_distension_exam
+    question: "Abdominal distension on clinician exam"
+    remote_askable: false  # in-person exam
+diagnoses:
+  - id: appendicitis
+    label: "Acute appendicitis"
+    cannot_miss: true
+    prior:
+      p: 0.019
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Viniol A et al. Fam Pract 2014;31(5):517-529 (PMID 24987023), abstract: appendicitis 1.9% of primary-care consultations for abdominal pain"
+    thresholds: {benefit: 30, harm: 1, test_se: 0.95, test_sp: 0.95, test_harm: 0.05, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs:
+      migration_to_rlq: {lr_pos: 3.18, lr_neg: 0.50, group: rlq, source: "Wagner JM et al. JAMA 1996;276(19):1589-1594 (PMID 8918857), as reproduced in Chopra A. Gastroenterology. In: Approach to Internal Medicine. Springer 2015 (PMC7123601, doi:10.1007/978-3-319-11821-5_5), Rational Clinical Examination table, Migration of pain to RLQ; secondary source, no CI"}
+      rlq_pain: {lr_pos: 8.0, lr_neg: 0.15, group: rlq, source: "Wagner 1996 JAMA (PMID 8918857) as reproduced in Chopra 2015 (PMC7123601) table, RLQ pain; secondary source, no CI; table sens 81%/spec 53% do not reproduce LR+ 8.0 (primary reported a range); reviewer must check primary"}
+      no_similar_pain_before: {lr_pos: 1.5, lr_neg: 0.32, source: "Wagner 1996 JAMA (PMID 8918857) as reproduced in Chopra 2015 (PMC7123601) table, No similar pain previously; secondary source, no CI"}
+      fever: {lr_pos: 1.94, lr_neg: 0.58, source: "Wagner 1996 JAMA (PMID 8918857) as reproduced in Chopra 2015 (PMC7123601) table, Fever (physical); secondary source, no CI"}
+      rigidity_exam: {lr_pos: 3.76, lr_neg: 0.82, group: peritoneal, source: "Wagner 1996 JAMA (PMID 8918857) as reproduced in Chopra 2015 (PMC7123601) table, Rigidity; secondary source, no CI"}
+      rebound_tenderness_exam: {lr_pos: 3.7, lr_neg: 0.4, group: peritoneal, source: "Wagner 1996 JAMA (PMID 8918857) as reproduced in Chopra 2015 (PMC7123601) table, Rebound tenderness; secondary source, no CI"}
+      psoas_sign_exam: {lr_pos: 2.38, lr_neg: 0.90, group: peritoneal, source: "Wagner 1996 JAMA (PMID 8918857) as reproduced in Chopra 2015 (PMC7123601) table, Psoas sign; secondary source, no CI"}
+  - id: ectopic_pregnancy
+    label: "Ectopic pregnancy"
+    red_flags: [pregnancy_possible]
+    cannot_miss: true
+    prior:
+      p: 0.0429
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Koksal O et al. World J Emerg Med 2013;4(3):175-178 (PMID 25215114), Results: 68 ectopic pregnancies among 1586 women of reproductive age given a pregnancy test in an ED (4.29%; 60% had abdominal pain)"
+    thresholds: {benefit: 100, harm: 1, test_se: 0.9, test_sp: 0.9, test_harm: 0.02, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs: {}
+  - id: bowel_obstruction
+    label: "Bowel obstruction"
+    cannot_miss: true
+    prior:
+      p: 0.067
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Lameris W et al. BMJ 2009;338:b2431 (PMID 19561056) Table 1: bowel obstruction 68 of 1021 (7%) adults with acute abdominal pain who had imaging in 6 Dutch EDs (pregnancy excluded)"
+    thresholds: {benefit: 30, harm: 1, test_se: 0.9, test_sp: 0.9, test_harm: 0.05, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs:
+      prior_abdominal_surgery: {lr_pos: 3.86, lr_neg: 0.19, source: "DERIVED from sensitivity 85% and specificity 78% for adhesive small bowel obstruction (Taylor MR, Lalani N. Acad Emerg Med 2013;20:528-544, PMID 23758299) as quoted in Catena F et al. World J Emerg Surg 2019;14:20 (PMID 31168315); secondary source, no counts, no CI"}
+      abdominal_distension_exam: {lr_pos: 16.8, lr_neg: 0.27, source: "Bohner H et al. Eur J Surg 1998;164:777-784 (PMID 9840308) as quoted in Catena 2019 World J Emerg Surg (PMID 31168315); secondary source, no CI; Bohner excluded patients with prior abdominal surgery (abstract)"}
+  - id: gastroenteritis
+    label: "Gastroenteritis"
+    cannot_miss: false
+    prior:
+      p: 0.187
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Viniol 2014 Fam Pract (PMID 24987023), abstract: gastroenteritis 7.2-18.7% of primary-care abdominal pain (upper value used)"
+    lrs: {}

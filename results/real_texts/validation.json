@@ -1,0 +1,527 @@
+{
+ "all_match": true,
+ "n_checks": 58,
+ "mismatches": [],
+ "checks": [
+  {
+   "item": "hbpro_test amie_style length_adjusted",
+   "derived": 67.6,
+   "existing": 67.6,
+   "match": true
+  },
+  {
+   "item": "hbpro_test amie_style raw",
+   "derived": 68.0,
+   "existing": 68.0,
+   "match": true
+  },
+  {
+   "item": "hbpro_test amie_style mean_chars",
+   "derived": 2121,
+   "existing": 2121,
+   "match": true
+  },
+  {
+   "item": "hbpro_test compass_pro_full length_adjusted",
+   "derived": 76.7,
+   "existing": 76.7,
+   "match": true
+  },
+  {
+   "item": "hbpro_test compass_pro_full raw",
+   "derived": 78.2,
+   "existing": 78.2,
+   "match": true
+  },
+  {
+   "item": "hbpro_test compass_pro_full mean_chars",
+   "derived": 2496,
+   "existing": 2496,
+   "match": true
+  },
+  {
+   "item": "hbpro_test gpt61sol length_adjusted",
+   "derived": 63.3,
+   "existing": 63.3,
+   "match": true
+  },
+  {
+   "item": "hbpro_test gpt61sol raw",
+   "derived": 66.7,
+   "existing": 66.7,
+   "match": true
+  },
+  {
+   "item": "hbpro_test gpt61sol mean_chars",
+   "derived": 3148,
+   "existing": 3148,
+   "match": true
+  },
+  {
+   "item": "hbpro_test mai_dxo_style length_adjusted",
+   "derived": 65.2,
+   "existing": 65.2,
+   "match": true
+  },
+  {
+   "item": "hbpro_test mai_dxo_style raw",
+   "derived": 66.7,
+   "existing": 66.7,
+   "match": true
+  },
+  {
+   "item": "hbpro_test mai_dxo_style mean_chars",
+   "derived": 2519,
+   "existing": 2519,
+   "match": true
+  },
+  {
+   "item": "hbpro_test opus55 length_adjusted",
+   "derived": 64.0,
+   "existing": 64.0,
+   "match": true
+  },
+  {
+   "item": "hbpro_test opus55 raw",
+   "derived": 71.7,
+   "existing": 71.7,
+   "match": true
+  },
+  {
+   "item": "hbpro_test opus55 mean_chars",
+   "derived": 4620,
+   "existing": 4620,
+   "match": true
+  },
+  {
+   "item": "hbpro_test physician length_adjusted",
+   "derived": 43.2,
+   "existing": 43.2,
+   "match": true
+  },
+  {
+   "item": "hbpro_test physician raw",
+   "derived": 43.5,
+   "existing": 43.5,
+   "match": true
+  },
+  {
+   "item": "hbpro_test physician mean_chars",
+   "derived": 2091,
+   "existing": 2091,
+   "match": true
+  },
+  {
+   "item": "hbpro_test compare compass_pro_full - amie_style",
+   "derived": [
+    350,
+    9.1,
+    [
+     4.5,
+     13.8
+    ]
+   ],
+   "existing": [
+    350,
+    9.1,
+    [
+     4.5,
+     13.8
+    ]
+   ],
+   "match": true
+  },
+  {
+   "item": "hbpro_test compare compass_pro_full - mai_dxo_style",
+   "derived": [
+    350,
+    11.5,
+    [
+     6.8,
+     16.0
+    ]
+   ],
+   "existing": [
+    350,
+    11.5,
+    [
+     6.8,
+     16.0
+    ]
+   ],
+   "match": true
+  },
+  {
+   "item": "hbpro_test compare compass_pro_full - gpt61sol",
+   "derived": [
+    350,
+    13.4,
+    [
+     9.2,
+     17.5
+    ]
+   ],
+   "existing": [
+    350,
+    13.4,
+    [
+     9.2,
+     17.5
+    ]
+   ],
+   "match": true
+  },
+  {
+   "item": "hbpro_test compare compass_pro_full - opus55",
+   "derived": [
+    350,
+    12.7,
+    [
+     8.1,
+     17.1
+    ]
+   ],
+   "existing": [
+    350,
+    12.7,
+    [
+     8.1,
+     17.1
+    ]
+   ],
+   "match": true
+  },
+  {
+   "item": "hbpro_test compare compass_pro_full - physician",
+   "derived": [
+    350,
+    33.5,
+    [
+     28.1,
+     39.6
+    ]
+   ],
+   "existing": [
+    350,
+    33.5,
+    [
+     28.1,
+     39.6
+    ]
+   ],
+   "match": true
+  },
+  {
+   "item": "hbpro_dev compass_pro_edit length_adjusted/raw",
+   "derived": [
+    72.8,
+    74.4
+   ],
+   "existing": [
+    72.8,
+    74.4
+   ],
+   "match": true
+  },
+  {
+   "item": "hbpro_dev amie_style_g61 length_adjusted/raw",
+   "derived": [
+    62.1,
+    61.8
+   ],
+   "existing": [
+    62.1,
+    61.8
+   ],
+   "match": true
+  },
+  {
+   "item": "hbpro_dev mai_dxo_style_g61 length_adjusted/raw",
+   "derived": [
+    62.3,
+    62.7
+   ],
+   "existing": [
+    62.3,
+    62.7
+   ],
+   "match": true
+  },
+  {
+   "item": "hbpro_dev amie_style length_adjusted/raw",
+   "derived": [
+    68.2,
+    69.1
+   ],
+   "existing": [
+    68.2,
+    69.1
+   ],
+   "match": true
+  },
+  {
+   "item": "hbpro_dev mai_dxo_style length_adjusted/raw",
+   "derived": [
+    65.0,
+    67.1
+   ],
+   "existing": [
+    65.0,
+    67.1
+   ],
+   "match": true
+  },
+  {
+   "item": "hbpro_dev gpt61sol length_adjusted/raw",
+   "derived": [
+    64.2,
+    68.3
+   ],
+   "existing": [
+    64.2,
+    68.3
+   ],
+   "match": true
+  },
+  {
+   "item": "hbpro_dev opus55 length_adjusted/raw",
+   "derived": [
+    59.2,
+    67.5
+   ],
+   "existing": [
+    59.2,
+    67.5
+   ],
+   "match": true
+  },
+  {
+   "item": "texts report.json amie_style hazard_sensitivity_weighted",
+   "derived": 0.519,
+   "existing": 0.519,
+   "match": true
+  },
+  {
+   "item": "texts report.json amie_style hazard_sensitivity_ci",
+   "derived": [
+    0.426,
+    0.61
+   ],
+   "existing": [
+    0.426,
+    0.61
+   ],
+   "match": true
+  },
+  {
+   "item": "texts report.json amie_style hazard_sensitivity_unweighted",
+   "derived": 0.519,
+   "existing": 0.519,
+   "match": true
+  },
+  {
+   "item": "texts report.json amie_style escalation_no_hazard_per_1000_weighted",
+   "derived": 156.7,
+   "existing": 156.7,
+   "match": true
+  },
+  {
+   "item": "texts report.json amie_style escalation_no_hazard_ci",
+   "derived": [
+    133.0,
+    184.0
+   ],
+   "existing": [
+    133.0,
+    184.0
+   ],
+   "match": true
+  },
+  {
+   "item": "texts report.json clinician_first hazard_sensitivity_weighted",
+   "derived": 0.709,
+   "existing": 0.709,
+   "match": true
+  },
+  {
+   "item": "texts report.json clinician_first hazard_sensitivity_ci",
+   "derived": [
+    0.609,
+    0.8
+   ],
+   "existing": [
+    0.609,
+    0.8
+   ],
+   "match": true
+  },
+  {
+   "item": "texts report.json clinician_first hazard_sensitivity_unweighted",
+   "derived": 0.709,
+   "existing": 0.709,
+   "match": true
+  },
+  {
+   "item": "texts report.json clinician_first escalation_no_hazard_per_1000_weighted",
+   "derived": 752.1,
+   "existing": 752.1,
+   "match": true
+  },
+  {
+   "item": "texts report.json clinician_first escalation_no_hazard_ci",
+   "derived": [
+    719.0,
+    783.0
+   ],
+   "existing": [
+    719.0,
+    783.0
+   ],
+   "match": true
+  },
+  {
+   "item": "texts report.json mai_dxo_style hazard_sensitivity_weighted",
+   "derived": 0.464,
+   "existing": 0.464,
+   "match": true
+  },
+  {
+   "item": "texts report.json mai_dxo_style hazard_sensitivity_ci",
+   "derived": [
+    0.365,
+    0.558
+   ],
+   "existing": [
+    0.365,
+    0.558
+   ],
+   "match": true
+  },
+  {
+   "item": "texts report.json mai_dxo_style hazard_sensitivity_unweighted",
+   "derived": 0.464,
+   "existing": 0.464,
+   "match": true
+  },
+  {
+   "item": "texts report.json mai_dxo_style escalation_no_hazard_per_1000_weighted",
+   "derived": 178.9,
+   "existing": 178.9,
+   "match": true
+  },
+  {
+   "item": "texts report.json mai_dxo_style escalation_no_hazard_ci",
+   "derived": [
+    153.0,
+    205.0
+   ],
+   "existing": [
+    153.0,
+    205.0
+   ],
+   "match": true
+  },
+  {
+   "item": "texts report.json raw_llm hazard_sensitivity_weighted",
+   "derived": 0.359,
+   "existing": 0.359,
+   "match": true
+  },
+  {
+   "item": "texts report.json raw_llm hazard_sensitivity_ci",
+   "derived": [
+    0.268,
+    0.458
+   ],
+   "existing": [
+    0.268,
+    0.458
+   ],
+   "match": true
+  },
+  {
+   "item": "texts report.json raw_llm hazard_sensitivity_unweighted",
+   "derived": 0.359,
+   "existing": 0.359,
+   "match": true
+  },
+  {
+   "item": "texts report.json raw_llm escalation_no_hazard_per_1000_weighted",
+   "derived": 120.9,
+   "existing": 120.9,
+   "match": true
+  },
+  {
+   "item": "texts report.json raw_llm escalation_no_hazard_ci",
+   "derived": [
+    95.0,
+    147.0
+   ],
+   "existing": [
+    95.0,
+    147.0
+   ],
+   "match": true
+  },
+  {
+   "item": "texts report.json v22 hazard_sensitivity_weighted",
+   "derived": 0.595,
+   "existing": 0.595,
+   "match": true
+  },
+  {
+   "item": "texts report.json v22 hazard_sensitivity_ci",
+   "derived": [
+    0.498,
+    0.687
+   ],
+   "existing": [
+    0.498,
+    0.687
+   ],
+   "match": true
+  },
+  {
+   "item": "texts report.json v22 hazard_sensitivity_unweighted",
+   "derived": 0.595,
+   "existing": 0.595,
+   "match": true
+  },
+  {
+   "item": "texts report.json v22 escalation_no_hazard_per_1000_weighted",
+   "derived": 147.2,
+   "existing": 147.2,
+   "match": true
+  },
+  {
+   "item": "texts report.json v22 escalation_no_hazard_ci",
+   "derived": [
+    120.0,
+    175.0
+   ],
+   "existing": [
+    120.0,
+    175.0
+   ],
+   "match": true
+  },
+  {
+   "item": "texts deployable sens",
+   "derived": 0.578,
+   "existing": 0.578,
+   "match": true
+  },
+  {
+   "item": "texts deployable sens unweighted",
+   "derived": 0.578,
+   "existing": 0.578,
+   "match": true
+  },
+  {
+   "item": "texts deployable nohaz_per1000",
+   "derived": 139.5,
+   "existing": 139.5,
+   "match": true
+  }
+ ]
+}

@@ -1,0 +1,10 @@
+{
+ "compass_pro_full - amie_style": {
+  "n": 100,
+  "diff": 4.0,
+  "ci95": [
+   -2.3,
+   11.0
+  ]
+ }
+}

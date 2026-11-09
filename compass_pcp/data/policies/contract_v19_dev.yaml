@@ -1,0 +1,123 @@
+# COMPASS v19 response contract wording (Paper 2 development). Same as v18, plus screen_check: when the general hazard
+# screen alone rates a conversation "possible emergency" for a possible heart cause (no crisis item, no script
+# escalation), the reply first asks screen_check_question with the screen_check 911 line, instead of sending the
+# person to an emergency room. Approved by S. Basu on 2026-11-06 (the 911 line is his approved wording); he signed the question
+# wording the same day. v18 notes follow.
+# COMPASS v18 response contract wording (Paper 2 development). Same as v10, plus review_followup: when a screen raises
+# a message to clinician review and the reply comes from the general (free-text) lane, this fixed sentence is added at
+# the end, so the reply always tells the patient that the care team has the message. Idea approved by S. Basu on
+# 2026-11-06; wording signed by him the same day. v10 notes follow.
+# COMPASS v10 response contract wording (Paper 2 development). Same as v9, plus complete_self_care and
+# complete_routine_visit: when every complaint's guideline pathway finishes with a self-care or routine-visit
+# disposition, the reply gives that disposition, and the pathway proposals go to the care-team queue for clinician
+# approval. Approved by S. Basu on 2026-11-05. v9 notes follow.
+# COMPASS v9 response contract wording (Paper 2 development). Same as v6, except that possible_emergency says the
+# problem could be an emergency and names the emergency room only: "an emergency room or urgent care" read as same-day care
+# to the blinded urgency classifier. S. Basu signed the possible_emergency wording and the contract_v9 writer
+# instructions, and the ask_open_cannot_miss standing clause, on 2026-11-05; every other section of this file
+# is still unsigned. v6 notes follow.
+# COMPASS v6 response contract wording (Paper 2 development). Same as v5, plus a standing clause on every question asked
+# while a cannot-miss diagnosis is still open, so that a person who stops replying holds a safe disposition
+# (ask_open_cannot_miss). The clause commits the care team to a same-day check-in on non-reply: an operational
+# capability that needs sign-off before any real use.
+# Derived from v4: required referral clauses for engine dispositions, prohibited content,
+# signed fallbacks, and the deterministic-check settings.
+#
+# ######################################################################################################
+# PLACEHOLDER, NOT SIGNED. The physician-signed response contract and checklist replace this file before any
+# case-level review (v4_spec.md, Development and test, step 1).
+# ######################################################################################################
+#
+# referrals: keyed by the v3 engine disposition. `text` is the required clause, copied verbatim into the reply;
+# `position` is "first" (within the first `checks.referral_max_sentences` sentences and before any question mark) or
+# "any". `fallback` is the signed reply sent when a reply still fails the check after one revision.
+version: "0.19.0-dev"
+status: placeholder_unsigned
+signed_by: null
+signed_on: null
+source: "PLACEHOLDER: v4_spec.md A1/A2, pending physician sign-off"
+referrals:
+  escalate:
+    text: "Please call 911 now or go to the nearest emergency room."
+    text_other: "Please call 911 for them now or get them to the nearest emergency room."
+    position: first
+    fallback: "Please call 911 now or go to the nearest emergency room. Do not wait for a reply to this message."
+    fallback_other: "Please call 911 for them now or get them to the nearest emergency room. Do not wait for a reply to this message."
+    source: "PLACEHOLDER"
+  possible_emergency:
+    text: "This could be an emergency. Please go to an emergency room now to get checked."
+    text_other: "This could be an emergency. Please get them to an emergency room now to get checked."
+    position: first
+    fallback: "This could be an emergency. Please go to an emergency room now to get checked. If you cannot get there safely or it gets worse, call 911. A clinician on your care team will review your message."
+    fallback_other: "This could be an emergency. Please get them to an emergency room now to get checked. If they cannot get there safely or it gets worse, call 911. A clinician on the care team will review this message."
+    source: "Signed S. Basu 2026-11-05 (Paper 2 development): possible_emergency wording only"
+  urgent_same_day:
+    text: "From what you describe, please get seen by a clinician today."
+    position: first
+    fallback: "From what you describe, please get seen by a clinician today. A clinician on your care team will review this today. If you feel worse before then, call 911 or go to the nearest emergency room."
+    source: "PLACEHOLDER"
+  ask:
+    text: null
+    position: none
+    fallback: "A clinician on your care team will review your message and reply. If you feel worse, call 911 or go to the nearest emergency room."
+    source: "PLACEHOLDER"
+  ask_open_cannot_miss:
+    text: "If I do not hear back from you, a clinician on your care team will contact you today about this."
+    text_other: "If I do not hear back from you, a clinician on the care team will contact you today about this."
+    position: any
+    fallback: "If I do not hear back from you, a clinician on your care team will contact you today about this. If you feel worse before then, call 911 or go to the nearest emergency room."
+    fallback_other: "If I do not hear back from you, a clinician on the care team will contact you today about this. If they feel worse before then, call 911 or go to the nearest emergency room."
+    source: "Signed S. Basu 2026-11-05 (Paper 2 development): standing clause and same-day check-in commitment"
+  defer:
+    text: "A physician on your care team will review your messages and reply."
+    position: any
+    fallback: "A physician on your care team will review your messages and reply. If you feel worse before then, call 911 or go to the nearest emergency room."
+    source: "PLACEHOLDER"
+  complete:
+    text: "A physician will review this and reply with a plan."
+    position: any
+    fallback: "A physician will review this and reply with a plan. If you feel worse before then, call 911 or go to the nearest emergency room."
+    source: "PLACEHOLDER"
+  screen_check:
+    text: "If you have chest pressure, trouble breathing, or sweating, call 911 now."
+    position: any
+    fallback: "If you have chest pressure, trouble breathing, or sweating, call 911 now. Our care team will be in touch with you soon to follow up."
+    source: "Approved S. Basu 2026-11-06 (Paper 2 development v19): 911 line for a screen-only possible heart emergency"
+  screen_check_question:
+    text: "Do you have any chest pressure or tightness, shortness of breath, or sweating, or does the pain come on when you walk or climb stairs?"
+    position: none
+    fallback: "not used"
+    source: "Signed S. Basu 2026-11-06 (v19); covers the features the screen names as missing (exertion, chest pressure, shortness of breath, sweating; CA-01/CA-02)"
+  review_followup:
+    text: "Our care team will be in touch with you soon to follow up."
+    position: any  # appended at the end by ai_pcp_v4 (review_followup)
+    fallback: "Our care team will be in touch with you soon to follow up."
+    source: "Signed S. Basu 2026-11-06 (Paper 2 development v18): review follow-up sentence"
+  complete_self_care:
+    text: "From what you describe, this can be cared for at home. If it gets worse, or you get new symptoms, contact your care team."
+    position: first
+    fallback: "From what you describe, this can be cared for at home. If it gets worse, or you get new symptoms, contact your care team. If you have trouble breathing or feel very sick, call 911."
+    source: "Approved S. Basu 2026-11-05 (Paper 2 development): disposition from the signed guideline pathway"
+  complete_routine_visit:
+    text: "From what you describe, please make an appointment with your clinician in the next few days."
+    position: first
+    fallback: "From what you describe, please make an appointment with your clinician in the next few days. If it gets worse before then, contact your care team, and if you have trouble breathing or feel very sick, call 911."
+    source: "Approved S. Basu 2026-11-05 (Paper 2 development): disposition from the signed guideline pathway"
+  out_of_engine:
+    text: null
+    position: none
+    fallback: "A clinician on your care team will review your message and reply. If you feel worse, call 911 or go to the nearest emergency room."
+    source: "PLACEHOLDER"
+prohibited:
+  - "telling the person they have a specific condition"
+  - "telling the person to start, stop or change a prescription medicine or its dose"
+  - "clinical thresholds or numbers that are not in the contract or in general label information"
+  - "reassurance that contradicts the required clause or the disposition"
+  - "implying the assessment is complete while it is open"
+page_claim_patterns:
+  - "\\b(has|have|had) been (alerted|paged|notified|contacted)\\b"
+  - "\\b(i|we) (have |just )?(alerted|paged|notified)\\b"
+  - "\\b(is|are) (being )?(alerted|paged|notified)\\b"
+checks:
+  referral_max_sentences: 2
+  question_overlap_min: 0.6

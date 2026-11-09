@@ -1,0 +1,42 @@
+{
+ "released_raw_llm_replies": {
+  "n_released": 2686,
+  "emergency_now": 4,
+  "possible_emergency": 63,
+  "emergency_now_per_1000_released": 1.5
+ },
+ "gate_test": {
+  "call911_paged": [
+   5,
+   5
+  ],
+  "hazard_contact_doctor_or_911_gated": [
+   53,
+   26
+  ]
+ },
+ "weighted_page_share": 0.0143,
+ "weighted_review_share": 0.0176,
+ "classifier_emergency_now_all_replies": {
+  "raw_llm": {
+   "replies": 2847,
+   "emergency_now": 10,
+   "per_1000": 3.5
+  },
+  "v22": {
+   "replies": 2847,
+   "emergency_now": 76,
+   "per_1000": 26.7
+  },
+  "amie_style": {
+   "replies": 2847,
+   "emergency_now": 10,
+   "per_1000": 3.5
+  },
+  "mai_dxo_style": {
+   "replies": 2847,
+   "emergency_now": 16,
+   "per_1000": 5.6
+  }
+ }
+}

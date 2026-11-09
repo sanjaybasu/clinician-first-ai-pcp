@@ -1,0 +1,200 @@
+# Titration-lane gate rules (lanes htn_titration and dm_titration: dose increase or
+# add-on within protocol, pharmacist co-sign). Physician signed 2026-10-28; pharmacist co-sign
+# pending. Do not deploy until both leads sign. Every rule cites a source; the
+# exact supporting statement, URL/DOI, and access date are in
+# docs/clinical/TITRATION_CONTRACEPTION_SOURCES.md.
+#
+# These rules say when a protocol titration step is BLOCKED or HELD. They do not
+# choose the next dose; the protocol does. [DESIGN ASSUMPTION, confirm at sign-off:
+# the titration lane also evaluates refill.yaml for the drug being titrated, so the
+# drug-level contraindications there are not repeated here.]
+#
+# ACC/AHA blood pressure guideline: we could not read the 2025 AHA/ACC guideline
+# (doi:10.1161/HYP.0000000000000249) or the 2017 ACC/AHA guideline in full text
+# (publisher pages returned HTTP 403). No rule cites them. Blood pressure rules cite
+# ADA Standards of Care 2026 Section 10 and KDIGO 2024 instead, so the BP goal
+# sources apply directly to people with diabetes or CKD. See the sources doc,
+# "Omitted items".
+#
+# PREDICATE NAMING CONVENTION (in addition to refill.yaml)
+#   titrate:<class>       the requested action is a dose increase or an add-on of
+#                         <class>. CLOSED WORLD, like rx_class: the builder sets every
+#                         titrate:<class> that is not requested to FALSE. One request
+#                         can set several, e.g. titrate:antihypertensive and
+#                         titrate:ace_inhibitor; titrate:glucose_lowering and
+#                         titrate:semaglutide and titrate:glp1_ra.
+#   bp:at_or_below_individual_goal
+#                         the mean of the readings used for the decision is at or
+#                         below the documented individual goal (ADA 2026 10.4 default
+#                         <130/80 mm Hg). No documented goal -> unknown (holds).
+#   bp:fewer_than_2_readings_on_2_occasions
+#                         the decision rests on fewer than two readings or on one
+#                         occasion only.
+#   vital:sbp_lt_90       as in refill.yaml.
+#   sx:symptomatic_hypotension
+#                         reported lightheadedness, presyncope, syncope, or falls on
+#                         standing since the last change.
+#   delta:creatinine_rise_gt_30pct_after_last_rasi_change
+#                         serum creatinine rose by more than 30% from the pre-change
+#                         value within 4 weeks after the last RASi start or increase.
+#   monitor:no_bmp_2_to_4_weeks_after_last_rasi_change
+#                         no creatinine AND potassium result within 2 to 4 weeks after
+#                         the last RASi start or increase.
+#   glycemia:a1c_at_or_below_individual_goal
+#                         most recent A1C at or below the documented individual goal
+#                         (ADA 2026 6.3a default <7%). No documented goal -> unknown.
+#   hx:glucose_lt_70_since_last_change
+#                         any measured glucose < 70 mg/dL (level 1 or worse) since
+#                         the last change to a glucose-lowering drug.
+#   hx:hypoglycemia_level_2_or_3_since_last_change
+#                         glucose < 54 mg/dL or an event needing assistance since the
+#                         last change.
+#   smbg:fasting_lt_80_since_last_change
+#                         any fasting self-monitored glucose < 80 mg/dL since the
+#                         last change.
+#   glycemia:overbasalization_signs
+#                         clinician- or pharmacist-documented signs listed in ADA 2026
+#                         9.26.
+#   dx:high_hypoglycemia_risk
+#                         a major risk factor or several risk factors in ADA 2026
+#                         Table 6.5, as documented by the care team.
+#   titration:days_on_current_dose_lt_<n>
+#                         fewer than <n> days since the current dose started.
+#   sx:edema_weight_gain_or_dyspnea
+#                         new edema, rapid weight gain, or dyspnea since the last
+#                         change.
+#
+# medication_class in lab_recency equals the <class> in titrate:<class>.
+#
+# LAB PREDICATE WINDOWS: potassium and creatinine for any RASi, MRA, or diuretic
+#   titration: 28 days [LANE POLICY, not from a source; needs sign-off. KDIGO 2024
+#   PP 3.6.2 sets a 2-4 week check AFTER a change, not before one].
+version: "1.0.0"
+clinical_review:
+  physician_approved_by: "Sanjay Basu, MD, PhD"
+  physician_approved_on: "2026-10-28"
+  pharmacist_approved_by: null
+  pharmacist_approved_on: null
+
+rules:
+  # ---- Blood pressure: any antihypertensive increase or add-on ----
+  - id: htn_bp_at_or_below_goal
+    kind: commission
+    when_all: [titrate:antihypertensive, bp:at_or_below_individual_goal]
+    message: "Antihypertensive titration requested but mean BP is at or below the documented goal (or no goal is documented). Hold the increase."
+    source: "ADA Standards of Care 2026, Recommendations 10.3, 10.4, 10.6, and 13.9"
+  - id: htn_bp_not_confirmed
+    kind: commission
+    when_all: [titrate:antihypertensive, bp:fewer_than_2_readings_on_2_occasions]
+    message: "Antihypertensive titration requested on fewer than two readings or one occasion. Hold until BP is confirmed with repeat readings."
+    source: "ADA Standards of Care 2026, Recommendations 10.1 (average of two or more measurements on two or more occasions) and 10.6 (confirmed office-based blood pressure)"
+  - id: htn_symptomatic_hypotension
+    kind: out_of_lane
+    when_all: [titrate:antihypertensive, sx:symptomatic_hypotension]
+    message: "Antihypertensive titration requested with symptomatic hypotension. Do not increase; route to the ordering clinician (dose reduction may be needed)."
+    source: "KDIGO 2024 CKD guideline, Practice Point 3.6.5; ADA Standards of Care 2026, Recommendation 13.9 (relaxed goal for high risk of adverse effects)"
+  - id: nondhp_ccb_titration_sbp_lt_90
+    kind: commission
+    when_all: [titrate:nondhp_ccb, vital:sbp_lt_90]
+    message: "Diltiazem or verapamil increase requested with systolic BP < 90 mm Hg. Label contraindication; hold."
+    source: "Cardizem CD label, Contraindications; verapamil ER label, Contraindications"
+
+  # ---- RAS inhibitors and MRAs ----
+  - id: rasi_titration_potassium_gt_5_5
+    kind: commission
+    when_all: [[titrate:ace_inhibitor, titrate:arb], lab:potassium_gt_5_5]
+    message: "ACE inhibitor/ARB increase requested with potassium > 5.5 mmol/L (or no potassium in 28 days). Hold."
+    source: "KDIGO 2024 CKD guideline, Figure 32 (potassium >5.5 mmol/l) and Practice Point 3.6.2"
+  - id: rasi_titration_creatinine_rise_gt_30pct
+    kind: commission
+    when_all: [[titrate:ace_inhibitor, titrate:arb], delta:creatinine_rise_gt_30pct_after_last_rasi_change]
+    message: "ACE inhibitor/ARB increase requested after creatinine rose > 30% within 4 weeks of the last start or increase. Hold; prescriber review."
+    source: "KDIGO 2024 CKD guideline, Practice Point 3.6.4"
+  - id: rasi_titration_no_bmp_after_last_change
+    kind: commission
+    when_all: [[titrate:ace_inhibitor, titrate:arb], monitor:no_bmp_2_to_4_weeks_after_last_rasi_change]
+    message: "ACE inhibitor/ARB increase requested but creatinine and potassium were not checked 2 to 4 weeks after the last change. Hold and order the labs."
+    source: "KDIGO 2024 CKD guideline, Practice Point 3.6.2; ADA Standards of Care 2026, Section 10 text (monitor creatinine and potassium after uptitration)"
+  - id: rasi_dual_blockade
+    kind: commission
+    when_all:
+      - [titrate:ace_inhibitor, titrate:arb]
+      - [med:ace_inhibitor, med:arb, med:arni, med:direct_renin_inhibitor]
+    message: "Requested ACE inhibitor/ARB titration or add-on would combine RAS inhibitors. ADA and KDIGO: avoid. Block."
+    source: "ADA Standards of Care 2026, Recommendation 10.9; KDIGO 2024 CKD guideline, Recommendation 3.6.4; AGS Beers Criteria 2023, Table 5"
+  - id: rasi_mra_titration_pregnancy_possible
+    kind: commission
+    when_all: [[titrate:ace_inhibitor, titrate:arb, titrate:mra], preg:possible]
+    message: "ACE inhibitor, ARB, or MRA titration requested and pregnancy not excluded. ADA: avoid without reliable contraception. Hold for prescriber."
+    source: "ADA Standards of Care 2026, Recommendation 10.12; lisinopril and Cozaar labels, Boxed Warning"
+  - id: mra_titration_potassium_gt_4_8
+    kind: commission
+    when_all: [titrate:mra, lab:potassium_gt_4_8]
+    message: "MRA increase requested with potassium > 4.8 mmol/L (or none in 28 days). KDIGO protocol increases the dose only at K+ <= 4.8. Hold."
+    source: "KDIGO 2024 CKD guideline, Figure 26 (increase dose at K+ <=4.8 mmol/l; legend: could be used for steroidal MRA)"
+
+  # ---- Diuretics ----
+  - id: diuretic_titration_potassium_below_lln
+    kind: commission
+    when_all: [[titrate:thiazide, titrate:loop_diuretic], ref:potassium_below_lln]
+    message: "Thiazide or loop diuretic increase requested with potassium below the laboratory reference range. Hold; pharmacist review."
+    source: "ADA Standards of Care 2026, Recommendation 10.11 (monitor for hypokalemia with diuretics)"
+
+  # ---- Glucose lowering: any increase or add-on ----
+  - id: dm_titration_a1c_at_or_below_goal
+    kind: commission
+    when_all: [titrate:glucose_lowering, glycemia:a1c_at_or_below_individual_goal]
+    message: "Glucose-lowering titration requested but A1C is at or below the documented goal (or no goal is documented). Hold the increase."
+    source: "ADA Standards of Care 2026, Recommendations 6.3a, 6.5, 6.8, and 13.7a-c"
+  - id: dm_titration_level_2_or_3_hypoglycemia
+    kind: out_of_lane
+    when_all: [titrate:glucose_lowering, hx:hypoglycemia_level_2_or_3_since_last_change]
+    message: "Glucose-lowering titration requested after level 2 or 3 hypoglycemia. ADA: reevaluate the treatment plan. Route to the ordering clinician."
+    source: "ADA Standards of Care 2026, Recommendation 6.19 and Table 6.4 (level definitions)"
+  - id: hypoglycemic_agent_titration_glucose_lt_70
+    kind: commission
+    when_all: [[titrate:basal_insulin, titrate:sulfonylurea], hx:glucose_lt_70_since_last_change]
+    message: "Insulin or sulfonylurea increase requested with a glucose < 70 mg/dL since the last change. Hold; consider deintensification."
+    source: "ADA Standards of Care 2026, Recommendations 6.3c, 6.6, and 6.13; Hypoglycemia section (level 1 definition)"
+  - id: basal_insulin_titration_fasting_lt_80
+    kind: commission
+    when_all: [titrate:basal_insulin, smbg:fasting_lt_80_since_last_change]
+    message: "Basal insulin increase requested with a fasting glucose < 80 mg/dL (below the ADA preprandial goal range) since the last change. Hold."
+    source: "ADA Standards of Care 2026, Table 6.3 (preprandial capillary plasma glucose 80-130 mg/dL)"
+  - id: basal_insulin_titration_overbasalization
+    kind: commission
+    when_all: [titrate:basal_insulin, glycemia:overbasalization_signs]
+    message: "Basal insulin increase requested with signs of overbasalization. ADA: reevaluate rather than increase basal insulin. Hold; pharmacist review."
+    source: "ADA Standards of Care 2026, Recommendation 9.26"
+  - id: hypoglycemic_agent_titration_high_risk
+    kind: commission
+    when_all: [[titrate:basal_insulin, titrate:sulfonylurea], dx:high_hypoglycemia_risk]
+    message: "Insulin or sulfonylurea increase requested for a person at high risk for hypoglycemia. ADA: deintensify or switch class. Hold; pharmacist review."
+    source: "ADA Standards of Care 2026, Recommendations 6.6 and 13.14a; Table 6.5"
+  - id: sulfonylurea_titration_age_ge_65
+    kind: commission
+    when_all: [titrate:sulfonylurea, age_ge_65]
+    message: "Sulfonylurea increase requested in an adult >= 65. Beers 2023: avoid unless substantial barriers to safer agents. Hold; pharmacist review."
+    source: "AGS Beers Criteria 2023, Table 2 (sulfonylureas)"
+  - id: weekly_glp1_titration_lt_4_weeks
+    kind: commission
+    when_all: [[titrate:semaglutide, titrate:dulaglutide], titration:days_on_current_dose_lt_28]
+    message: "Semaglutide or dulaglutide increase requested less than 4 weeks after the current dose started. Label escalation interval is at least 4 weeks. Hold."
+    source: "Ozempic label 2.2; Trulicity label 2.1"
+  - id: liraglutide_titration_lt_1_week
+    kind: commission
+    when_all: [titrate:liraglutide, titration:days_on_current_dose_lt_7]
+    message: "Liraglutide increase requested less than 1 week after the current dose started. Label escalation interval is at least one week. Hold."
+    source: "Victoza label 2.1"
+  - id: pioglitazone_titration_heart_failure_signs
+    kind: out_of_lane
+    when_all: [titrate:pioglitazone, sx:edema_weight_gain_or_dyspnea]
+    message: "Pioglitazone increase requested with new edema, rapid weight gain, or dyspnea. Boxed warning (heart failure). Route to the ordering clinician."
+    source: "Actos label, Boxed Warning (monitor after initiation and after dose increases)"
+
+lab_recency:
+  - id: a1c_before_glucose_titration
+    medication_class: glucose_lowering
+    loinc: ["4548-4", "17856-6", "4549-2"]
+    max_age_days: 92
+    source: "ADA Standards of Care 2026, Recommendation 6.2 (more frequently, e.g., every 3 months, for those not meeting goals or with recent treatment changes)"

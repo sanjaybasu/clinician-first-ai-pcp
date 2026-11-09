@@ -1,0 +1,71 @@
+# COMPASS v5 response contract wording (Paper 2 development). Same as v4 except that a raised urgency tier states a
+# disposition for what the person reports now, instead of only a conditional warning (design/paper2_plan.md, section 2).
+# Derived from v4: required referral clauses for engine dispositions, prohibited content,
+# signed fallbacks, and the deterministic-check settings.
+#
+# ######################################################################################################
+# PLACEHOLDER, NOT SIGNED. The physician-signed response contract and checklist replace this file before any
+# case-level review (v4_spec.md, Development and test, step 1).
+# ######################################################################################################
+#
+# referrals: keyed by the v3 engine disposition. `text` is the required clause, copied verbatim into the reply;
+# `position` is "first" (within the first `checks.referral_max_sentences` sentences and before any question mark) or
+# "any". `fallback` is the signed reply sent when a reply still fails the check after one revision.
+version: "0.5.0-dev"
+status: placeholder_unsigned
+signed_by: null
+signed_on: null
+source: "PLACEHOLDER: v4_spec.md A1/A2, pending physician sign-off"
+referrals:
+  escalate:
+    text: "Please call 911 now or go to the nearest emergency room."
+    text_other: "Please call 911 for them now or get them to the nearest emergency room."
+    position: first
+    fallback: "Please call 911 now or go to the nearest emergency room. Do not wait for a reply to this message."
+    fallback_other: "Please call 911 for them now or get them to the nearest emergency room. Do not wait for a reply to this message."
+    source: "PLACEHOLDER"
+  possible_emergency:
+    text: "From what you describe, please get checked in person today at an emergency room or urgent care."
+    text_other: "From what you describe, please get them checked in person today at an emergency room or urgent care."
+    position: first
+    fallback: "From what you describe, please get checked in person today at an emergency room or urgent care. If it gets worse, call 911 now. A clinician on your care team will review your message."
+    fallback_other: "From what you describe, please get them checked in person today at an emergency room or urgent care. If it gets worse, call 911 now. A clinician on the care team will review this message."
+    source: "PLACEHOLDER"
+  urgent_same_day:
+    text: "From what you describe, please get seen by a clinician today."
+    position: first
+    fallback: "From what you describe, please get seen by a clinician today. A clinician on your care team will review this today. If you feel worse before then, call 911 or go to the nearest emergency room."
+    source: "PLACEHOLDER"
+  ask:
+    text: null
+    position: none
+    fallback: "A clinician on your care team will review your message and reply. If you feel worse, call 911 or go to the nearest emergency room."
+    source: "PLACEHOLDER"
+  defer:
+    text: "A physician on your care team will review your messages and reply."
+    position: any
+    fallback: "A physician on your care team will review your messages and reply. If you feel worse before then, call 911 or go to the nearest emergency room."
+    source: "PLACEHOLDER"
+  complete:
+    text: "A physician will review this and reply with a plan."
+    position: any
+    fallback: "A physician will review this and reply with a plan. If you feel worse before then, call 911 or go to the nearest emergency room."
+    source: "PLACEHOLDER"
+  out_of_engine:
+    text: null
+    position: none
+    fallback: "A clinician on your care team will review your message and reply. If you feel worse, call 911 or go to the nearest emergency room."
+    source: "PLACEHOLDER"
+prohibited:
+  - "telling the person they have a specific condition"
+  - "telling the person to start, stop or change a prescription medicine or its dose"
+  - "clinical thresholds or numbers that are not in the contract or in general label information"
+  - "reassurance that contradicts the required clause or the disposition"
+  - "implying the assessment is complete while it is open"
+page_claim_patterns:
+  - "\\b(has|have|had) been (alerted|paged|notified|contacted)\\b"
+  - "\\b(i|we) (have |just )?(alerted|paged|notified)\\b"
+  - "\\b(is|are) (being )?(alerted|paged|notified)\\b"
+checks:
+  referral_max_sentences: 2
+  question_overlap_min: 0.6

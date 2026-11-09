@@ -1,0 +1,114 @@
+# Illness script: low back pain in adults (undifferentiated high-risk lane).
+# Signed by a physician on 2026-10-28. Every value and its table location is listed in
+# docs/clinical/SCRIPT_SOURCES_neuro_back_abd.md. Priors are literature values; a later version replaces them with Waymark claims rates. Thresholds were drafted and accepted at physician review; they are not from a formal decision analysis. The AI takes the history and escalates; it does not treat.
+#
+# Groups (only the strongest finding in a group counts):
+#   - fracture_flags: age > 70, significant trauma, prolonged corticosteroids.
+#     Henschke 2009 reports LR+ 15.48 for 2 positive flags, less than the
+#     product of the single-flag LR+ values, so the flags are not independent.
+#   - cancer_minor: age >= 50, unexplained weight loss, no improvement after
+#     1 month, no relief with bed rest (all Deyo 1988, same cohort).
+#   - sacral_exam: rectal tone, perianal sensation, post-void residual.
+# Previous history of cancer has no group.
+#
+# Known gaps (see the sources doc, "Unverified and omitted"):
+#   - cauda equina syndrome has NO sourced remote LRs. `bladder_bowel_change`
+#     and `saddle_numbness` are rule-only must_ask features with no LR: a "yes"
+#     escalates by the red-flag rule, not by Bayes.
+#   - spinal infection (epidural abscess, osteomyelitis) and abdominal aortic
+#     aneurysm are NOT candidate diagnoses: no sourced prior or paired LRs in a
+#     back-pain population were verified.
+complaint: low_back_pain
+version: "1.0.0"
+lane: undifferentiated_high_risk
+clinical_review:
+  approved_by: "Sanjay Basu, MD, PhD"
+  approved_on: "2026-10-28"
+# must_ask: fracture, malignancy and cauda equina history red flags; signed 2026-10-28
+must_ask: [significant_trauma, prolonged_steroids, previous_cancer, bladder_bowel_change, saddle_numbness]
+# Fracture and cancer flags need clinician review and imaging, not emergency care; CES flags escalate. signed 2026-10-28
+red_flag_action: {significant_trauma: defer, prolonged_steroids: defer, previous_cancer: defer}
+features:
+  - id: age_over_70
+    question: "Are you older than 70?"
+    remote_askable: true   # can be filled from enrollment data
+  - id: significant_trauma
+    question: "Did this back pain start after a hard fall, a car crash, or another big hit? If you are older, does a small fall count here?"
+    remote_askable: true
+  - id: prolonged_steroids
+    question: "Have you taken steroid pills, like prednisone, for a long time (many weeks or months)?"
+    remote_askable: true
+  - id: previous_cancer
+    question: "Have you ever had cancer?"
+    remote_askable: true
+  - id: age_50_or_older
+    question: "Are you 50 or older?"
+    remote_askable: true   # can be filled from enrollment data
+  - id: unexplained_weight_loss
+    question: "Have you lost weight without trying?"
+    remote_askable: true
+  - id: not_improved_1_month
+    question: "Have you had this back pain for more than a month without it getting better?"
+    remote_askable: true
+  - id: bed_rest_no_relief
+    question: "Have you tried lying down or resting in bed, and it did not ease the pain?"
+    remote_askable: true
+  - id: bladder_bowel_change
+    question: "Since the back pain started, have you been unable to pee, had trouble starting to pee, or leaked pee or poop without meaning to?"
+    remote_askable: true   # gate-only red flag; no sourced LR
+  - id: saddle_numbness
+    question: "Is the skin numb between your legs, around your private parts or bottom?"
+    remote_askable: true   # gate-only red flag; no sourced LR
+  - id: rectal_tone_abnormal
+    question: "Reduced voluntary rectal tone on clinician exam"
+    remote_askable: false  # in-person exam
+  - id: perianal_sensation_abnormal
+    question: "Reduced perianal sensation on clinician exam"
+    remote_askable: false  # in-person exam
+  - id: post_void_residual_abnormal
+    question: "Abnormal post-void residual on bladder scan"
+    remote_askable: false  # in-person test
+diagnoses:
+  - id: vertebral_fracture
+    label: "Vertebral fracture"
+    cannot_miss: true
+    prior:
+      p: 0.0068
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Henschke N et al. Arthritis Rheum 2009;60(10):3072-3080 (PMID 19790051), as tabulated in Downie A et al. BMJ 2013;347:f7095 (PMID 24335669) appendix Table E: 8 fractures in 1172 primary-care patients with acute LBP"
+    thresholds: {benefit: 5, harm: 1, test_se: 0.9, test_sp: 0.95, test_harm: 0.02, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs:
+      age_over_70: {lr_pos: 11.19, lr_neg: 0.52, lr_pos_ci: [5.33, 23.51], lr_neg_ci: [0.26, 1.05], group: fracture_flags, source: "Downie 2013 BMJ (PMID 24335669) appendix Table E, Age >70 years, Henschke 2009 (primary care)"}
+      significant_trauma: {lr_pos: 10.03, lr_neg: 0.77, lr_pos_ci: [2.87, 35.13], lr_neg_ci: [0.52, 1.15], group: fracture_flags, source: "Downie 2013 BMJ (PMID 24335669) appendix Table E, Significant trauma, Henschke 2009 (major in young, minor in elderly)"}
+      prolonged_steroids: {lr_pos: 48.5, lr_neg: 0.75, lr_pos_ci: [11.48, 204.99], lr_neg_ci: [0.51, 1.12], group: fracture_flags, source: "Downie 2013 BMJ (PMID 24335669) appendix Table E, Prolonged use steroid, Henschke 2009"}
+  - id: spinal_malignancy
+    label: "Spinal malignancy (primary or metastatic)"
+    cannot_miss: true
+    prior:
+      p: 0.0066
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Deyo RA, Diehl AK. J Gen Intern Med 1988 (walk-in clinic, back pain as primary complaint), as tabulated in Downie 2013 BMJ (PMID 24335669) appendix Table G: 13 cancers in 1975 patients"
+    thresholds: {benefit: 10, harm: 1, test_se: 0.95, test_sp: 0.9, test_harm: 0.05, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs:
+      previous_cancer: {lr_pos: 15.27, lr_neg: 0.71, lr_pos_ci: [6.38, 36.55], lr_neg_ci: [0.49, 1.02], source: "Downie 2013 BMJ (PMID 24335669) appendix Table G, Previous history of cancer, Deyo 1988 (primary care)"}
+      age_50_or_older: {lr_pos: 2.65, lr_neg: 0.32, lr_pos_ci: [1.95, 3.6], lr_neg_ci: [0.12, 0.88], group: cancer_minor, source: "Downie 2013 BMJ (PMID 24335669) appendix Table G, Age >50 years, Deyo 1988"}
+      unexplained_weight_loss: {lr_pos: 2.59, lr_neg: 0.90, lr_pos_ci: [0.72, 9.39], lr_neg_ci: [0.71, 1.13], group: cancer_minor, source: "Downie 2013 BMJ (PMID 24335669) appendix Table G, Unexplained weight loss, Deyo 1988"}
+      not_improved_1_month: {lr_pos: 3.08, lr_neg: 0.77, lr_pos_ci: [1.35, 7.04], lr_neg_ci: [0.54, 1.11], group: cancer_minor, source: "Downie 2013 BMJ (PMID 24335669) appendix Table G, Not improved after 1 month, Deyo 1988"}
+      bed_rest_no_relief: {lr_pos: 1.67, lr_neg: 0.22, lr_pos_ci: [1.24, 2.25], lr_neg_ci: [0.02, 3.02], group: cancer_minor, source: "Downie 2013 BMJ (PMID 24335669) appendix Table G, Tried bed rest with no relief, Deyo 1988"}
+  - id: cauda_equina_syndrome
+    label: "Cauda equina syndrome"
+    red_flags: [bladder_bowel_change, saddle_numbness]
+    cannot_miss: true
+    prior:
+      p: 0.0008
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Hoeritzauer I et al. J Neurosurg Spine 2020;32(6):832-841 (PMID 32059184), abstract: CES in 0.08% of patients with low back pain presenting to primary care (1 study)"
+    thresholds: {benefit: 100, harm: 1, test_se: 0.95, test_sp: 0.95, test_harm: 0.05, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs:
+      rectal_tone_abnormal: {lr_pos: 5.56, lr_neg: 0.23, lr_pos_ci: [3.28, 9.42], lr_neg_ci: [0.07, 0.81], group: sacral_exam, source: "DERIVED from Zusman NL et al. Global Spine J 2022;12(2):209-214 (PMID 32935582) Table 1 counts TP8 FN2 FP18 TN107 (missing excluded); ED patients with back pain AND bowel/bladder symptoms; log-method 95% CI"}
+      perianal_sensation_abnormal: {lr_pos: 1.87, lr_neg: 0.59, lr_pos_ci: [1.06, 3.30], lr_neg_ci: [0.27, 1.27], group: sacral_exam, source: "DERIVED from Zusman 2022 (PMID 32935582) Table 1 counts TP6 FN4 FP41 TN87; log-method 95% CI"}
+      post_void_residual_abnormal: {lr_pos: 1.96, lr_neg: 0.34, lr_pos_ci: [1.30, 2.96], lr_neg_ci: [0.10, 1.18], group: sacral_exam, source: "DERIVED from Zusman 2022 (PMID 32935582) Table 1 counts TP8 FN2 FP31 TN45 (missing excluded); log-method 95% CI"}
+  - id: nonspecific_mechanical_lbp
+    label: "Non-specific (mechanical) low back pain"
+    cannot_miss: false
+    prior:
+      p: 0.99
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Henschke 2009 Arthritis Rheum (PMID 19790051), abstract: 11 of 1172 (0.9%) had serious pathology; complement 99.1% rounded to 0.99"
+    lrs: {}

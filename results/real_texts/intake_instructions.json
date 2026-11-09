@@ -1,0 +1,20 @@
+{
+ "source": "paper2_dev/intake_eval/episodes.jsonl; paper.disposition_check (final policy)",
+ "arms": {
+  "intake": {
+   "messages": 180,
+   "any_instruction": 3,
+   "unconditional_instruction": 0
+  },
+  "amie_style": {
+   "messages": 219,
+   "any_instruction": 141,
+   "unconditional_instruction": 23
+  },
+  "mai_dxo_style": {
+   "messages": 216,
+   "any_instruction": 167,
+   "unconditional_instruction": 61
+  }
+ }
+}

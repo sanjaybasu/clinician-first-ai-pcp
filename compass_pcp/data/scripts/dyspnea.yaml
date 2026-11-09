@@ -1,0 +1,137 @@
+# Illness script: shortness of breath (dyspnea) in adults (undifferentiated high-risk lane).
+# Signed by a physician on 2026-10-28. Every value and its table location is listed in
+# docs/clinical/SCRIPT_SOURCES_cardiopulm.md. Priors are literature values; a later version replaces them with Waymark claims rates. Thresholds were drafted and accepted at physician review; they are not from a formal decision analysis.
+#
+# The AI takes the history and escalates. Heart failure, PE, and pneumonia each
+# need an exam, natriuretic peptide, D-dimer, oxygen saturation, or chest X-ray to
+# rule out, so those features are remote_askable: false and the engine defers.
+#
+# Reference conditions and populations differ by source:
+#   - heart_failure: Devroey 2011 (primary care, new suspected HF, confirmed at
+#     1 month; DERIVED from counts); history_heart_failure from the Wang 2005
+#     abstract and history_mi from Martindale 2016 as reproduced in Long 2019
+#     Table 2 (both ED dyspnea).
+#   - pulmonary_embolism: Courtney 2010, VTE (PE or DVT) in ED patients tested for PE.
+#   - pneumonia: Htun 2019 meta-analysis, radiographic pneumonia in primary-care
+#     adults with acute cough or LRTI symptoms.
+#   - asthma_copd_exacerbation: prior only; no sourced LRs.
+#
+# Not candidate diagnoses (no sourced LRs; see sources doc): ACS presenting as
+# dyspnea, pneumothorax, anaphylaxis, upper airway obstruction.
+# Hard escalation rules for the lane gate (not Bayesian): cannot speak in full
+# sentences, blue lips, chest pain with the breathlessness, fainting, stridor.
+complaint: dyspnea
+version: "1.0.0"
+lane: undifferentiated_high_risk
+clinical_review:
+  approved_by: "Sanjay Basu, MD, PhD"
+  approved_on: "2026-10-28"
+# must_ask: red flags for heart failure, PE, and pneumonia; signed 2026-10-28
+must_ask: [history_heart_failure, orthopnea, history_vte, unilateral_leg_swelling, recent_surgery, fever_history]
+features:
+  # Heart failure
+  - id: history_heart_failure
+    question: "Has a doctor ever told you that you have heart failure (a weak heart)?"
+    remote_askable: true   # patient report or record
+  - id: history_mi
+    question: "Have you ever had a heart attack?"
+    remote_askable: true
+  - id: orthopnea
+    question: "Do you get short of breath when you lie flat, so that you need extra pillows to sleep?"
+    remote_askable: true
+  - id: pnd
+    question: "Do you wake up at night gasping for air and need to sit up or stand to breathe?"
+    remote_askable: true
+  - id: dyspnea_on_exertion
+    question: "Do you get short of breath when you walk or climb stairs?"
+    remote_askable: true
+  - id: ankle_swelling
+    question: "Are both of your ankles or legs swollen?"
+    remote_askable: true   # patient report; source used clinician exam for peripheral edema
+  # Pulmonary embolism
+  - id: history_vte
+    question: "Have you ever had a blood clot in your leg or lung?"
+    remote_askable: true
+  - id: unilateral_leg_swelling
+    question: "Is one of your legs more swollen than the other right now?"
+    remote_askable: true   # patient report; source used clinician assessment
+  - id: recent_surgery
+    question: "Have you had surgery with general anesthesia (put to sleep) in the past 4 weeks?"
+    remote_askable: true
+  - id: immobilization
+    question: "In the past few days, have you been stuck in bed, unable to move a limb, or had a leg in a cast?"
+    remote_askable: true
+  - id: active_cancer
+    question: "Are you being treated for cancer right now (chemotherapy, radiation, or comfort care)?"
+    remote_askable: true
+  - id: hemoptysis
+    question: "Have you coughed up blood?"
+    remote_askable: true
+  - id: hypoxemia
+    question: "Oxygen saturation below 95% on pulse oximetry"
+    remote_askable: false  # measured
+  # Pneumonia
+  - id: fever_history
+    question: "Have you had a fever or felt hot and shivery with this illness?"
+    remote_askable: true
+  - id: cough
+    question: "Do you have a cough?"
+    remote_askable: true
+  - id: sputum
+    question: "Are you coughing up mucus (phlegm)?"
+    remote_askable: true
+  - id: chest_pain
+    question: "Do you have chest pain with this illness?"
+    remote_askable: true
+  - id: temperature_38
+    question: "Body temperature of 38.0 C (100.4 F) or higher, measured"
+    remote_askable: false  # measured; the reviewer can allow a home thermometer reading
+diagnoses:
+  - id: heart_failure
+    label: "Heart failure (new or worse)"
+    cannot_miss: true
+    prior:
+      p: 0.041
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Frese T et al. J Clin Med Res 2011;3(5):239-246 (PMID 22383911) Table 5, heart failure 4.09% of Transition Project primary-care initial consultations for new dyspnea (n = 3743)"
+    thresholds: {benefit: 20, harm: 1, test_se: 0.93, test_sp: 0.60, test_harm: 0.05, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs:
+      history_heart_failure: {lr_pos: 5.8, lr_neg: 0.45, lr_pos_ci: [4.1, 8.0], lr_neg_ci: [0.38, 0.53], source: "Wang CS et al. JAMA 2005;294(15):1944-1956 (PMID 16234501) Abstract, past history of heart failure; ED dyspnea"}
+      history_mi: {lr_pos: 2.1, lr_neg: 0.82, lr_pos_ci: [1.8, 2.5], lr_neg_ci: [0.76, 0.89], source: "Long B et al. West J Emerg Med 2019;20(6):875-884 (PMID 31738714) Table 2, History of MI, values attributed to Martindale JL et al. Acad Emerg Med 2016;23(3):223-242 (PMID 26910112); ED dyspnea"}
+      orthopnea: {lr_pos: 2.12, lr_neg: 0.69, lr_pos_ci: [1.61, 2.80], lr_neg_ci: [0.62, 0.76], group: hf_nocturnal, source: "DERIVED from Devroey D, Van Casteren V. Vasc Health Risk Manag 2011;7:591-596 (PMID 21966224) Table 1 counts TP258 FN299 FP43 TN154; primary care, new suspected HF; log-method 95% CI"}
+      pnd: {lr_pos: 2.30, lr_neg: 0.84, lr_pos_ci: [1.51, 3.49], lr_neg_ci: [0.78, 0.90], group: hf_nocturnal, source: "DERIVED from Devroey 2011 (PMID 21966224) Table 1 counts, Nocturnal dyspnea TP143 FN414 FP22 TN175; log-method 95% CI"}
+      dyspnea_on_exertion: {lr_pos: 1.78, lr_neg: 0.53, lr_pos_ci: [1.47, 2.15], lr_neg_ci: [0.45, 0.62], source: "DERIVED from Devroey 2011 (PMID 21966224) Table 1 counts, Breathlessness on exercise TP372 FN185 FP74 TN123; log-method 95% CI"}
+      ankle_swelling: {lr_pos: 1.93, lr_neg: 0.49, lr_pos_ci: [1.58, 2.34], lr_neg_ci: [0.42, 0.58], source: "DERIVED from Devroey 2011 (PMID 21966224) Table 1 counts, Peripheral edema TP381 FN176 FP70 TN127; clinician exam in source; log-method 95% CI"}
+  - id: pulmonary_embolism
+    label: "Pulmonary embolism"
+    cannot_miss: true
+    prior:
+      p: 0.0035
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Frese 2011 J Clin Med Res (PMID 22383911) Table 5, pulmonary embolism 0.35% of Transition Project initial consultations for new dyspnea (n = 3743)"
+    thresholds: {benefit: 50, harm: 1, test_se: 0.97, test_sp: 0.40, test_harm: 0.05, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs:
+      history_vte: {lr_pos: 2.86, lr_neg: 0.80, lr_pos_ci: [2.46, 3.33], lr_neg_ci: [0.76, 0.85], source: "DERIVED from Courtney DM et al. Ann Emerg Med 2010;55(4):307-315.e1 (PMID 20045580) web-appendix table counts TP155 FN413 FP703 TN6669; VTE outcome; log-method 95% CI"}
+      unilateral_leg_swelling: {lr_pos: 3.05, lr_neg: 0.83, lr_pos_ci: [2.58, 3.60], lr_neg_ci: [0.79, 0.87], source: "DERIVED from Courtney 2010 (PMID 20045580) web-appendix counts TP135 FN433 FP575 TN6797; log-method 95% CI"}
+      recent_surgery: {lr_pos: 2.57, lr_neg: 0.90, lr_pos_ci: [2.07, 3.19], lr_neg_ci: [0.87, 0.93], group: vte_provoked, source: "DERIVED from Courtney 2010 (PMID 20045580) web-appendix counts TP86 FN482 FP434 TN6938; log-method 95% CI"}
+      immobilization: {lr_pos: 2.54, lr_neg: 0.85, lr_pos_ci: [2.14, 3.02], lr_neg_ci: [0.82, 0.89], group: vte_provoked, source: "DERIVED from Courtney 2010 (PMID 20045580) web-appendix counts TP125 FN443 FP638 TN6734; log-method 95% CI"}
+      active_cancer: {lr_pos: 2.73, lr_neg: 0.90, lr_pos_ci: [2.20, 3.40], lr_neg_ci: [0.87, 0.93], source: "DERIVED from Courtney 2010 (PMID 20045580) web-appendix counts TP85 FN483 FP404 TN6968; log-method 95% CI"}
+      hemoptysis: {lr_pos: 1.25, lr_neg: 0.99, lr_pos_ci: [0.80, 1.97], lr_neg_ci: [0.98, 1.01], source: "DERIVED from Courtney 2010 (PMID 20045580) web-appendix counts TP20 FN548 FP207 TN7165; log-method 95% CI"}
+      hypoxemia: {lr_pos: 2.39, lr_neg: 0.70, lr_pos_ci: [2.14, 2.66], lr_neg_ci: [0.65, 0.75], source: "DERIVED from Courtney 2010 (PMID 20045580) web-appendix counts TP240 FN327 FP1304 TN6045; log-method 95% CI"}
+  - id: pneumonia
+    label: "Community-acquired pneumonia"
+    cannot_miss: true
+    prior:
+      p: 0.026
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Frese 2011 J Clin Med Res (PMID 22383911) Table 5, pneumonia 2.64% of Transition Project initial consultations for new dyspnea (n = 3743)"
+    thresholds: {benefit: 20, harm: 1, test_se: 0.90, test_sp: 0.80, test_harm: 0.05, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs:
+      fever_history: {lr_pos: 1.41, lr_neg: 0.70, lr_pos_ci: [1.15, 1.78], lr_neg_ci: [0.59, 0.82], source: "Htun TP et al. Sci Rep 2019;9(1):7600 (PMID 31110214) Table 2, Fever (symptom), 4 studies"}
+      cough: {lr_pos: 1.36, lr_neg: 0.36, lr_pos_ci: [1.03, 2.10], lr_neg_ci: [0.15, 0.78], group: pna_cough, source: "Htun 2019 (PMID 31110214) Table 2, Cough, 6 studies"}
+      sputum: {lr_pos: 1.27, lr_neg: 0.72, lr_pos_ci: [0.90, 1.72], lr_neg_ci: [0.39, 1.13], group: pna_cough, source: "Htun 2019 (PMID 31110214) Table 2, Sputum, 5 studies"}
+      chest_pain: {lr_pos: 1.37, lr_neg: 0.79, lr_pos_ci: [1.14, 1.60], lr_neg_ci: [0.62, 0.93], source: "Htun 2019 (PMID 31110214) Table 2, Chest pain, 7 studies"}
+      temperature_38: {lr_pos: 3.21, lr_neg: 0.68, lr_pos_ci: [2.36, 4.23], lr_neg_ci: [0.53, 0.82], source: "Htun 2019 (PMID 31110214) Table 2, Temp >= 38 C (sign), 7 studies"}
+  - id: asthma_copd_exacerbation
+    label: "Asthma or COPD exacerbation"
+    cannot_miss: false
+    prior:
+      p: 0.13
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Frese 2011 J Clin Med Res (PMID 22383911) Table 5, bronchial asthma 10.96% plus COPD 2.19% of Transition Project initial consultations for new dyspnea (n = 3743); sum 13.15%"

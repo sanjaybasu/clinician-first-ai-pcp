@@ -1,0 +1,52 @@
+# Paper 2 development pathway v20 (S. Basu option (a), 2026-11-06): node complete_high_risk sends a completed workup in
+# the NICE high-risk group, or a person who feels very unwell, to same-day care. Earlier notes follow.
+# Guideline pathway: sore throat in adults (URI lane).
+# Paper 2 development pathway, signed by S. Basu on 2026-11-05 (design/pathway_schema.md). Every source resolved in PubMed on 2026-11-04;
+# section-level support for each node stays unverified until the signing physician checks the cited section.
+pathway: sore_throat
+version: "0.2.0-dev"
+script: sore_throat@1.3.0-dev
+status: signed
+signed_by: "S. Basu 2026-11-05"
+sources:
+  nice_ng84:
+    citation: "NICE. Sore throat (acute): antimicrobial prescribing. NICE guideline NG84. 26 January 2018. Recommendation 1.1.12 (systemically very unwell, more serious illness, or high risk of complications: immediate antibiotic)"
+    url: "https://www.nice.org.uk/guidance/ng84/chapter/Recommendations"
+  nice_ng120:
+    citation: "NICE. Cough (acute): antimicrobial prescribing. NICE guideline NG120. 7 February 2019. Recommendations 1.1.15-1.1.16 (higher risk of complications; consider an immediate or back-up antibiotic, ideally at a face-to-face clinical examination)"
+    url: "https://www.nice.org.uk/guidance/ng120/chapter/Recommendations"
+  basu_2026_11_06_same_day:
+    citation: "S. Basu decision of 2026-11-06 (option a): a person in the NICE high-risk group, or who describes being very unwell, gets same-day clinician care; NICE names the group but sets no time frame"
+  shulman2012:
+    citation: "Shulman ST, et al. Clinical practice guideline for the diagnosis and management of group A streptococcal pharyngitis: 2012 update by the IDSA. Clin Infect Dis. 2012;55(10):e86-e102"
+    pmid: "22965026"
+  harris2016:
+    citation: "Harris AM, et al. Appropriate antibiotic use for acute respiratory tract infection in adults: advice for high-value care from the ACP and the CDC. Ann Intern Med. 2016;164(6):425-434"
+    pmid: "26785402"
+  judgment:
+    citation: "Development judgment (conservative choice where no cited source sets the level)"
+nodes:
+  - id: escalate
+    when: {kinds: [escalate]}
+    disposition: {level: emergency_now, within_hours: 0}
+    source: [judgment]
+  - id: open
+    when: {kinds: [ask]}
+    standing: {level: clinician_review, within_hours: 24}
+    source: [judgment]
+  - id: defer
+    when: {kinds: [defer]}
+    disposition: {level: clinician_review, within_hours: 24}
+    source: [judgment]
+  - id: complete_high_risk
+    when: {kinds: [complete], red_flags_any: [high_risk_condition, older_high_risk, very_unwell]}
+    disposition: {level: urgent_same_day, within_hours: 24}
+    proposals:
+      - {kind: medication_review, name: "NICE high-risk group or very unwell: same-day face-to-face examination; consider an immediate or back-up antibiotic per NICE NG84", source: [nice_ng84]}
+    source: [basu_2026_11_06_same_day, nice_ng120, nice_ng84]
+  - id: complete
+    when: {kinds: [complete]}
+    disposition: {level: self_care}
+    proposals:
+      - {kind: lab, name: "Rapid antigen detection test for group A strep only if features suggest strep (fever, tonsillar exudate, tender anterior cervical nodes, no cough); no antibiotics without a positive test", source: [shulman2012, harris2016]}
+    source: [shulman2012, harris2016]

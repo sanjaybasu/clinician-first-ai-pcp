@@ -1,0 +1,6 @@
+85fee3a6b7a16c1fa8e7795442c14213b0791a774c723f4d12bb141156eb5c49  compass_pcp/arms/pro.py
+efb616f0046028b2bb72674c34415b7981a4ef2cc2c883351f1af760bcb0ea47  compass_pcp/arms/openai_reasoning.py
+6387f4cc3ef3c8578ab4f1ca08e0993ef7c6c7f69a6dea34bb9a74f736290f23  compass_pcp/arms/baselines.py
+dff52c03bc0134629bbc552c4fcd4c63d0ff1385d9c34561f13fd619e50fa172  compass_pcp/arms/llm.py
+dea74792b90776f0c3df1e50eb609db5e2d1995a72d8da5946f7b0aedbcb6775  paper/hbpro.py
+Sun Nov  8 23:20:46 UTC 2026

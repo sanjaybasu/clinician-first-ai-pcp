@@ -1,0 +1,26 @@
+# COMPASS v23 urgent-page route (development). DRAFT: not signed.
+# Policy (S. Basu, 2026-11-08, chat): FDA expects possible 911/988 situations to go to a clinician first, not to an
+# automatic instruction. Waymark practice: page the clinician, and tell the patient this might be urgent and our
+# physician will call back; if things get worse, call 911/988, because this text line is not an emergency service.
+# This route replaces the automatic emergency_911, crisis_988_page and er_now instructions of crisis_v4.yaml in v23.
+# The exact text below needs S. Basu's word-for-word sign-off before any run uses it (then set status: signed,
+# signed_by, signed_on).
+version: 0.1.0-dev
+status: draft
+signed_by: null
+signed_on: null
+route: urgent_page
+actions:
+  - page_on_call_physician   # at once; the page carries the message and the gate score
+patient_text:
+  self: >-
+    This might be an urgent situation. I am sending your message to our physician now, and they will call you back.
+    If things get worse, call 911. If you are thinking about hurting yourself, call or text 988. This text line is
+    not an emergency service.
+  other: >-
+    This might be an urgent situation. I am sending your message to our physician now, and they will call you back.
+    If the person gets worse, call 911. This text line is not an emergency service.
+open_questions:
+  - Callback time to promise, if any (for example "within 15 minutes"), and the after-hours path.
+  - Whether the 988 sentence goes in every urgent page or only when the gate flags self-harm.
+  - Whether the writer's own reply follows this text in the same message or is held until the physician calls.

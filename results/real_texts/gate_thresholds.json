@@ -1,0 +1,8 @@
+{
+ "t_e": 0.005624941538023442,
+ "t_s": 0.04532663768736829,
+ "alpha_e": 0.05,
+ "alpha_s": 0.1,
+ "source": "paper/paging_gate_497.py: Kev-9B physician fine-tunes compass-phys9b-f0..f4 (mean of fold models, message only); conformal risk control threshold fit on all 497 texts of the emergency-enriched care-team SMS development set (S. Basu labels). t_e on P(Call 911/988), emergency = action Call 911/988 (104 positives). t_s on P(Contact Doctor or Call 911/988), safety = hazard and action Contact Doctor or Call 911/988 (263 positives). Frozen 2026-11-08 before any fresh-set scoring.",
+ "score_file": "gate_scores.jsonl (emergency vs t_e, safety vs t_s; page when score >= threshold)"
+}

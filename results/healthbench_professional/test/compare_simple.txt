@@ -1,0 +1,50 @@
+{
+ "opus_search_edit - amie_style": {
+  "n": 350,
+  "diff": 7.6,
+  "ci95": [
+   3.5,
+   11.9
+  ]
+ },
+ "opus_search_edit - mai_dxo_style": {
+  "n": 350,
+  "diff": 10.1,
+  "ci95": [
+   5.6,
+   14.2
+  ]
+ },
+ "opus_search_edit - amie_style_uncapped": {
+  "n": 350,
+  "diff": 6.7,
+  "ci95": [
+   2.3,
+   11.0
+  ]
+ },
+ "opus_search_edit - mai_dxo_style_uncapped": {
+  "n": 350,
+  "diff": 8.5,
+  "ci95": [
+   4.7,
+   12.5
+  ]
+ },
+ "opus_search_edit - opus55": {
+  "n": 350,
+  "diff": 11.2,
+  "ci95": [
+   7.5,
+   15.3
+  ]
+ },
+ "opus_search_edit - compass_pro_full": {
+  "n": 350,
+  "diff": -1.5,
+  "ci95": [
+   -5.4,
+   2.5
+  ]
+ }
+}

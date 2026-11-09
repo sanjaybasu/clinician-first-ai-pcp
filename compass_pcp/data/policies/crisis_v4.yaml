@@ -1,0 +1,1471 @@
+# COMPASS v4 crisis policy (B1). GENERATED FILE: do not edit by hand.
+# Built by design/convert_signed_criteria.py from design/v4_crisis_criteria_draft.yaml (the signed record).
+# Families 1-3: signed by Sanjay Basu, MD, PhD on 2026-11-03 (approved_with_changes). Families 4+: signed by Sanjay Basu, MD, PhD on 2026-11-03 (approved_with_changes).
+# Every criterion carries its primary source id (`source`) and all source ids (`source_ids`); citations are under
+# `sources`. Routes follow the signed rank: 911, 988 plus page, emergency room now, urgent review; Poison Control is
+# an addition below the emergency endpoint.
+version: 0.1.0-draft
+status: signed
+signed_by: Sanjay Basu, MD, PhD
+signed_on: '2026-11-03'
+screen:
+  timeout_seconds: 25
+  source: 'operational setting: p95 latency budget about 30 s (v4 panel round 4, section 4)'
+route_precedence:
+- emergency_911
+- crisis_988_page
+- er_now
+- urgent_review
+- poison_control_addition
+- none
+additions:
+- poison_control_addition
+additions_suppressed_by:
+- emergency_911
+instructions:
+  emergency_911:
+    id: instr_emergency_911_0.1.0-draft
+    text: Call 911 now. This could be an emergency, and you need help right away. Do not drive yourself.
+    text_other: Call 911 now for this person. Stay with them until help comes if it is safe to do so.
+    fallback: Call 911 now. This could be an emergency, and you need help right away. Do not drive yourself.
+    fallback_other: Call 911 now for this person. Stay with them until help comes if it is safe to do so.
+    page_care_team: true
+    required_clause: Call 911 now
+    clause_max_sentences: 1
+    source: signed:routes.R911; fallbacks.R911
+  crisis_988_page:
+    id: instr_crisis_988_page_0.1.0-draft
+    text: Please call or text 988 now to talk with a crisis counselor. It is free and open all day and night. If you might
+      act on these thoughts or you are in danger, call 911.
+    text_other: Please call or text 988 now. Counselors can help you support this person. If they might act on these thoughts
+      or are in danger, call 911.
+    fallback: Please call or text 988 now to talk with a crisis counselor. It is free and open all day and night. If you might
+      act on these thoughts or you are in danger, call 911.
+    fallback_other: Please call or text 988 now. Counselors can help you support this person. If they might act on these thoughts
+      or are in danger, call 911.
+    page_care_team: true
+    required_clause: call or text 988 now
+    clause_max_sentences: 2
+    source: signed:routes.R988_PAGE; fallbacks.R988_PAGE
+  er_now:
+    id: instr_er_now_0.1.0-draft
+    text: Go to the nearest emergency room now. If you get worse before you get there, call 911.
+    text_other: Please take this person to the nearest emergency room now. If they get worse before you get there, call 911.
+    fallback: Go to the nearest emergency room now. If you get worse before you get there, call 911.
+    fallback_other: Please take this person to the nearest emergency room now. If they get worse before you get there, call
+      911.
+    page_care_team: true
+    required_clause: nearest emergency room now
+    clause_max_sentences: 1
+    source: signed:routes.RER_NOW; fallbacks.RER_NOW
+  poison_control_addition:
+    id: instr_poison_control_addition_0.1.0-draft
+    text: Call Poison Control now at 1-800-222-1222. Do not wait for signs of poisoning. If anyone collapses, has a seizure,
+      has trouble breathing, or cannot be woken up, call 911.
+    text_other: Please call Poison Control now at 1-800-222-1222 about this exposure. If the patient collapses, has a seizure,
+      has trouble breathing, or cannot be woken up, call 911.
+    fallback: Call Poison Control now at 1-800-222-1222. Do not wait for signs of poisoning. If anyone collapses, has a seizure,
+      has trouble breathing, or cannot be woken up, call 911.
+    fallback_other: Please call Poison Control now at 1-800-222-1222 about this exposure. If the patient collapses, has a
+      seizure, has trouble breathing, or cannot be woken up, call 911.
+    page_care_team: false
+    required_clause: Call Poison Control now at 1-800-222-1222
+    clause_max_sentences: 2
+    source: signed:routes.RPOISON_ADD; fallbacks.RPOISON_ADD
+uncertainty:
+  uncertain_route: urgent_review
+  incomplete_route: urgent_review
+  screen_failure_route: urgent_review
+  present_without_valid_quote: uncertain_applicable
+  unknown_currentness: uncertain
+  source: 'signed: uncertainty_applicability_policy (v4_spec.md B1, verbatim)'
+families:
+- id: suicide_self_harm
+  name: Suicide or self-harm
+  lexicon:
+  - kill myself
+  - kms
+  - kys
+  - suicide
+  - suicidal
+  - sucidal
+  - suicde
+  - end it all
+  - end my life
+  - unalive
+  - want to die
+  - wanna die
+  - wish i was dead
+  - wish i were dead
+  - better off dead
+  - better off without me
+  - go to sleep and not wake up
+  - dont want to wake up
+  - dont want to be here anymore
+  - no reason to live
+  - cant go on
+  - take all my pills
+  - overdose on purpose
+  - cut myself
+  - cutting again
+  - hang myself
+  - shoot myself
+  - jump off
+  - goodbye forever
+  - wrote a note
+  classifier_cut: null
+  classifier_cut_source: null
+  criteria:
+  - id: SH-01
+    description: 'The person is harming or trying to kill themself now, or has just done so (for example, took pills, cut,
+      hanging, gun in hand), with or without a stated intent to die. Counts as present: Any report of an act happening now
+      or within the current episode (today, ''just'', ''a few minutes ago'') including an aborted act still in progress (pills
+      in hand, at a height). Uncertain: Ambiguous act (''I did something stupid'', ''took a bunch''), unclear time, or unclear
+      whether it was self-directed. Currentness: current = now or today and not yet medically assessed. Earlier acts -> SH-06.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: samhsa_988_faq
+    source_ids:
+    - samhsa_988_faq
+    - cssrs_screener_pc
+    instruction:
+      id: instr_SH-01
+      text: Call 911 now. You need medical help right away, even if you feel okay. You can also call or text 988.
+      text_other: Call 911 now for this person. Stay with them until help comes if it is safe to do so.
+      fallback: Call 911 now. You need medical help right away, even if you feel okay. You can also call or text 988.
+      fallback_other: Call 911 now for this person. Stay with them until help comes if it is safe to do so.
+      source: signed:SH-01
+  - id: SH-02
+    description: 'The person has hurt themself in a way that may need emergency medical care now (heavy bleeding, deep cut,
+      swallowed something, trouble breathing, cannot stay awake), whatever the intent. Counts as present: Self-injury reported
+      with any of: bleeding that will not stop, deep or gaping wound, ingestion, head or neck injury, trouble breathing, fainting,
+      cannot stay awake, confusion. Uncertain: Self-injury reported but severity or ingestion unknown. Currentness: current
+      = injury or symptoms present now, or self-harm today not yet medically assessed.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: samhsa_988_faq
+    source_ids:
+    - samhsa_988_faq
+    instruction:
+      id: instr_SH-02
+      text: Call 911 now so you can get medical care right away. You can also call or text 988.
+      text_other: Call 911 now for this person. Stay with them until help comes if it is safe to do so.
+      fallback: Call 911 now so you can get medical care right away. You can also call or text 988.
+      fallback_other: Call 911 now for this person. Stay with them until help comes if it is safe to do so.
+      source: signed:SH-02
+  - id: SH-03
+    description: 'The person has a specific plan to kill or harm themself that they are carrying out or intend to carry out
+      right away, and has the means; or is taking steps now to prepare (collected pills, got a gun, wrote a note, gave away
+      things) with current suicidal thoughts. Counts as present: Plan + immediate intent (''tonight'', ''now'', ''today'',
+      ''when everyone leaves'') + means available; or a preparatory act in the current episode together with current suicidal
+      thoughts. Uncertain: Plan or intent stated but timing or means unclear; or means present with thoughts but intent unclear.
+      Means possession alone is not present for SH-03 (round4_gpt.md section 1, item 4). Currentness: current = plan and intent
+      are for now or the next hours; a preparatory act counts if it happened in the current episode. Older preparatory acts
+      -> SH-06.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: samhsa_988_faq
+    source_ids:
+    - samhsa_988_faq
+    - asq_tool
+    - posner_2011
+    instruction:
+      id: instr_SH-03
+      text: Call 911 now. If you can, move away from anything you could use to hurt yourself and stay near another person.
+        You can also call or text 988.
+      text_other: Call 911 now for this person. Stay with them until help comes if it is safe to do so.
+      fallback: Call 911 now. If you can, move away from anything you could use to hurt yourself and stay near another person.
+        You can also call or text 988.
+      fallback_other: Call 911 now for this person. Stay with them until help comes if it is safe to do so.
+      source: signed:SH-03
+  - id: SH-04
+    description: 'The person says they are thinking about killing themself right now, or has thoughts of suicide with some
+      intention of acting on them, or is working out a plan, without the SH-03 immediacy and means. Counts as present: C-SSRS
+      items 2-5 type statements that are current (''I keep thinking about how I''d do it'', ''I might actually do it''), or
+      ASQ item 5 type (''I''m thinking about killing myself right now''). Uncertain: Indirect or vague statements where intent
+      cannot be judged (''I don''t know if I can keep going like this''). Currentness: current = now or ongoing in the last
+      few days with no stated resolution. Past-month thoughts stated as resolved -> SH-06.'
+    route: crisis_988_page
+    routing_relevant: true
+    requires_current: true
+    source: cssrs_community_card
+    source_ids:
+    - cssrs_community_card
+    - cssrs_screener_pc
+    - asq_tool
+    instruction:
+      id: instr_SH-04
+      text: Please call or text 988 now to talk with a crisis counselor. It is free and open all day and night. If you might
+        act on these thoughts or you are in danger, call 911.
+      text_other: Please call or text 988 now. Counselors can help you support this person. If they might act on these thoughts
+        or are in danger, call 911.
+      fallback: Please call or text 988 now to talk with a crisis counselor. It is free and open all day and night. If you
+        might act on these thoughts or you are in danger, call 911.
+      fallback_other: Please call or text 988 now. Counselors can help you support this person. If they might act on these
+        thoughts or are in danger, call 911.
+      source: signed:SH-04
+  - id: SH-05
+    description: 'The person says they wish they were dead, wish they could go to sleep and not wake up, think others would
+      be better off without them, or has thoughts of killing themself with no stated intent or plan; includes indirect statements
+      that a reasonable clinician would read as suicidal. Counts as present: Current passive ideation (C-SSRS item 1; ASQ
+      items 1-2), active ideation without intent or plan (C-SSRS item 2), or indirect statements (''everyone would be better
+      off without me'', ''I won''t be a burden much longer'', ''I just want to disappear for good'', ''giving my stuff away'').
+      Uncertain: Hopelessness or exhaustion without a death wish (''I can''t do this anymore'', ''what''s the point''); idiom
+      plus distress. Currentness: current = now or ongoing in the last few days with no stated resolution. Resolved past-month
+      thoughts -> SH-06.'
+    route: crisis_988_page
+    routing_relevant: true
+    requires_current: true
+    source: asq_tool
+    source_ids:
+    - asq_tool
+    - cssrs_screener_pc
+    - horowitz_2012
+    - samhsa_988_faq
+    instruction:
+      id: instr_SH-05
+      text: Please call or text 988 now to talk with a crisis counselor. It is free and open all day and night. If you might
+        act on these thoughts or you are in danger, call 911.
+      text_other: Please call or text 988 now. Counselors can help you support this person. If they might act on these thoughts
+        or are in danger, call 911.
+      fallback: Please call or text 988 now to talk with a crisis counselor. It is free and open all day and night. If you
+        might act on these thoughts or you are in danger, call 911.
+      fallback_other: Please call or text 988 now. Counselors can help you support this person. If they might act on these
+        thoughts or are in danger, call 911.
+      source: signed:SH-05
+  - id: SH-06
+    description: 'The person reports suicidal thoughts in the past month that they say have stopped, or a suicide attempt,
+      self-harm act, or preparatory act in the past 3 months, with no current ideation. Counts as present: Past-month ideation
+      stated as resolved; attempt, self-harm, or preparatory act within 3 months with no current ideation. Uncertain: Time
+      of the past act or thoughts unclear; or unclear whether thoughts are still present (-> treat as uncertain on SH-05).
+      Currentness: recent_not_current = ideation within the past month, or behavior within the past 3 months (C-SSRS screener
+      windows). Older -> historical, normal path.'
+    route: urgent_review
+    routing_relevant: true
+    requires_current: false
+    source: cssrs_screener_pc
+    source_ids:
+    - cssrs_screener_pc
+    - tjc_npsg_15_r3
+    instruction:
+      id: instr_SH-06
+      text: Thank you for telling me. I am sending this to your care team. If these thoughts come back, call or text 988 any
+        time, or call 911 if you are in danger.
+      text_other: null
+      fallback: Thank you for telling me. I am sending this to your care team. If these thoughts come back, call or text 988
+        any time, or call 911 if you are in danger.
+      fallback_other: null
+      source: signed:SH-06
+- id: overdose_poisoning
+  name: Overdose or poisoning
+  lexicon:
+  - overdose
+  - overdosed
+  - od
+  - o.d.
+  - odd
+  - took too many
+  - took all my pills
+  - took the whole bottle
+  - double dose
+  - took it twice
+  - wrong pills
+  - swallowed
+  - ate some pills
+  - got into my meds
+  - got into the medicine
+  - drank bleach
+  - drank cleaner
+  - poison
+  - poisoned
+  - narcan
+  - naloxone
+  - fent
+  - fetty
+  - pressies
+  - percs
+  - xans
+  - wont wake up
+  - cant wake him
+  - cant wake her
+  - lips are blue
+  classifier_cut: null
+  classifier_cut_source: null
+  criteria:
+  - id: OD-01
+    description: 'A person who used or may have used opioids or other drugs is now hard to wake or will not wake, is breathing
+      slowly or not at all, is making choking, gurgling, or snoring sounds while not awake, has blue, purple, gray, or ashen
+      lips or nails, or has pinpoint pupils. Counts as present: Any listed sign now, in a person with known or possible drug
+      use. Uncertain: Drowsy after drug use with breathing not described; ''nodding out''; ''really out of it''. Currentness:
+      current = sign present now or since the last time the sender saw the person. Naloxone given and the person woke up ->
+      still current (signs can return).'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: samhsa_overdose_toolkit
+    source_ids:
+    - samhsa_overdose_toolkit
+    - samhsa_988_faq
+    instruction:
+      id: instr_OD-01
+      text: Call 911 now. If you have naloxone (Narcan), give it now. Stay with the person and watch their breathing.
+      text_other: null
+      fallback: Call 911 now. If you have naloxone (Narcan), give it now. Stay with the person and watch their breathing.
+      fallback_other: null
+      source: signed:OD-01
+  - id: OD-02
+    description: 'After swallowing, breathing in, or touching a medicine, drug, alcohol, or chemical, the person has collapsed,
+      had a seizure, has trouble breathing, or cannot be woken up. Counts as present: Any of collapse, seizure, trouble breathing,
+      or cannot be woken, with a known or suspected exposure. Uncertain: Confused, very sleepy, vomiting while drowsy, or
+      chest pain after an exposure (judgment: the source lists only the four signs). Currentness: current = sign present now
+      or since the exposure.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: apc_poisonhelp
+    source_ids:
+    - apc_poisonhelp
+    instruction:
+      id: instr_OD-02
+      text: Call 911 now. Stay with the person. If you can, keep the medicine or bottle to show the responders.
+      text_other: null
+      fallback: Call 911 now. Stay with the person. If you can, keep the medicine or bottle to show the responders.
+      fallback_other: null
+      source: signed:OD-02
+  - id: OD-03
+    description: 'The person took or swallowed more than prescribed, or took any substance, to hurt or kill themself, or a
+      sender reports this about someone. No symptoms does not clear it. Counts as present: Ingestion or exposure with stated
+      or clearly implied self-harm intent (''took all my pills because I''m done''). Uncertain: Large or unusual amount with
+      no stated reason; ''took a bunch to sleep forever''; intent unclear. Currentness: current = exposure today or not yet
+      medically assessed. Absence of symptoms does not change currentness.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: samhsa_988_faq
+    source_ids:
+    - samhsa_988_faq
+    - hrsa_poisonhelp_2013
+    - apc_poisonhelp_tool
+    instruction:
+      id: instr_OD-03
+      text: Call 911 now, even if you feel okay. Some medicines hurt you hours later. You can also call or text 988.
+      text_other: Call 911 now for this person, even if they seem okay. Stay with them until help comes if it is safe to do
+        so.
+      fallback: Call 911 now, even if you feel okay. Some medicines hurt you hours later. You can also call or text 988.
+      fallback_other: Call 911 now for this person, even if they seem okay. Stay with them until help comes if it is safe
+        to do so.
+      source: signed:OD-03
+  - id: OD-04
+    description: 'Someone swallowed, breathed in, or touched a medicine, drug, or chemical by accident (a child got into pills,
+      a double dose, the wrong medicine, a cleaning product), and has none of the OD-01 or OD-02 signs. Counts as present:
+      An accidental exposure is reported and no OD-01/OD-02 sign is reported. Uncertain: Unclear whether anything was swallowed
+      (''the bottle was open'', ''might have eaten one''); unclear amount. Currentness: current = exposure today or not yet
+      assessed by Poison Control or a clinician.'
+    route: poison_control_addition
+    routing_relevant: true
+    requires_current: true
+    source: apc_poisonhelp
+    source_ids:
+    - apc_poisonhelp
+    - hrsa_poisonhelp_2013
+    instruction:
+      id: instr_OD-04
+      text: Call Poison Control now at 1-800-222-1222. Do not wait for signs of poisoning. If the person collapses, has a
+        seizure, has trouble breathing, or cannot be woken up, call 911.
+      text_other: null
+      fallback: Call Poison Control now at 1-800-222-1222. Do not wait for signs of poisoning. If the person collapses, has
+        a seizure, has trouble breathing, or cannot be woken up, call 911.
+      fallback_other: null
+      source: signed:OD-04
+- id: acute_cardiac
+  name: Possible acute cardiac
+  lexicon:
+  - chest pain
+  - chest pressure
+  - chest tightness
+  - chest hurts
+  - chest feels heavy
+  - elephant on my chest
+  - squeezing in my chest
+  - cp
+  - heart attack
+  - heart atack
+  - hart attack
+  - angina
+  - jaw pain
+  - left arm pain
+  - arm is numb
+  - pain in my back between my shoulders
+  - upper stomach pain
+  - cant catch my breath
+  - short of breath
+  - sob
+  - cold sweat
+  - sweating and nauseous
+  - lightheaded
+  - passed out
+  - fainted
+  - nitro
+  - nitroglycerin
+  - heartburn that wont go away
+  classifier_cut: null
+  classifier_cut_source: null
+  criteria:
+  - id: CA-01
+    description: 'The person has pain, pressure, tightness, squeezing, heaviness, or discomfort in the chest now. Counts as
+      present: Any current chest pain or discomfort, of any description, not already evaluated by a clinician for this episode.
+      Uncertain: Unclear whether the pain is current; vague ''chest feels weird''; pain the sender links to anxiety or heartburn
+      with no clinician evaluation. Currentness: current = present now, or came and went today and is still recurring. Fully
+      resolved earlier episode -> CA-04.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: gulati_2021_es
+    source_ids:
+    - gulati_2021_es
+    - nhlbi_heart_attack
+    instruction:
+      id: instr_CA-01
+      text: Call 911 now. Do not drive yourself to the hospital or let someone else drive you. Chest pain needs to be checked
+        right away.
+      text_other: Call 911 now for this person. Do not drive them to the hospital.
+      fallback: Call 911 now. Do not drive yourself to the hospital or let someone else drive you. Chest pain needs to be
+        checked right away.
+      fallback_other: Call 911 now for this person. Do not drive them to the hospital.
+      source: signed:CA-01
+  - id: CA-02
+    description: 'The person has new pain, pressure, tightness, or discomfort now in the shoulders, arms, neck, jaw, back,
+      or upper belly, or new shortness of breath, with no chest pain. Fatigue counts only together with one of these. Counts
+      as present: A listed symptom now, new or worse than usual, with no clear other cause; higher weight if with sweating,
+      nausea or vomiting, lightheadedness, or in a woman, an older adult, or a person with diabetes. Uncertain: Long-standing
+      or usual-pattern symptom; a symptom with a plausible other cause (strained shoulder lifting, known asthma flare) and
+      no clinician evaluation. Currentness: current = present now. Resolved -> CA-04.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: gulati_2021_es
+    source_ids:
+    - gulati_2021_es
+    - nhlbi_heart_attack
+    instruction:
+      id: instr_CA-02
+      text: Call 911 now. These symptoms can be a sign of a heart problem. Do not drive yourself to the hospital.
+      text_other: Call 911 now for this person. Do not drive them to the hospital.
+      fallback: Call 911 now. These symptoms can be a sign of a heart problem. Do not drive yourself to the hospital.
+      fallback_other: Call 911 now for this person. Do not drive them to the hospital.
+      source: signed:CA-02
+  - id: CA-03
+    description: 'A person aged 75 or older (stated or from the record) has, now or today, new shortness of breath, fainted,
+      became suddenly confused, or fell without a clear reason. Counts as present: Age 75 or older and one listed event now
+      or today. Uncertain: Age unknown with a listed event; fall with a clear trip mechanism but no injury information. Currentness:
+      current = now or today.'
+    route: urgent_review
+    routing_relevant: true
+    requires_current: true
+    source: gulati_2021_es
+    source_ids:
+    - gulati_2021_es
+    instruction:
+      id: instr_CA-03
+      text: A nurse or doctor needs to check on this today. If you have chest pain, trouble breathing, or you faint again,
+        call 911.
+      text_other: This person needs to be checked by a nurse or doctor today. If they have chest pain, trouble breathing,
+        or faint again, call 911.
+      fallback: A nurse or doctor needs to check on this today. If you have chest pain, trouble breathing, or you faint again,
+        call 911.
+      fallback_other: This person needs to be checked by a nurse or doctor today. If they have chest pain, trouble breathing,
+        or faint again, call 911.
+      source: signed:CA-03
+  - id: CA-04
+    description: 'The person had chest pain or an anginal-equivalent symptom recently that has now stopped, or has known angina
+      that came with exertion and went away with rest or medicine in its usual way. Counts as present: Resolved episode within
+      the recent window, or usual-pattern angina now resolved. Uncertain: Unclear whether symptoms are still present (-> uncertain
+      on CA-01 or CA-02); a change in the usual angina pattern (-> treat as CA-01). Currentness: recent_not_current = stopped
+      within the past 72 hours [judgment: window drafted, not sourced]. Angina that is new, at rest, lasts longer, or does
+      not go away with rest or medicine -> CA-01 (current).'
+    route: urgent_review
+    routing_relevant: true
+    requires_current: false
+    source: gulati_2021_es
+    source_ids:
+    - gulati_2021_es
+    - nhlbi_heart_attack
+    instruction:
+      id: instr_CA-04
+      text: If the pain comes back, call 911 right away. Do not drive yourself. I am sending this to your care team so a clinician
+        can check on you.
+      text_other: null
+      fallback: If the pain comes back, call 911 right away. Do not drive yourself. I am sending this to your care team so
+        a clinician can check on you.
+      fallback_other: null
+      source: signed:CA-04
+- id: neuro_stroke_seizure
+  name: Stroke or seizure
+  lexicon:
+  - stroke
+  - strok
+  - face drooping
+  - face is droopy
+  - one side of my face
+  - cant lift my arm
+  - arm went numb
+  - leg went numb
+  - slurred speech
+  - slurring
+  - words come out wrong
+  - cant see out of one eye
+  - lost my vision
+  - double vision
+  - cant walk straight
+  - worst headache of my life
+  - seizure
+  - seizing
+  - having a fit
+  - convulsing
+  - shaking and wont respond
+  classifier_cut: null
+  classifier_cut_source: null
+  criteria:
+  - id: NE-01
+    description: 'Sudden loss of balance or trouble walking, sudden vision loss or change, face drooping, arm or leg weakness
+      or numbness (especially one side), trouble speaking or understanding speech, or a sudden severe headache with no known
+      cause. Counts as present: Any listed sign that started suddenly and is present now, or started today and is gone (a
+      sign that went away can still be a stroke warning). Uncertain: Gradual or long-standing weakness or numbness; dizziness
+      without balance loss; unclear onset time. Currentness: current = present now, or began within the past 24 hours [clinical
+      judgment, approved by signer change A7].'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: mp_stroke
+    source_ids:
+    - mp_stroke
+    - aroor_2017
+    - acep_is_it_emergency
+    instruction:
+      id: instr_NE-01
+      text: Call 911 now. These can be signs of a stroke, and every minute counts. Do not drive yourself.
+      text_other: Call 911 now for this person. Note the time the signs started.
+      fallback: Call 911 now. These can be signs of a stroke, and every minute counts. Do not drive yourself.
+      fallback_other: Call 911 now for this person. Note the time the signs started.
+      source: signed:NE-01
+  - id: NE-02
+    description: 'A seizure that is the person''s first, lasts more than 2 to 5 minutes, is followed by not waking up or not
+      acting normally, is followed by another seizure, happened in water, happened in someone pregnant, injured, or with diabetes,
+      or is different from the person''s usual seizures. Counts as present: A seizure now or just now, with any listed feature.
+      Uncertain: Shaking or jerking that may or may not be a seizure; a usual seizure with recovery not described. Currentness:
+      current = seizure now or within the current episode and not yet assessed.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: mp_seizure
+    source_ids:
+    - mp_seizure
+    instruction:
+      id: instr_NE-02
+      text: Call 911 now. Stay with the person, keep them away from hard or sharp things, and turn them on their side.
+      text_other: Call 911 now for this person. Stay with them until help comes.
+      fallback: Call 911 now. Stay with the person, keep them away from hard or sharp things, and turn them on their side.
+      fallback_other: Call 911 now for this person. Stay with them until help comes.
+      source: signed:NE-02
+- id: breathing_anaphylaxis
+  name: Breathing emergency or anaphylaxis
+  lexicon:
+  - cant breathe
+  - can't breath
+  - cant breath
+  - hard to breathe
+  - struggling to breathe
+  - gasping
+  - out of breath
+  - short of breath
+  - sob
+  - wheezing
+  - throat closing
+  - throat is tight
+  - lips are blue
+  - lips turning blue
+  - allergic reaction
+  - anaphylaxis
+  - epipen
+  - epi pen
+  - tongue swelling
+  - lips swelling
+  - hives all over
+  - stung by a bee
+  classifier_cut: null
+  classifier_cut_source: null
+  criteria:
+  - id: BR-01
+    description: 'Trouble breathing that came on suddenly, or is bad enough to make talking hard, or breathing has stopped;
+      blue, purple, or gray lips. Counts as present: Any listed feature now. Uncertain: Shortness of breath that is usual
+      for the person (COPD, heart failure) without a stated change; mild breathlessness with a cold. Currentness: current
+      = now.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: mp_breathing
+    source_ids:
+    - mp_breathing
+    - acep_is_it_emergency
+    instruction:
+      id: instr_BR-01
+      text: Call 911 now. Trouble breathing like this needs emergency care right away.
+      text_other: Call 911 now for this person. Stay with them until help comes.
+      fallback: Call 911 now. Trouble breathing like this needs emergency care right away.
+      fallback_other: Call 911 now for this person. Stay with them until help comes.
+      source: signed:BR-01
+  - id: BR-02
+    description: 'After a food, medicine, insect sting, or other trigger: trouble breathing, wheezing, throat tightness, hoarse
+      voice, trouble swallowing, fainting or feeling faint, pale or blue color, or swelling of the face, lips, or tongue with
+      any of these. Counts as present: Any listed breathing or circulation sign after a possible trigger, now. Uncertain:
+      Hives or swelling plus stomach symptoms with breathing not described; symptoms that went away (anaphylaxis can return).
+      Currentness: current = now, or began within the past few hours even if better (symptoms can return).'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: aaaai_anaphylaxis
+    source_ids:
+    - aaaai_anaphylaxis
+    instruction:
+      id: instr_BR-02
+      text: Call 911 now. If you have an epinephrine auto-injector (EpiPen), use it now. Do not wait to see if it gets better.
+      text_other: Call 911 now for this person. If they have an epinephrine auto-injector (EpiPen), use it now.
+      fallback: Call 911 now. If you have an epinephrine auto-injector (EpiPen), use it now. Do not wait to see if it gets
+        better.
+      fallback_other: Call 911 now for this person. If they have an epinephrine auto-injector (EpiPen), use it now.
+      source: signed:BR-02
+- id: altered_mental_status_fainting
+  name: Sudden confusion, hard to wake, or fainting
+  lexicon:
+  - passed out
+  - past out
+  - fainted
+  - blacked out
+  - fell out
+  - collapsed
+  - hard to wake
+  - wont wake up
+  - cant wake
+  - confused
+  - not making sense
+  - out of it
+  - acting strange
+  - doesnt know where she is
+  - doesnt know where he is
+  - delirious
+  - dizzy and fell
+  - unresponsive
+  classifier_cut: null
+  classifier_cut_source: null
+  criteria:
+  - id: AM-01
+    description: 'Confusion that came on suddenly, a sudden change in how the person thinks or acts, or the person is hard
+      to wake or unconscious. Counts as present: Any listed feature now, including confusion for the first time with no known
+      reason, sudden confusion in someone with diabetes, or confusion after a head injury. Uncertain: Long-standing memory
+      problems with no stated change; ''not himself'' without detail. Currentness: current = now.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: mp_confusion
+    source_ids:
+    - mp_confusion
+    - acep_is_it_emergency
+    instruction:
+      id: instr_AM-01
+      text: Call 911 now. Sudden confusion or being hard to wake needs emergency care right away.
+      text_other: Call 911 now for this person. Stay with them until help comes.
+      fallback: Call 911 now. Sudden confusion or being hard to wake needs emergency care right away.
+      fallback_other: Call 911 now for this person. Stay with them until help comes.
+      source: signed:AM-01
+  - id: AM-02
+    description: 'The person fainted today and is now awake and talking, and the faint came with a high-risk feature: a fall
+      from a height, pregnancy, age over 50, diabetes, chest pain, a pounding or irregular heartbeat, loss of speech, vision
+      problems, inability to move a limb, convulsions, a tongue injury, or loss of bladder or bowel control. Counts as present:
+      A faint today with any listed feature, and the person is now awake and talking. Uncertain: Unclear whether the person
+      lost consciousness or has recovered; age not known. Currentness: current = faint today, not yet assessed.'
+    route: er_now
+    routing_relevant: true
+    requires_current: true
+    source: mp_fainting
+    source_ids:
+    - mp_fainting
+    - acep_is_it_emergency
+    instruction:
+      id: instr_AM-02
+      text: Go to the nearest emergency room now to be checked. Do not drive yourself. If you faint again, have chest pain,
+        or feel confused, call 911.
+      text_other: Please take this person to the nearest emergency room now. Do not let them drive. If they faint again, have
+        chest pain, or become confused, call 911.
+      fallback: Go to the nearest emergency room now to be checked. Do not drive yourself. If you faint again, have chest
+        pain, or feel confused, call 911.
+      fallback_other: Please take this person to the nearest emergency room now. Do not let them drive. If they faint again,
+        have chest pain, or become confused, call 911.
+      source: signed:AM-02
+  - id: AM-03
+    description: 'The person fainted, became alert quickly, and has none of the AM-02 features; or faints often; or fainted
+      for the first time. Counts as present: A recovered faint in the past few days with no AM-02 feature. Uncertain: Unclear
+      whether recovery was complete. Currentness: recent_not_current = faint within the past 7 days [clinical judgment, approved
+      by signer change A7].'
+    route: urgent_review
+    routing_relevant: true
+    requires_current: false
+    source: mp_fainting
+    source_ids:
+    - mp_fainting
+    instruction:
+      id: instr_AM-03
+      text: I am sending this to your care team so you can be seen soon. If you faint again, have chest pain, or have a pounding
+        heartbeat, call 911.
+      text_other: null
+      fallback: I am sending this to your care team so you can be seen soon. If you faint again, have chest pain, or have
+        a pounding heartbeat, call 911.
+      fallback_other: null
+      source: signed:AM-03
+- id: bleeding
+  name: Uncontrolled bleeding, or vomiting or coughing up blood
+  lexicon:
+  - bleeding wont stop
+  - wont stop bleeding
+  - cant stop the bleeding
+  - blood everywhere
+  - soaked through
+  - spurting
+  - tourniquet
+  - throwing up blood
+  - throwing up blod
+  - vomiting blood
+  - coffee grounds
+  - black poop
+  - black stool
+  - tarry stool
+  - blood in my poop
+  - coughing up blood
+  - coughing blood
+  - blood when i cough
+  classifier_cut: null
+  classifier_cut_source: null
+  criteria:
+  - id: BL-01
+    description: 'Bleeding that does not stop with firm pressure, is spurting or soaking through cloths, needed a tourniquet,
+      or came from a serious injury; or signs of internal bleeding or shock. Counts as present: Any listed feature now. Uncertain:
+      Bleeding amount or control not described; nosebleed that is ''a lot'' with no duration. Currentness: current = now.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: acep_is_it_emergency
+    source_ids:
+    - acep_is_it_emergency
+    - mp_bleeding
+    instruction:
+      id: instr_BL-01
+      text: Call 911 now. Press hard on the bleeding spot with a clean cloth and keep pressing.
+      text_other: Call 911 now for this person. Press hard on the bleeding spot with a clean cloth and keep pressing.
+      fallback: Call 911 now. Press hard on the bleeding spot with a clean cloth and keep pressing.
+      fallback_other: Call 911 now for this person. Press hard on the bleeding spot with a clean cloth and keep pressing.
+      source: signed:BL-01
+  - id: BL-02
+    description: 'Vomiting blood or dark, coffee-ground material; blood in the stool (bright red, maroon, or black and tarry);
+      or coughing up more than streaks of blood (for example a few teaspoons or more), or any coughed blood with chest pain,
+      dizziness, lightheadedness, fever, or severe shortness of breath. Counts as present: Any listed feature now or today.
+      Uncertain: Unclear amount; red stool after eating beets or red food. Currentness: current = today or ongoing.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: mp_vomiting
+    source_ids:
+    - mp_vomiting
+    - mp_abdominal_pain
+    - mp_cough_blood
+    - acep_is_it_emergency
+    instruction:
+      id: instr_BL-02
+      text: Call 911 now. Bleeding inside the body needs emergency care right away. Do not drive yourself.
+      text_other: Call 911 now for this person.
+      fallback: Call 911 now. Bleeding inside the body needs emergency care right away. Do not drive yourself.
+      fallback_other: Call 911 now for this person.
+      source: signed:BL-02
+  - id: BL-03
+    description: 'The person coughs up mucus with streaks or specks of blood, with none of the BL-02 features (no more than
+      streaks, no chest pain, dizziness, lightheadedness, fever, or severe shortness of breath). Counts as present: Streaks
+      or specks of blood in coughed-up mucus, with no BL-02 feature. Uncertain: Amount unclear (-> also uncertain on BL-02).
+      Currentness: current = today or in the past few days and still happening.'
+    route: urgent_review
+    routing_relevant: true
+    requires_current: true
+    source: mp_cough_blood
+    source_ids:
+    - mp_cough_blood
+    instruction:
+      id: instr_BL-03
+      text: I am sending this to your care team so a clinician can check on you soon. If you cough up more than streaks of
+        blood, or have chest pain, dizziness, or trouble breathing, call 911.
+      text_other: null
+      fallback: I am sending this to your care team so a clinician can check on you soon. If you cough up more than streaks
+        of blood, or have chest pain, dizziness, or trouble breathing, call 911.
+      fallback_other: null
+      source: signed:BL-03
+- id: severe_pain_gi
+  name: Sudden severe pain, or severe vomiting or diarrhea
+  lexicon:
+  - worst headache
+  - worst headache ever
+  - thunderclap
+  - head about to explode
+  - sudden severe pain
+  - stomach is hard
+  - belly is rock hard
+  - sharp pain in my stomach
+  - doubled over
+  - cant stop throwing up
+  - cant keep anything down
+  - cant keep water down
+  - throwing up all day
+  - diarrhea all day
+  - havent peed
+  - haven't pee'd
+  - dehydrated
+  classifier_cut: null
+  classifier_cut_source: null
+  criteria:
+  - id: PG-01
+    description: 'A headache that came on suddenly and is explosive or ''the worst ever''; sudden, sharp belly pain; a belly
+      that is rigid and hard; belly pain with vomiting blood, black stool, inability to pass stool while vomiting, a recent
+      belly injury, current cancer treatment, or trouble breathing; belly pain in pregnancy or possible pregnancy together
+      with fainting, severe pain, or heavy bleeding; pain in or between the shoulder blades with nausea. Counts as present:
+      Any listed feature now. Uncertain: Severe pain without the listed features (''really bad stomach ache''); unclear onset.
+      Currentness: current = now.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: mp_headache
+    source_ids:
+    - mp_headache
+    - mp_abdominal_pain
+    - acep_is_it_emergency
+    instruction:
+      id: instr_PG-01
+      text: Call 911 now. Sudden, severe pain like this needs emergency care right away. Do not drive yourself.
+      text_other: Call 911 now for this person.
+      fallback: Call 911 now. Sudden, severe pain like this needs emergency care right away. Do not drive yourself.
+      fallback_other: Call 911 now for this person.
+      source: signed:PG-01
+  - id: PG-02
+    description: 'Vomiting for more than 24 hours, unable to keep fluids down for 12 hours or more, no urine for 8 hours or
+      more, vomiting 3 or more times in a day, or severe or persistent diarrhea, with signs of dehydration (very dark urine,
+      dry mouth, dizziness, fast heartbeat). Counts as present: Any listed duration or count feature, or vomiting or diarrhea
+      with any dehydration sign. Uncertain: Duration or fluid intake not described. Currentness: current = ongoing now.'
+    route: er_now
+    routing_relevant: true
+    requires_current: true
+    source: mp_vomiting
+    source_ids:
+    - mp_vomiting
+    - mp_dehydration
+    - acep_is_it_emergency
+    instruction:
+      id: instr_PG-02
+      text: Go to the nearest emergency room now. You may be losing too much fluid. If you get confused, faint, or are hard
+        to wake, call 911.
+      text_other: Please take this person to the nearest emergency room now. If they get confused, faint, or are hard to wake,
+        call 911.
+      fallback: Go to the nearest emergency room now. You may be losing too much fluid. If you get confused, faint, or are
+        hard to wake, call 911.
+      fallback_other: Please take this person to the nearest emergency room now. If they get confused, faint, or are hard
+        to wake, call 911.
+      source: signed:PG-02
+  - id: PG-03
+    description: 'A person who is or could be pregnant has belly or pelvic pain now, without fainting, severe pain, or heavy
+      bleeding. Counts as present: Belly or pelvic pain now in a person who is or could be pregnant, with none of the PG-01
+      features. Uncertain: Pregnancy possibility unknown; pain severity unclear. Currentness: current = now.'
+    route: er_now
+    routing_relevant: true
+    requires_current: true
+    source: mp_abdominal_pain
+    source_ids:
+    - mp_abdominal_pain
+    instruction:
+      id: instr_PG-03
+      text: Go to the nearest emergency room now, and tell them you are or may be pregnant. If you faint, the pain becomes
+        severe, or you have heavy bleeding, call 911.
+      text_other: Please take this person to the nearest emergency room now. If she faints, the pain becomes severe, or she
+        has heavy bleeding, call 911.
+      fallback: Go to the nearest emergency room now, and tell them you are or may be pregnant. If you faint, the pain becomes
+        severe, or you have heavy bleeding, call 911.
+      fallback_other: Please take this person to the nearest emergency room now. If she faints, the pain becomes severe, or
+        she has heavy bleeding, call 911.
+      source: signed:PG-03
+- id: behavioral_other
+  name: 'Violence toward others, psychosis, or severe agitation (taxonomy: behavioral_other)'
+  lexicon:
+  - kill him
+  - kill her
+  - kill them
+  - hurt someone
+  - hurt somebody
+  - going to hurt
+  - gonna hurt
+  - shoot him
+  - stab
+  - homicidal
+  - hearing voices
+  - voices telling me
+  - voices tell me
+  - someone is watching me
+  - people are after me
+  - seeing things
+  - paranoid
+  - out of control
+  - going crazy
+  - manic
+  - psychotic
+  classifier_cut: null
+  classifier_cut_source: null
+  criteria:
+  - id: BH-01
+    description: 'The person says they intend to hurt or kill someone and has a plan or the means and a near time, or violence
+      toward another person is happening now, or someone is in danger from the person now. Counts as present: Intent plus
+      plan, means, or near timing; or violence in progress. Uncertain: Angry statements without clear intent (''I could kill
+      him''), unless idiomatic; threats with unclear timing. Currentness: current = now or the next hours.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: samhsa_988_faq
+    source_ids:
+    - samhsa_988_faq
+    - acep_is_it_emergency
+    - mp_confusion
+    instruction:
+      id: instr_BH-01
+      text: Please call 911 now. If you might hurt someone, move away from them and from any weapon. You can also call or
+        text 988 to talk with a counselor.
+      text_other: If you or anyone is in danger, get to a safe place and call 911 now.
+      fallback: Please call 911 now. If you might hurt someone, move away from them and from any weapon. You can also call
+        or text 988 to talk with a counselor.
+      fallback_other: If you or anyone is in danger, get to a safe place and call 911 now.
+      source: signed:BH-01
+  - id: BH-02
+    description: 'The person reports thoughts or urges to hurt or kill another person, without a plan, means, or near timing.
+      Counts as present: Current thoughts or urges to harm another person, not idiomatic. Uncertain: Idiom plus anger; intrusive
+      unwanted thoughts the person finds distressing (for example postpartum intrusive thoughts; MO-01 applies in the perinatal
+      year). Currentness: current = now or in the last few days, not resolved.'
+    route: crisis_988_page
+    routing_relevant: true
+    requires_current: true
+    source: samhsa_988_faq
+    source_ids:
+    - samhsa_988_faq
+    - acep_is_it_emergency
+    instruction:
+      id: instr_BH-02
+      text: Please call or text 988 now to talk with a crisis counselor about these thoughts. It is free and open all day
+        and night. If you might act on them, call 911.
+      text_other: null
+      fallback: Please call or text 988 now to talk with a crisis counselor about these thoughts. It is free and open all
+        day and night. If you might act on them, call 911.
+      fallback_other: null
+      source: signed:BH-02
+  - id: BH-03
+    description: 'The person (or someone about them) reports seeing or hearing things others do not, including voices telling
+      them to do something, strong false beliefs (for example that others are trying to hurt them), speech that does not make
+      sense, or behavior that is out of control, and this is new or worse than usual. Counts as present: Any listed feature
+      now, new or worse. Uncertain: Paranoia or odd ideas without detail; a known condition with unclear change. Currentness:
+      current = now or in the last few days.'
+    route: crisis_988_page
+    routing_relevant: true
+    requires_current: true
+    source: nimh_psychosis
+    source_ids:
+    - nimh_psychosis
+    - samhsa_988_faq
+    instruction:
+      id: instr_BH-03
+      text: Please call or text 988 now to talk with a crisis counselor. It is free and open all day and night. If you or
+        someone else is in danger, call 911.
+      text_other: Please call or text 988 now. Counselors can help you support this person. If anyone is in danger, call 911.
+      fallback: Please call or text 988 now to talk with a crisis counselor. It is free and open all day and night. If you
+        or someone else is in danger, call 911.
+      fallback_other: Please call or text 988 now. Counselors can help you support this person. If anyone is in danger, call
+        911.
+      source: signed:BH-03
+- id: med_safety
+  name: 'Medication safety (taxonomy: med_safety)'
+  lexicon:
+  - ran out of insulin
+  - out of insulin
+  - no insulin
+  - cant afford insulin
+  - out of my blood thinner
+  - out of eliquis
+  - out of xarelto
+  - out of warfarin
+  - out of coumadin
+  - out of my seizure meds
+  - out of keppra
+  - pharmacy wont fill
+  - stopped taking my
+  - fruity breath
+  - ketones
+  - dka
+  - lips swelling
+  - tongue is swollen
+  - face swelling after
+  classifier_cut: null
+  classifier_cut_source: null
+  criteria:
+  - id: MD-01
+    description: 'The person has run out of, cannot get, or has stopped on their own insulin, a blood thinner (anticoagulant),
+      or a seizure medicine, or will run out within 2 days. Counts as present: A statement that one of these medicines is
+      out, unavailable, or stopped, or will run out within 2 days. Uncertain: Unclear which medicine; ''running low'' without
+      timing. Currentness: current = out now, or out within 2 days [clinical judgment, approved by signer change A7].'
+    route: urgent_review
+    routing_relevant: true
+    requires_current: true
+    source: mp_dka
+    source_ids:
+    - mp_dka
+    - mp_apixaban
+    - mp_levetiracetam
+    instruction:
+      id: instr_MD-01
+      text: Please do not wait. I am sending this to your care team today so they can help you get your medicine. Do not stop
+        this medicine without talking to your care team.
+      text_other: null
+      fallback: Please do not wait. I am sending this to your care team today so they can help you get your medicine. Do not
+        stop this medicine without talking to your care team.
+      fallback_other: null
+      source: signed:MD-01
+  - id: MD-02
+    description: 'A person with diabetes has decreased consciousness, confusion, is hard to wake, or has trouble breathing.
+      Counts as present: Diabetes plus any listed sign now. Uncertain: High sugar readings without the listed signs (-> hyperglycemia
+      illness script); diabetes status unknown. Currentness: current = now.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: mp_dka
+    source_ids:
+    - mp_dka
+    instruction:
+      id: instr_MD-02
+      text: Call 911 now. These can be signs of a dangerous diabetes problem (DKA).
+      text_other: Call 911 now for this person.
+      fallback: Call 911 now. These can be signs of a dangerous diabetes problem (DKA).
+      fallback_other: Call 911 now for this person.
+      source: signed:MD-02
+  - id: MD-04
+    description: 'A person with diabetes has nausea and vomiting or fruity breath, and is awake, not confused, and breathing
+      normally. Counts as present: Diabetes plus vomiting or fruity breath now, with none of the MD-02 signs. Uncertain: Diabetes
+      status unknown; alertness or breathing not described (-> also uncertain on MD-02). Currentness: current = now.'
+    route: er_now
+    routing_relevant: true
+    requires_current: true
+    source: mp_dka
+    source_ids:
+    - mp_dka
+    instruction:
+      id: instr_MD-04
+      text: Go to the nearest emergency room now. These can be signs of a dangerous diabetes problem (DKA). If you get confused,
+        very sleepy, or have trouble breathing, call 911.
+      text_other: Please take this person to the nearest emergency room now. If they get confused, very sleepy, or have trouble
+        breathing, call 911.
+      fallback: Go to the nearest emergency room now. These can be signs of a dangerous diabetes problem (DKA). If you get
+        confused, very sleepy, or have trouble breathing, call 911.
+      fallback_other: Please take this person to the nearest emergency room now. If they get confused, very sleepy, or have
+        trouble breathing, call 911.
+      source: signed:MD-04
+  - id: MD-03
+    description: 'Swelling of the face, lips, tongue, or throat (angioedema) after a medicine, with no trouble breathing,
+      no abnormal breathing sounds, and no fainting. Counts as present: Swelling as defined, with breathing stated normal.
+      Uncertain: Swelling with breathing not described (-> also uncertain on BR-02). Currentness: current = now.'
+    route: urgent_review
+    routing_relevant: true
+    requires_current: true
+    source: mp_angioedema
+    source_ids:
+    - mp_angioedema
+    instruction:
+      id: instr_MD-03
+      text: If your breathing changes, you hear wheezing, or you feel faint, call 911 now. I am sending this to your care
+        team right away. Do not take another dose until you hear from them.
+      text_other: null
+      fallback: If your breathing changes, you hear wheezing, or you feel faint, call 911 now. I am sending this to your care
+        team right away. Do not take another dose until you hear from them.
+      fallback_other: null
+      source: signed:MD-03
+- id: falls_mobility
+  name: 'Falls and head injury (taxonomy: falls_mobility)'
+  lexicon:
+  - fell
+  - i fell
+  - fall down
+  - fell down
+  - took a fall
+  - slipped and fell
+  - cant get up
+  - can't get up
+  - on the floor
+  - on the ground
+  - hit my head
+  - hit her head
+  - hit his head
+  - bumped my head
+  - knocked out
+  - blood thinner and fell
+  - fell and hit
+  classifier_cut: null
+  classifier_cut_source: null
+  criteria:
+  - id: FA-01
+    description: 'After a fall, the person is hurt or cannot get up on their own; or after a head injury the person is not
+      fully awake, has new weakness, numbness, or trouble speaking, had a seizure, may have a skull fracture or penetrating
+      injury, or had a high-energy injury. Counts as present: Any listed feature now. Uncertain: Fall with pain but injury
+      severity unclear; head strike with symptoms not described. Currentness: current = fall or head injury today, or the
+      person is still on the floor.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: nia_falls
+    source_ids:
+    - nia_falls
+    - nice_ng232
+    instruction:
+      id: instr_FA-01
+      text: Call 911 now. Do not try to get up if you are hurt. Stay as warm and still as you can until help comes.
+      text_other: Call 911 now for this person. Do not move them if they may be hurt.
+      fallback: Call 911 now. Do not try to get up if you are hurt. Stay as warm and still as you can until help comes.
+      fallback_other: Call 911 now for this person. Do not move them if they may be hurt.
+      source: signed:FA-01
+  - id: FA-02
+    description: 'After a head injury, the person was knocked out and has recovered, has memory loss for events around the
+      injury, a headache that has not gone away, any vomiting, takes a blood thinner or antiplatelet medicine (other than
+      aspirin alone), has a bleeding or clotting disorder or past brain surgery, or is intoxicated. Counts as present: A head
+      injury in the past 24 hours plus any listed factor, with no FA-01 feature. Uncertain: Fall with head strike unclear;
+      medicine list unknown (check the record). Currentness: current = head injury within the past 24 hours [clinical judgment,
+      approved by signer change A7; NICE times CT from the injury but sets no remote-advice window].'
+    route: er_now
+    routing_relevant: true
+    requires_current: true
+    source: nice_ng232
+    source_ids:
+    - nice_ng232
+    - acep_is_it_emergency
+    instruction:
+      id: instr_FA-02
+      text: Go to the nearest emergency room now to be checked for bleeding in the head. Do not drive yourself. If you get
+        very sleepy, confused, or throw up again, call 911.
+      text_other: Please take this person to the nearest emergency room now. Do not let them drive. If they get very sleepy,
+        confused, or throw up again, call 911.
+      fallback: Go to the nearest emergency room now to be checked for bleeding in the head. Do not drive yourself. If you
+        get very sleepy, confused, or throw up again, call 911.
+      fallback_other: Please take this person to the nearest emergency room now. Do not let them drive. If they get very sleepy,
+        confused, or throw up again, call 911.
+      source: signed:FA-02
+- id: maternity_ob
+  name: 'Pregnancy and the year after birth (taxonomy: maternity_ob)'
+  lexicon:
+  - pregnant
+  - preg
+  - pregnet
+  - weeks along
+  - postpartum
+  - post partum
+  - just had a baby
+  - had my baby
+  - c section
+  - c-section
+  - baby not moving
+  - baby isnt moving
+  - baby stopped moving
+  - water broke
+  - leaking fluid
+  - bleeding while pregnant
+  - soaking a pad
+  - swollen face and hands
+  - seeing spots
+  - blurry vision pregnant
+  - preeclampsia
+  - thoughts of hurting my baby
+  classifier_cut: null
+  classifier_cut_source: null
+  criteria:
+  - id: MO-01
+    description: 'A person who is pregnant or gave birth in the past year has chest pain, obstructed breathing or shortness
+      of breath, a seizure, or thoughts of hurting themself or their baby. Counts as present: Any listed sign now, in the
+      perinatal window. Uncertain: Perinatal status unknown; ''scary thoughts'' without content (intrusive thoughts can be
+      distressing without intent; the source still says call 911). Currentness: current = now.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: awhonn_post_birth
+    source_ids:
+    - awhonn_post_birth
+    - cdc_hear_her
+    instruction:
+      id: instr_MO-01
+      text: Call 911 now. Tell them you are pregnant or had a baby in the past year. These signs can be life-threatening.
+      text_other: Call 911 now for this person. Tell them she is pregnant or had a baby in the past year.
+      fallback: Call 911 now. Tell them you are pregnant or had a baby in the past year. These signs can be life-threatening.
+      fallback_other: Call 911 now for this person. Tell them she is pregnant or had a baby in the past year.
+      source: signed:MO-01
+  - id: MO-02
+    description: 'A person who is pregnant or gave birth in the past year has: a headache that will not go away or gets worse;
+      dizziness or fainting; vision changes; fever of 100.4 F or higher; extreme swelling of hands or face; fast-beating heart;
+      severe nausea and throwing up; severe belly pain that does not go away; baby moving less or not at all during pregnancy;
+      vaginal bleeding or fluid leaking during pregnancy; heavy vaginal bleeding or discharge after pregnancy; severe swelling,
+      redness, or pain of a leg or arm; or overwhelming tiredness. Counts as present: Any listed sign now, in the perinatal
+      window. Uncertain: Perinatal status unknown; usual pregnancy discomforts the person describes as mild. Currentness:
+      current = now.'
+    route: er_now
+    routing_relevant: true
+    requires_current: true
+    source: cdc_hear_her
+    source_ids:
+    - cdc_hear_her
+    - awhonn_post_birth
+    instruction:
+      id: instr_MO-02
+      text: Go to the nearest emergency room now, and tell them you are pregnant or had a baby in the past year. If you have
+        chest pain, trouble breathing, or a seizure, call 911.
+      text_other: Please take her to the nearest emergency room now, and tell them she is pregnant or had a baby in the past
+        year. If she has chest pain, trouble breathing, or a seizure, call 911.
+      fallback: Go to the nearest emergency room now, and tell them you are pregnant or had a baby in the past year. If you
+        have chest pain, trouble breathing, or a seizure, call 911.
+      fallback_other: Please take her to the nearest emergency room now, and tell them she is pregnant or had a baby in the
+        past year. If she has chest pain, trouble breathing, or a seizure, call 911.
+      source: signed:MO-02
+- id: environmental_housing_safety
+  name: 'Violence at home and environmental danger (taxonomy: environmental_housing_safety)'
+  lexicon:
+  - he hit me
+  - she hit me
+  - hits me
+  - beats me
+  - choked me
+  - threatened to kill me
+  - scared of my boyfriend
+  - scared of my husband
+  - abusive
+  - domestic violence
+  - not safe at home
+  - locked me in
+  - co alarm
+  - carbon monoxide
+  - detector going off
+  - generator inside
+  - gas smell
+  - no ac
+  - too hot in my apartment
+  - heat stroke
+  - overheated
+  classifier_cut: null
+  classifier_cut_source: null
+  criteria:
+  - id: EH-01
+    description: 'The person is being hurt or threatened by someone now, or says they are in immediate danger at home or where
+      they are (partner, family member, or other). Counts as present: Violence or threat now, or a statement of immediate
+      danger. Uncertain: Abuse described without timing; ''scared to go home''. Currentness: current = now or tonight.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: ndvh_hotline
+    source_ids:
+    - ndvh_hotline
+    instruction:
+      id: instr_EH-01
+      text: If you are in danger right now, call 911 if it is safe to do so. If you cannot talk, you can text 911 in many
+        areas.
+      text_other: If this person is in danger right now, call 911.
+      fallback: If you are in danger right now, call 911 if it is safe to do so. If you cannot talk, you can text 911 in many
+        areas.
+      fallback_other: If this person is in danger right now, call 911.
+      source: signed:EH-01
+    order_exception:
+      required_clause: call 911
+      max_sentences: 1
+      source: Signer change A6, 2026-11-03
+  - id: EH-02
+    description: 'The person reports being hurt, threatened, controlled, or afraid of a partner, family member, or someone
+      they live with, without immediate danger now. Counts as present: Abuse or fear for safety reported, not immediate. Uncertain:
+      Conflict without fear or harm described. Currentness: current = ongoing or in the past month.'
+    route: urgent_review
+    routing_relevant: true
+    requires_current: true
+    source: ndvh_hotline
+    source_ids:
+    - ndvh_hotline
+    instruction:
+      id: instr_EH-02
+      text: You can talk with the National Domestic Violence Hotline any time. Call 800-799-7233 or text START to 88788. It
+        is free and private. I am sending this to your care team. If you are in danger, call 911.
+      text_other: null
+      fallback: You can talk with the National Domestic Violence Hotline any time. Call 800-799-7233 or text START to 88788.
+        It is free and private. I am sending this to your care team. If you are in danger, call 911.
+      fallback_other: null
+      source: signed:EH-02
+  - id: EH-03
+    description: 'A carbon monoxide alarm is sounding, or people (or pets) in the same place have headache, dizziness, nausea,
+      confusion, drowsiness, or fainting with a fuel-burning source (heater, generator, stove, car) running indoors or a suspected
+      leak. Counts as present: Alarm sounding, or symptoms in the setting described. Uncertain: Symptoms with a possible source
+      but unclear; alarm beeping that may be a low battery. Currentness: current = now.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: mp_co
+    source_ids:
+    - mp_co
+    instruction:
+      id: instr_EH-03
+      text: Get everyone, including pets, outside into fresh air now. Then call 911 from outside.
+      text_other: Get everyone outside into fresh air now, then call 911.
+      fallback: Get everyone, including pets, outside into fresh air now. Then call 911 from outside.
+      fallback_other: Get everyone outside into fresh air now, then call 911.
+      source: signed:EH-03
+    order_exception:
+      required_clause: call 911
+      max_sentences: 2
+      source: Signer change A6, 2026-11-03
+  - id: EH-04
+    description: 'During heat exposure (hot home with no cooling, outdoor work, heat wave), the person has a very high temperature
+      (above 104 F), confusion, irrational behavior, seizures, slurred speech, extreme tiredness, or is unconscious. Counts
+      as present: Heat exposure plus any listed neurologic sign or temperature above 104 F. Uncertain: Heat exposure with
+      heat exhaustion signs only (heavy sweating, cramps, nausea, dizziness, headache). Currentness: current = now.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: mp_heat
+    source_ids:
+    - mp_heat
+    instruction:
+      id: instr_EH-04
+      text: Call 911 now. Move to a cooler place and cool down with water or wet cloths while you wait.
+      text_other: Call 911 now for this person. Move them to a cooler place and cool them with water or wet cloths.
+      fallback: Call 911 now. Move to a cooler place and cool down with water or wet cloths while you wait.
+      fallback_other: Call 911 now for this person. Move them to a cooler place and cool them with water or wet cloths.
+      source: signed:EH-04
+- id: substance_withdrawal
+  name: 'Dangerous alcohol or sedative withdrawal (taxonomy: substance_use)'
+  lexicon:
+  - withdrawal
+  - withdrawals
+  - detox
+  - detoxing
+  - dts
+  - the dts
+  - delirium tremens
+  - the shakes
+  - shaky since i stopped
+  - stopped drinking
+  - quit drinking
+  - cold turkey
+  - stopped my xanax
+  - ran out of xanax
+  - ran out of klonopin
+  - out of my benzos
+  - seeing bugs
+  - hearing things since i stopped
+  classifier_cut: null
+  classifier_cut_source: null
+  criteria:
+  - id: SU-01
+    description: 'After stopping or sharply cutting down heavy drinking, or a benzodiazepine or similar sedative, the person
+      has hallucinations (seeing, hearing, or feeling things that are not there), severe confusion, fever, a fast or irregular
+      heartbeat, or severe shaking with sweating. Counts as present: Recent stop or cut-down plus any listed sign now, with
+      no seizure and the person awake. Uncertain: Mild shakiness or anxiety after stopping; amount or recency of drinking
+      unclear. Currentness: current = now, within days of stopping or cutting down.'
+    route: er_now
+    routing_relevant: true
+    requires_current: true
+    source: asam_aw_2020
+    source_ids:
+    - asam_aw_2020
+    - mp_alcohol_withdrawal
+    - mp_lorazepam
+    instruction:
+      id: instr_SU-01
+      text: Go to the nearest emergency room now. Withdrawal from alcohol or sedatives can quickly become dangerous. If you
+        have a seizure, or someone cannot wake you, they should call 911.
+      text_other: Please take this person to the nearest emergency room now. If they have a seizure or you cannot wake them,
+        call 911.
+      fallback: Go to the nearest emergency room now. Withdrawal from alcohol or sedatives can quickly become dangerous. If
+        you have a seizure, or someone cannot wake you, they should call 911.
+      fallback_other: Please take this person to the nearest emergency room now. If they have a seizure or you cannot wake
+        them, call 911.
+      source: signed:SU-01
+  - id: SU-02
+    description: 'After stopping or sharply cutting down heavy drinking, or a benzodiazepine or similar sedative, the person
+      has a seizure or is hard to wake. Counts as present: Recent stop or cut-down plus a seizure now or just now, or the
+      person is hard to wake. Uncertain: Shaking that may or may not be a seizure. Currentness: current = now or just now.'
+    route: emergency_911
+    routing_relevant: true
+    requires_current: true
+    source: mp_alcohol_withdrawal
+    source_ids:
+    - mp_alcohol_withdrawal
+    - mp_seizure
+    - asam_aw_2020
+    instruction:
+      id: instr_SU-02
+      text: Call 911 now. A seizure during withdrawal needs emergency care right away.
+      text_other: Call 911 now for this person. Stay with them, and turn them on their side.
+      fallback: Call 911 now. A seizure during withdrawal needs emergency care right away.
+      fallback_other: Call 911 now for this person. Stay with them, and turn them on their side.
+      source: signed:SU-02
+sources:
+  posner_2011: 'Posner K, Brown GK, Stanley B, et al. The Columbia-Suicide Severity Rating Scale: initial validity and internal
+    consistency findings from three multisite studies with adolescents and adults. Am J Psychiatry. 2011;168(12):1266-1277.'
+  cssrs_screener_pc: 'The Columbia Lighthouse Project. Columbia-Suicide Severity Rating Scale: Screen with Triage Points for
+    Primary Care (2026 form).'
+  cssrs_community_card: The Columbia Lighthouse Project. C-SSRS Community Card for Friends and Family (2026 form).
+  asq_tool: 'National Institute of Mental Health. Ask Suicide-Screening Questions (ASQ) Toolkit: Suicide Risk Screening Tool
+    for youth and adults (form dated 9/29/25).'
+  horowitz_2012: 'Horowitz LM, Bridge JA, Teach SJ, et al. Ask Suicide-Screening Questions (ASQ): a brief instrument for the
+    pediatric emergency department. Arch Pediatr Adolesc Med. 2012;166(12):1170-1176.'
+  tjc_npsg_15_r3: 'The Joint Commission. R3 Report Issue 18: National Patient Safety Goal for suicide prevention (NPSG.15.01.01).
+    November 27, 2018; updated December 3, 2025.'
+  samhsa_988_faq: Substance Abuse and Mental Health Services Administration. 988 Frequently Asked Questions.
+  samhsa_overdose_toolkit: Substance Abuse and Mental Health Services Administration. SAMHSA Overdose Prevention and Response
+    Toolkit. Publication No. PEP23-03-00-001. SAMHSA; 2026 (formerly the SAMHSA Opioid Overdose Prevention Toolkit).
+  apc_poisonhelp: America's Poison Centers. PoisonHelp.org, First Aid.
+  apc_poisonhelp_tool: America's Poison Centers. PoisonHelp.org online help tool, entry page.
+  hrsa_poisonhelp_2013: 'Health Resources and Services Administration. Poison Help: Emergency Checklist (archived page, captured
+    2013-02-21).'
+  gulati_2021_es: 'Gulati M, Levy PD, Mukherjee D, et al. 2021 AHA/ACC/ASE/CHEST/SAEM/SCCT/SCMR Guideline for the Evaluation
+    and Diagnosis of Chest Pain: Executive Summary. Circulation. 2021;144(22):e336-e367.'
+  nhlbi_heart_attack: 'National Heart, Lung, and Blood Institute. Heart Attack: Symptoms.'
+  acep_is_it_emergency: 'American College of Emergency Physicians. Medical Emergencies: What You Need to Know. Is It An Emergency?
+    (patient booklet, EmergencyCareForYou.org).'
+  mp_stroke: MedlinePlus (National Library of Medicine). Stroke.
+  aroor_2017: 'Aroor S, Singh R, Goldstein LB. BE-FAST (Balance, Eyes, Face, Arm, Speech, Time): reducing the proportion of
+    strokes missed using the FAST mnemonic. Stroke. 2017;48(2):479-481.'
+  mp_seizure: MedlinePlus Medical Encyclopedia. Seizures.
+  mp_breathing: MedlinePlus Medical Encyclopedia. Breathing difficulty.
+  aaaai_anaphylaxis: American Academy of Allergy, Asthma & Immunology. Anaphylaxis (Conditions Library).
+  mp_confusion: MedlinePlus Medical Encyclopedia. Confusion.
+  mp_fainting: MedlinePlus Medical Encyclopedia. Fainting.
+  mp_bleeding: MedlinePlus Medical Encyclopedia. Bleeding.
+  mp_vomiting: MedlinePlus Medical Encyclopedia. Nausea and vomiting - adults.
+  mp_abdominal_pain: MedlinePlus Medical Encyclopedia. Abdominal pain.
+  mp_cough_blood: MedlinePlus Medical Encyclopedia. Coughing up blood.
+  mp_headache: MedlinePlus Medical Encyclopedia. Headache.
+  mp_dehydration: MedlinePlus Medical Encyclopedia. Dehydration.
+  nimh_psychosis: National Institute of Mental Health. Understanding Psychosis.
+  mp_dka: MedlinePlus Medical Encyclopedia. Diabetic ketoacidosis.
+  mp_apixaban: MedlinePlus Drug Information. Apixaban.
+  mp_levetiracetam: MedlinePlus Drug Information. Levetiracetam.
+  mp_angioedema: MedlinePlus Medical Encyclopedia. Angioedema.
+  nia_falls: 'National Institute on Aging. Falls and Fractures in Older Adults: Causes and Prevention.'
+  nice_ng232: 'National Institute for Health and Care Excellence. Head injury: assessment and early management (NG232), Recommendations
+    1.2.2 and 1.2.3. 2023.'
+  awhonn_post_birth: 'Association of Women''s Health, Obstetric and Neonatal Nurses. SAVE YOUR LIFE: Get Care for these POST-BIRTH
+    Warning Signs (AWHONN news post).'
+  cdc_hear_her: 'Centers for Disease Control and Prevention. Hear Her: Urgent Maternal Warning Signs and Symptoms (page dated
+    May 15, 2024).'
+  ndvh_hotline: National Domestic Violence Hotline. Home page (thehotline.org).
+  mp_co: MedlinePlus Medical Encyclopedia. Carbon monoxide poisoning.
+  mp_heat: MedlinePlus Medical Encyclopedia. Heat emergencies.
+  asam_aw_2020: American Society of Addiction Medicine. The ASAM Clinical Practice Guideline on Alcohol Withdrawal Management.
+    J Addict Med. 2020;14(3S Suppl 1):1-72.
+  mp_alcohol_withdrawal: MedlinePlus Medical Encyclopedia. Alcohol withdrawal.
+  mp_lorazepam: MedlinePlus Drug Information. Lorazepam.

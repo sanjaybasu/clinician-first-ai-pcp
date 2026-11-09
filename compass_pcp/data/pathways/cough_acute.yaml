@@ -1,0 +1,61 @@
+# Guideline pathway: acute cough (28 days or less) in adults. Paper 2 development pathway, signed by S. Basu on 2026-11-05.
+# Reads the signed illness script cough_acute@1.0.0 (design/pathway_schema.md). Nodes are checked in order; the first
+# match sets the output. Every source below resolved in PubMed on 2026-11-03; the section-level support for each node
+# is marked verified: false until the signing physician checks the cited section.
+pathway: cough_acute
+version: "0.1.0-dev"
+script: cough_acute@1.0.0
+status: signed
+signed_by: "S. Basu 2026-11-05"
+sources:
+  metlay2019:
+    citation: "Metlay JP, et al. Diagnosis and treatment of adults with community-acquired pneumonia. An official clinical practice guideline of the ATS and IDSA. Am J Respir Crit Care Med. 2019;200(7):e45-e67"
+    pmid: "31573350"
+  acr_ari2024:
+    citation: "Batra K, et al. ACR Appropriateness Criteria Acute Respiratory Illness in Immunocompetent Patients: 2024 Update. J Am Coll Radiol. 2025;22(5S):S14-S35"
+    pmid: "40409874"
+  acr_hemoptysis2020:
+    citation: "Olsen KM, et al. ACR Appropriateness Criteria Hemoptysis. J Am Coll Radiol. 2020;17(5S):S148-S159"
+    pmid: "32370959"
+  irwin2018:
+    citation: "Irwin RS, et al. Classification of cough as a symptom in adults and management algorithms: CHEST guideline and expert panel report. Chest. 2018;153(1):196-209"
+    pmid: "29080708"
+  vanvugt2013:
+    citation: "van Vugt SF, et al. Diagnosing pneumonia in patients with acute cough. BMJ. 2013;346:f2450"
+    pmid: "23633005"
+  judgment:
+    citation: "Development judgment (S. Basu decision of 2026-11-03: clinician workload is acceptable for open cannot-miss workups)"
+nodes:
+  - id: hemoptysis
+    when: {kinds: [escalate], red_flags_any: [coughing_blood]}
+    disposition: {level: urgent_same_day, within_hours: 24}
+    proposals:
+      - {kind: imaging, name: "Chest radiograph", source: [acr_hemoptysis2020]}
+      - {kind: imaging, name: "CT chest with contrast or CTA chest, if the radiograph does not explain the bleeding", source: [acr_hemoptysis2020]}
+    source: [acr_hemoptysis2020]
+  - id: pneumonia_likely
+    when: {cannot_miss: {community_acquired_pneumonia: [escalate]}}
+    disposition: {level: urgent_same_day, within_hours: 24}
+    proposals:
+      - {kind: imaging, name: "Chest radiograph, PA and lateral", source: [acr_ari2024]}
+    source: [metlay2019, vanvugt2013, acr_ari2024]
+  - id: pneumonia_open
+    when: {kinds: [ask], cannot_miss: {community_acquired_pneumonia: [needs_workup]}}
+    standing: {level: clinician_review, within_hours: 24}
+    source: [vanvugt2013, judgment]
+  - id: defer
+    when: {kinds: [defer]}
+    disposition: {level: clinician_review, within_hours: 24}
+    source: [judgment]
+  - id: other_escalation
+    when: {kinds: [escalate]}
+    disposition: {level: urgent_same_day, within_hours: 24}
+    source: [judgment]
+  - id: pneumonia_ruled_out_asking
+    when: {kinds: [ask], cannot_miss: {community_acquired_pneumonia: [ruled_out]}}
+    standing: {level: self_care}
+    source: [irwin2018]
+  - id: complete
+    when: {kinds: [complete]}
+    disposition: {level: self_care}
+    source: [irwin2018, vanvugt2013]

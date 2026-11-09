@@ -1,0 +1,69 @@
+# Monitoring contracts for refill-lane drug classes. Physician signed 2026-10-28; pharmacist
+# co-sign pending. Sources and exact statements: docs/clinical/REFILL_RULE_SOURCES.md.
+#
+# These contracts start at initiation or a dose change. A pure refill (no dose
+# change) does not start one; they apply when the lane sees a new start or a dose
+# change in the record, or when a reopened case changes the dose.
+#
+# `trigger` uses the same <class> as rx_class:<class> in refill.yaml.
+# A Check with no max_abs_rise / max_rel_rise / max_abs_fall / low / high only
+# requires that the lab is drawn inside the window (PENDING, then OVERDUE). `high`
+# breaches when the value is strictly above it (potassium > 5.5). No contract uses a
+# fall or a floor because no source we read gives a number (see the sources doc,
+# "Omitted items").
+version: "1.0.0"
+clinical_review:
+  physician_approved_by: "Sanjay Basu, MD, PhD"
+  physician_approved_on: "2026-10-28"
+  pharmacist_approved_by: null
+  pharmacist_approved_on: null
+contracts:
+  - id: ace_inhibitor_start_or_dose_change
+    trigger: ace_inhibitor
+    window_days: [14, 28]
+    checks:
+      - loinc: "2160-0"
+        max_rel_rise: 0.30
+      - loinc: "2823-3"
+        high: 5.5
+    source: "KDIGO 2024 CKD guideline, Practice Points 3.6.2 (check within 2-4 weeks) and 3.6.4 (creatinine rise >30% within 4 weeks); Figure 32 (potassium >5.5 mmol/l)"
+  - id: arb_start_or_dose_change
+    trigger: arb
+    window_days: [14, 28]
+    checks:
+      - loinc: "2160-0"
+        max_rel_rise: 0.30
+      - loinc: "2823-3"
+        high: 5.5
+    source: "KDIGO 2024 CKD guideline, Practice Points 3.6.2 and 3.6.4; Figure 32 (potassium >5.5 mmol/l)"
+  - id: spironolactone_start_or_titration
+    trigger: spironolactone
+    window_days: [0, 7]
+    checks:
+      - loinc: "2823-3"
+        high: 5.5
+    source: "Spironolactone label, 5.1 Hyperkalemia (monitor potassium within 1 week of initiation or titration); KDIGO 2024 Figure 26 (hold at K+ >5.5 mmol/l; applicable to steroidal MRA)"
+  - id: thiazide_start_or_dose_change
+    trigger: thiazide
+    window_days: [7, 14]
+    checks:
+      - loinc: "2823-3"
+    source: "ADA Standards of Care 2025, Recommendation 10.12 (hypokalemia with diuretics, 7-14 days after initiation or dose change)"
+  - id: loop_diuretic_start_or_dose_change
+    trigger: loop_diuretic
+    window_days: [7, 14]
+    checks:
+      - loinc: "2823-3"
+    source: "ADA Standards of Care 2025, Recommendation 10.12"
+  - id: lithium_start_or_dose_change
+    trigger: lithium
+    window_days: [7, 7]
+    checks:
+      - loinc: "14334-7"
+    source: "NICE CG185 recommendation 1.10.15 (plasma lithium 1 week after starting and after every dose change)"
+  - id: levothyroxine_dose_change
+    trigger: levothyroxine
+    window_days: [42, 56]
+    checks:
+      - loinc: "3016-3"
+    source: "Levothyroxine label, 2.4 (TSH 6 to 8 weeks after any change in dosage)"

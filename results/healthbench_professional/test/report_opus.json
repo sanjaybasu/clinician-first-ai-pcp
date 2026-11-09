@@ -1,0 +1,277 @@
+{
+ "amie_style": {
+  "length_adjusted": {
+   "n": 350,
+   "score": 72.7,
+   "se": 2.5
+  },
+  "raw": {
+   "n": 350,
+   "score": 73.0,
+   "se": 2.5
+  },
+  "mean_chars": 2121,
+  "use_case=consult": {
+   "n": 157,
+   "score": 67.2,
+   "se": 4.5
+  },
+  "use_case=research": {
+   "n": 98,
+   "score": 70.7,
+   "se": 4.3
+  },
+  "use_case=writing": {
+   "n": 95,
+   "score": 83.7,
+   "se": 3.0
+  },
+  "type=good_faith": {
+   "n": 225,
+   "score": 73.6,
+   "se": 2.8
+  },
+  "type=red_teaming": {
+   "n": 125,
+   "score": 71.1,
+   "se": 4.9
+  }
+ },
+ "amie_style_uncapped": {
+  "length_adjusted": {
+   "n": 36,
+   "score": 79.3,
+   "se": 5.8
+  },
+  "raw": {
+   "n": 36,
+   "score": 78.4,
+   "se": 5.9
+  },
+  "mean_chars": 1704,
+  "use_case=consult": {
+   "n": 22,
+   "score": 78.8,
+   "se": 8.6
+  },
+  "use_case=research": {
+   "n": 9,
+   "score": 72.2,
+   "se": 9.6
+  },
+  "use_case=writing": {
+   "n": 5,
+   "score": 94.3,
+   "se": 6.6
+  },
+  "type=good_faith": {
+   "n": 20,
+   "score": 77.8,
+   "se": 7.2
+  },
+  "type=red_teaming": {
+   "n": 16,
+   "score": 81.2,
+   "se": 9.9
+  }
+ },
+ "compass_pro_full": {
+  "length_adjusted": {
+   "n": 350,
+   "score": 82.0,
+   "se": 1.9
+  },
+  "raw": {
+   "n": 350,
+   "score": 83.4,
+   "se": 1.8
+  },
+  "mean_chars": 2496,
+  "use_case=consult": {
+   "n": 157,
+   "score": 78.5,
+   "se": 3.2
+  },
+  "use_case=research": {
+   "n": 98,
+   "score": 85.8,
+   "se": 2.6
+  },
+  "use_case=writing": {
+   "n": 95,
+   "score": 83.7,
+   "se": 3.4
+  },
+  "type=good_faith": {
+   "n": 225,
+   "score": 84.6,
+   "se": 1.9
+  },
+  "type=red_teaming": {
+   "n": 125,
+   "score": 77.2,
+   "se": 3.9
+  }
+ },
+ "gpt61sol": {
+  "length_adjusted": {
+   "n": 350,
+   "score": 67.0,
+   "se": 2.4
+  },
+  "raw": {
+   "n": 350,
+   "score": 70.4,
+   "se": 2.4
+  },
+  "mean_chars": 3148,
+  "use_case=consult": {
+   "n": 157,
+   "score": 65.1,
+   "se": 4.0
+  },
+  "use_case=research": {
+   "n": 98,
+   "score": 67.6,
+   "se": 3.9
+  },
+  "use_case=writing": {
+   "n": 95,
+   "score": 69.5,
+   "se": 4.5
+  },
+  "type=good_faith": {
+   "n": 225,
+   "score": 69.4,
+   "se": 2.7
+  },
+  "type=red_teaming": {
+   "n": 125,
+   "score": 62.7,
+   "se": 4.7
+  }
+ },
+ "mai_dxo_style": {
+  "length_adjusted": {
+   "n": 350,
+   "score": 69.3,
+   "se": 2.6
+  },
+  "raw": {
+   "n": 350,
+   "score": 70.9,
+   "se": 2.6
+  },
+  "mean_chars": 2519,
+  "use_case=consult": {
+   "n": 157,
+   "score": 64.0,
+   "se": 4.5
+  },
+  "use_case=research": {
+   "n": 98,
+   "score": 68.2,
+   "se": 4.4
+  },
+  "use_case=writing": {
+   "n": 95,
+   "score": 79.3,
+   "se": 3.5
+  },
+  "type=good_faith": {
+   "n": 225,
+   "score": 71.0,
+   "se": 2.8
+  },
+  "type=red_teaming": {
+   "n": 125,
+   "score": 66.4,
+   "se": 5.0
+  }
+ },
+ "opus55": {
+  "length_adjusted": {
+   "n": 350,
+   "score": 67.0,
+   "se": 2.6
+  },
+  "raw": {
+   "n": 350,
+   "score": 74.7,
+   "se": 2.5
+  },
+  "mean_chars": 4620,
+  "use_case=consult": {
+   "n": 157,
+   "score": 61.6,
+   "se": 4.5
+  },
+  "use_case=research": {
+   "n": 98,
+   "score": 69.8,
+   "se": 3.6
+  },
+  "use_case=writing": {
+   "n": 95,
+   "score": 72.9,
+   "se": 4.2
+  },
+  "type=good_faith": {
+   "n": 225,
+   "score": 70.7,
+   "se": 2.6
+  },
+  "type=red_teaming": {
+   "n": 125,
+   "score": 60.2,
+   "se": 5.4
+  }
+ },
+ "physician": {
+  "length_adjusted": {
+   "n": 350,
+   "score": 45.4,
+   "se": 3.0
+  },
+  "raw": {
+   "n": 350,
+   "score": 45.7,
+   "se": 3.1
+  },
+  "mean_chars": 2091,
+  "use_case=consult": {
+   "n": 157,
+   "score": 42.8,
+   "se": 4.7
+  },
+  "use_case=research": {
+   "n": 98,
+   "score": 62.1,
+   "se": 3.6
+  },
+  "use_case=writing": {
+   "n": 95,
+   "score": 32.4,
+   "se": 6.8
+  },
+  "type=good_faith": {
+   "n": 225,
+   "score": 53.0,
+   "se": 3.1
+  },
+  "type=red_teaming": {
+   "n": 125,
+   "score": 31.7,
+   "se": 6.3
+  }
+ },
+ "_paired_vs_physician_on_common_ids": {
+  "amie_style": 19.7,
+  "mai_dxo_style": 14.5,
+  "opus55": 16.3,
+  "gpt61sol": 10.7,
+  "compass_pro_full": 33.9,
+  "amie_style_uncapped": 26.3
+ },
+ "_usd_list": 577.6
+}

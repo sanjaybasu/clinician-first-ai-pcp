@@ -1,0 +1,37 @@
+{
+ "notes": 10,
+ "parsed": 10,
+ "item_accuracy": 0.979,
+ "items": 378,
+ "conditions": {
+  "correct": 118,
+  "n": 122,
+  "acc": 0.967
+ },
+ "medicines": {
+  "correct": 102,
+  "n": 106,
+  "acc": 0.962
+ },
+ "facts": {
+  "correct": 150,
+  "n": 150,
+  "acc": 1.0
+ },
+ "omission_detected": {
+  "correct": 159,
+  "n": 167,
+  "acc": 0.952
+ },
+ "elicited": {
+  "correct": 150,
+  "n": 150,
+  "acc": 1.0
+ },
+ "unsupported_flagged": {
+  "correct": 5,
+  "n": 5,
+  "acc": 1.0
+ },
+ "spend_usd": 108.17
+}

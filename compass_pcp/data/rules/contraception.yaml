@@ -1,0 +1,228 @@
+# Contraception-lane gate rules (continuation refills of combined hormonal and
+# progestin-only methods). Physician signed 2026-10-28; pharmacist co-sign pending. Do not
+# deploy until both leads sign. Source: CDC U.S. Medical Eligibility Criteria for
+# Contraceptive Use, 2024 (U.S. MEC 2024), MMWR Recomm Rep 2024;73(No. RR-4),
+# Appendix C (Table C1, progestin-only), Appendix D (Table D1, combined hormonal),
+# and Appendix K (Table K1, summary). Exact statements, URL/DOI, and access date are
+# in docs/clinical/TITRATION_CONTRACEPTION_SOURCES.md.
+#
+# Each rule encodes a condition that U.S. MEC 2024 classifies as category 3 ("the
+# theoretical or proven risks usually outweigh the advantages") or category 4 ("an
+# unacceptable health risk") for the method requested.
+#   category 4 or "3/4"  -> kind out_of_lane (routes to the ordering clinician; the
+#                           method has to change or a clinician must decide)
+#   category 3           -> kind commission (pharmacist review; renewal only with a
+#                           documented clinician decision)
+# Where U.S. MEC splits initiation and continuation, the rule uses the CONTINUATION
+# category, because this lane renews an existing method.
+#
+# Every predicate can be asked of the patient or found in the record.
+#
+# PREDICATE NAMING CONVENTION (in addition to refill.yaml)
+#   rx_class:chc          combined hormonal contraceptive: pill, patch, or ring.
+#   rx_class:coc          combined oral contraceptive (pill only; subset of chc).
+#   rx_class:pop          progestin-only pill (any progestin).
+#   rx_class:drsp_pop     drospirenone progestin-only pill (subset of pop).
+#   age_ge_35             age in years at the refill date.
+#   tob:smokes_lt_15_per_day, tob:smokes_ge_15_per_day
+#                         current cigarette smoking, by cigarettes per day.
+#   bp:sbp_ge_140, bp:dbp_ge_90, bp:sbp_ge_160, bp:dbp_ge_100
+#                         from properly taken measurements. U.S. MEC 2024: "A single
+#                         reading of blood pressure level is not sufficient to
+#                         classify a person as hypertensive." The builder uses the
+#                         mean of at least two readings; one reading -> unknown.
+#   postpartum:lt_21_days, postpartum:21_to_42_days, postpartum:21_to_lt_30_days
+#                         days since delivery at the refill date.
+#   postpartum:vte_risk_factor
+#                         any U.S. MEC postpartum VTE risk factor (age >= 35, previous
+#                         VTE, thrombophilia, immobility, transfusion at delivery,
+#                         peripartum cardiomyopathy, BMI >= 30, postpartum hemorrhage,
+#                         postcesarean delivery, preeclampsia, or smoking).
+#   breastfeeding         currently breastfeeding.
+#   dx:<condition>, hx:<event>, med:<class>
+#                         as in refill.yaml.
+version: "1.0.0"
+clinical_review:
+  physician_approved_by: "Sanjay Basu, MD, PhD"
+  physician_approved_on: "2026-10-28"
+  pharmacist_approved_by: null
+  pharmacist_approved_on: null
+
+rules:
+  # ---- Combined hormonal contraceptives (pill, patch, ring): category 4 ----
+  - id: chc_age_ge_35_smokes_ge_15
+    kind: out_of_lane
+    when_all: [rx_class:chc, age_ge_35, tob:smokes_ge_15_per_day]
+    message: "CHC renewal, age >= 35, smokes >= 15 cigarettes/day. U.S. MEC category 4. Route to the ordering clinician for a different method."
+    source: "U.S. MEC 2024, Table D1 (Smoking, b.ii)"
+  - id: chc_bp_ge_160_100_or_vascular_disease
+    kind: out_of_lane
+    when_all: [rx_class:chc, [bp:sbp_ge_160, bp:dbp_ge_100, dx:vascular_disease]]
+    message: "CHC renewal with BP >= 160/100 mm Hg or hypertension with vascular disease. U.S. MEC category 4."
+    source: "U.S. MEC 2024, Table D1 (Hypertension, b.ii and c)"
+  - id: chc_migraine_with_aura
+    kind: out_of_lane
+    when_all: [rx_class:chc, dx:migraine_with_aura]
+    message: "CHC renewal with migraine with aura. U.S. MEC category 4."
+    source: "U.S. MEC 2024, Table D1 (Headaches, b.ii)"
+  - id: chc_dvt_pe_history
+    kind: out_of_lane
+    when_all: [rx_class:chc, hx:dvt_pe]
+    message: "CHC renewal with current or past DVT/PE. U.S. MEC category 3 (lower recurrence risk or therapeutic anticoagulation) or 4 (higher recurrence risk). Route to the ordering clinician."
+    source: "U.S. MEC 2024, Table D1 (Deep venous thrombosis/Pulmonary embolism, a-c)"
+  - id: chc_thrombophilia
+    kind: out_of_lane
+    when_all: [rx_class:chc, dx:thrombophilia]
+    message: "CHC renewal with known thrombophilia (e.g. factor V Leiden, antiphospholipid syndrome). U.S. MEC category 4."
+    source: "U.S. MEC 2024, Table D1 (Thrombophilia)"
+  - id: chc_postpartum_lt_21_days
+    kind: out_of_lane
+    when_all: [rx_class:chc, postpartum:lt_21_days]
+    message: "CHC renewal < 21 days postpartum. U.S. MEC category 4 (breastfeeding or not)."
+    source: "U.S. MEC 2024, Table D1 (Breastfeeding, a; Postpartum [nonbreastfeeding], a)"
+  - id: chc_ischemic_heart_disease_or_stroke
+    kind: out_of_lane
+    when_all: [rx_class:chc, [dx:ischemic_heart_disease, dx:stroke]]
+    message: "CHC renewal with current or past ischemic heart disease or stroke. U.S. MEC category 4."
+    source: "U.S. MEC 2024, Table D1 (Current and history of ischemic heart disease; Stroke)"
+  - id: chc_complicated_valvular_disease
+    kind: out_of_lane
+    when_all: [rx_class:chc, dx:complicated_valvular_heart_disease]
+    message: "CHC renewal with complicated valvular heart disease (pulmonary hypertension, atrial fibrillation risk, or past subacute bacterial endocarditis). U.S. MEC category 4."
+    source: "U.S. MEC 2024, Table D1 (Valvular heart disease, b)"
+  - id: chc_peripartum_cardiomyopathy
+    kind: out_of_lane
+    when_all: [rx_class:chc, dx:peripartum_cardiomyopathy]
+    message: "CHC renewal with peripartum cardiomyopathy. U.S. MEC category 4 (< 6 months, or NYHA III-IV) or 3 (>= 6 months, NYHA I-II)."
+    source: "U.S. MEC 2024, Table D1 (Peripartum cardiomyopathy)"
+  - id: chc_diabetes_vascular_or_gt_20_years
+    kind: out_of_lane
+    when_all: [rx_class:chc, dx:diabetes_with_vascular_disease_or_gt_20_years]
+    message: "CHC renewal with diabetes and nephropathy, retinopathy, neuropathy, other vascular disease, or > 20 years duration. U.S. MEC category 3/4."
+    source: "U.S. MEC 2024, Table D1 (Diabetes, c and d)"
+  - id: chc_multiple_ascvd_risk_factors
+    kind: out_of_lane
+    when_all: [rx_class:chc, dx:multiple_ascvd_risk_factors]
+    message: "CHC renewal with multiple ASCVD risk factors (e.g. older age, smoking, diabetes, hypertension, dyslipidemia). U.S. MEC category 3/4."
+    source: "U.S. MEC 2024, Table D1 (Multiple risk factors for atherosclerotic cardiovascular disease)"
+  - id: chc_major_surgery_prolonged_immobilization
+    kind: out_of_lane
+    when_all: [rx_class:chc, hx:major_surgery_with_prolonged_immobilization]
+    message: "CHC renewal around major surgery with prolonged immobilization. U.S. MEC category 4."
+    source: "U.S. MEC 2024, Table D1 (Surgery, b.ii)"
+  - id: chc_liver_disease_cat_4
+    kind: out_of_lane
+    when_all: [rx_class:chc, [dx:decompensated_cirrhosis, dx:hepatocellular_adenoma, dx:hepatocellular_carcinoma]]
+    message: "CHC renewal with decompensated cirrhosis, hepatocellular adenoma, or hepatocellular carcinoma. U.S. MEC category 4."
+    source: "U.S. MEC 2024, Table D1 (Cirrhosis, b; Liver tumors, a.ii and b)"
+  - id: chc_sle_antiphospholipid
+    kind: out_of_lane
+    when_all: [rx_class:chc, dx:sle_with_positive_or_unknown_antiphospholipid_antibodies]
+    message: "CHC renewal with SLE and positive or unknown antiphospholipid antibodies. U.S. MEC category 4."
+    source: "U.S. MEC 2024, Table D1 (Systemic lupus erythematosus, a)"
+  - id: chc_ckd_nephrotic_or_dialysis
+    kind: out_of_lane
+    when_all: [rx_class:chc, dx:ckd_nephrotic_syndrome_or_dialysis]
+    message: "CHC renewal with CKD and current nephrotic syndrome, hemodialysis, or peritoneal dialysis. U.S. MEC category 4."
+    source: "U.S. MEC 2024, Table D1 (Chronic kidney disease, a-c)"
+  - id: chc_sickle_cell_disease
+    kind: out_of_lane
+    when_all: [rx_class:chc, dx:sickle_cell_disease]
+    message: "CHC renewal with sickle cell disease. U.S. MEC category 4."
+    source: "U.S. MEC 2024, Table D1 (Sickle cell disease)"
+  - id: chc_transplant_graft_failure
+    kind: out_of_lane
+    when_all: [rx_class:chc, dx:solid_organ_transplant_graft_failure]
+    message: "CHC renewal after solid organ transplant with graft failure. U.S. MEC category 4."
+    source: "U.S. MEC 2024, Table D1 (Solid organ transplantation, b)"
+
+  # ---- Combined hormonal contraceptives: category 3 ----
+  - id: chc_age_ge_35_smokes_lt_15
+    kind: commission
+    when_all: [rx_class:chc, age_ge_35, tob:smokes_lt_15_per_day]
+    message: "CHC renewal, age >= 35, smokes < 15 cigarettes/day. U.S. MEC category 3. Pharmacist review; renew only with a documented clinician decision."
+    source: "U.S. MEC 2024, Table D1 (Smoking, b.i)"
+  - id: chc_hypertension
+    kind: commission
+    when_all: [rx_class:chc, [dx:hypertension, bp:sbp_ge_140, bp:dbp_ge_90]]
+    message: "CHC renewal with hypertension (adequately controlled, or BP 140-159/90-99 mm Hg). U.S. MEC category 3."
+    source: "U.S. MEC 2024, Table D1 (Hypertension, a and b.i)"
+  - id: chc_postpartum_21_to_42_days_vte_risk
+    kind: commission
+    when_all: [rx_class:chc, postpartum:21_to_42_days, postpartum:vte_risk_factor]
+    message: "CHC renewal 21 to 42 days postpartum with another VTE risk factor. U.S. MEC category 3."
+    source: "U.S. MEC 2024, Table D1 (Breastfeeding, b.i and c.i; Postpartum [nonbreastfeeding], b.i)"
+  - id: chc_breastfeeding_21_to_lt_30_days
+    kind: commission
+    when_all: [rx_class:chc, breastfeeding, postpartum:21_to_lt_30_days]
+    message: "CHC renewal while breastfeeding 21 to < 30 days postpartum. U.S. MEC category 3 (with or without VTE risk factors)."
+    source: "U.S. MEC 2024, Table D1 (Breastfeeding, b.i and b.ii)"
+  - id: chc_superficial_venous_thrombosis
+    kind: commission
+    when_all: [rx_class:chc, hx:superficial_venous_thrombosis]
+    message: "CHC renewal with acute or past superficial venous thrombosis. U.S. MEC category 3."
+    source: "U.S. MEC 2024, Table D1 (Superficial venous disorders, b)"
+  - id: chc_gallbladder_or_coc_cholestasis
+    kind: commission
+    when_all: [rx_class:chc, [dx:symptomatic_gallbladder_disease_current_or_medically_treated, hx:coc_related_cholestasis]]
+    message: "CHC renewal with current or medically treated symptomatic gallbladder disease, or past COC-related cholestasis. U.S. MEC category 3."
+    source: "U.S. MEC 2024, Table D1 (Gallbladder disease, b.i and b.iii; History of cholestasis, b)"
+  - id: chc_ms_prolonged_immobility
+    kind: commission
+    when_all: [rx_class:chc, dx:multiple_sclerosis_with_prolonged_immobility]
+    message: "CHC renewal with multiple sclerosis and prolonged immobility. U.S. MEC category 3."
+    source: "U.S. MEC 2024, Table D1 (Multiple sclerosis, b)"
+  - id: chc_past_breast_cancer
+    kind: commission
+    when_all: [rx_class:chc, hx:breast_cancer_no_disease_5_years]
+    message: "CHC renewal with past breast cancer and no evidence of disease for 5 years. U.S. MEC category 3."
+    source: "U.S. MEC 2024, Table D1 (Breast disease, d.ii)"
+  - id: chc_interacting_drug
+    kind: commission
+    when_all: [rx_class:chc, [med:enzyme_inducing_anticonvulsant, med:lamotrigine, med:rifampin_or_rifabutin]]
+    message: "CHC renewal with phenytoin, carbamazepine, a barbiturate, primidone, topiramate, oxcarbazepine, lamotrigine, rifampin, or rifabutin. U.S. MEC category 3."
+    source: "U.S. MEC 2024, Table D1 (Anticonvulsant therapy, a and b; Antimicrobial therapy, d)"
+  - id: coc_malabsorptive_bariatric_surgery
+    kind: commission
+    when_all: [rx_class:coc, hx:malabsorptive_bariatric_surgery]
+    message: "Combined oral contraceptive renewal after Roux-en-Y gastric bypass or biliopancreatic diversion. U.S. MEC category 3 for COCs (patch and ring: category 1)."
+    source: "U.S. MEC 2024, Table D1 (History of bariatric surgery, b)"
+
+  # ---- Combined and progestin-only: breast cancer ----
+  - id: hormonal_current_breast_cancer
+    kind: out_of_lane
+    when_all: [[rx_class:chc, rx_class:pop], dx:breast_cancer_current]
+    message: "Hormonal contraceptive renewal with current breast cancer. U.S. MEC category 4 for CHC and POP."
+    source: "U.S. MEC 2024, Table C1 and Table D1 (Breast disease, d.i)"
+
+  # ---- Progestin-only pills ----
+  - id: drsp_pop_ckd_hyperkalemia
+    kind: out_of_lane
+    when_all: [rx_class:drsp_pop, dx:ckd_nephrotic_syndrome_or_dialysis, dx:known_hyperkalemia]
+    message: "Drospirenone POP renewal with CKD (nephrotic syndrome or dialysis) and known hyperkalemia. U.S. MEC category 4."
+    source: "U.S. MEC 2024, Table C1 (Chronic kidney disease, a-c; clarification for DRSP POP)"
+  - id: pop_ischemic_heart_disease_or_stroke
+    kind: commission
+    when_all: [rx_class:pop, [dx:ischemic_heart_disease, dx:stroke]]
+    message: "POP renewal (continuation) with ischemic heart disease or stroke. U.S. MEC category 3 for continuation."
+    source: "U.S. MEC 2024, Table C1 (Current and history of ischemic heart disease; Stroke; POP continuation)"
+  - id: pop_past_breast_cancer
+    kind: commission
+    when_all: [rx_class:pop, hx:breast_cancer_no_disease_5_years]
+    message: "POP renewal with past breast cancer and no evidence of disease for 5 years. U.S. MEC category 3."
+    source: "U.S. MEC 2024, Table C1 (Breast disease, d.ii)"
+  - id: pop_hepatocellular_carcinoma
+    kind: commission
+    when_all: [rx_class:pop, dx:hepatocellular_carcinoma]
+    message: "POP renewal with hepatocellular carcinoma. U.S. MEC category 3."
+    source: "U.S. MEC 2024, Table C1 (Liver tumors, b)"
+  - id: pop_interacting_drug
+    kind: commission
+    when_all: [rx_class:pop, [med:enzyme_inducing_anticonvulsant, med:rifampin_or_rifabutin]]
+    message: "POP renewal with phenytoin, carbamazepine, a barbiturate, primidone, topiramate, oxcarbazepine, rifampin, or rifabutin. U.S. MEC category 3."
+    source: "U.S. MEC 2024, Table C1 (Anticonvulsant therapy, a; Antimicrobial therapy, d)"
+  - id: pop_malabsorptive_bariatric_surgery
+    kind: commission
+    when_all: [rx_class:pop, hx:malabsorptive_bariatric_surgery]
+    message: "POP renewal after Roux-en-Y gastric bypass or biliopancreatic diversion. U.S. MEC category 3."
+    source: "U.S. MEC 2024, Table C1 (History of bariatric surgery, b)"

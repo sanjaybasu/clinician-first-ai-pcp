@@ -1,0 +1,672 @@
+# Refill-lane gate rules (renewal with no dose change). Physician signed 2026-10-28; pharmacist
+# co-sign pending. Do not deploy until both leads sign. Every rule cites a
+# source; the exact supporting statement, URL/DOI, and access date are in
+# docs/clinical/REFILL_RULE_SOURCES.md.
+#
+# PREDICATE NAMING CONVENTION
+#   rx_class:<class>      the requested refill belongs to <class>. CLOSED WORLD: the
+#                         predicate builder must set every rx_class that is NOT the
+#                         requested drug to FALSE. A missing rx_class predicate is
+#                         unknown [0, 1] and holds every rule that names it.
+#   allergy_class:<class> a recorded allergy or intolerance to <class>.
+#   lab:<analyte>_<gt|ge|lt|le>_<value>
+#                         built with compass_pcp.gate.lab_bounds(op, threshold,
+#                         max_age_days). The value uses "_" for the decimal point
+#                         (lab:potassium_gt_5_5 means potassium > 5.5;
+#                         lab:creatinine_ge_1_5 means creatinine >= 1.5). The operator
+#                         matches the source wording (">=" -> ge, "<=" -> le). A
+#                         missing or stale result is unknown, which holds the rule and
+#                         asks for the lab.
+#   ref:<analyte>_<below_lln|gt_3x_uln>
+#                         computed from the reporting laboratory's own reference
+#                         interval on the result (not lab_bounds), for sources that
+#                         name no fixed number. Missing or stale is unknown.
+#   preg:possible         pregnant or possibly pregnant. FALSE only when pregnancy is
+#                         excluded (test, no reproductive potential); unknown holds.
+#   age_ge_65, age_ge_80, age_gt_60
+#                         age in years at the refill date.
+#   weight_le_60_kg       most recent body weight <= 60 kg.
+#   vital:sbp_lt_90       most recent systolic blood pressure < 90 mm Hg.
+#   controlled_substance  the requested drug is a DEA Schedule II to V substance
+#                         (pregabalin is Schedule V and fires this rule).
+#   dx:<condition>        an active problem-list diagnosis or a documented history.
+#   hx:<event>            a documented event in the stated period, e.g.
+#                         hx:hypoglycemia_since_last_review (an episode since the
+#                         last prescriber review of the diabetes regimen).
+#   sx:<symptom>          a patient-reported or documented new symptom since the last
+#                         fill (asked by the lane when not in the record).
+#   med:<class>           another active medication (not the requested drug) in
+#                         <class>, from the reconciled medication list.
+#   dose:<drug>_daily_mg_<gt|le>_<value>
+#                         the requested total daily dose compared with the value.
+#   indication:<condition>
+#                         the documented indication for the requested drug.
+#   therapy:scheduled_use_gt_8_weeks
+#                         the requested drug has been taken on a schedule for more
+#                         than 8 weeks.
+#   adherence:supply_lapsed
+#                         the previous fill ran out (days supply exhausted) before
+#                         this request. Any lapse is TRUE; the lane does not choose a
+#                         gap length.
+#   allergy_class, rx_class, dx, hx, sx, med, indication, therapy and adherence
+#   predicates use the same closed-world rule as rx_class when the record is
+#   reconciled; otherwise they are unknown and the rule asks.
+#
+# Analytes: potassium (LOINC 2823-3), creatinine (2160-0), egfr (computed or
+# reported; 98979-8 CKD-EPI 2021, 62238-1 CKD-EPI, 33914-3 MDRD), crcl
+# (Cockcroft-Gault from creatinine 2160-0 and actual body weight; no LOINC), lithium
+# (14334-7), digoxin (10535-3), sodium (2951-2), calcium (17861-6), ALT (1742-6).
+# Codes verified against the NLM LOINC table (see sources doc).
+#
+# LAB PREDICATE WINDOWS (max_age_days passed to lab_bounds). GateRule has no field
+# for this, so the predicate builder must use these values:
+#   potassium for RAS inhibitors, egfr/crcl for all rules: 365  [LANE POLICY, not
+#     from a source; needs sign-off. KDIGO 2024 and ADA 2025 give no fixed interval
+#     for a stable RAS inhibitor refill.]
+#   potassium for spironolactone: 120  (KDIGO 2024 Figure 26, every 4 months)
+#   egfr for metformin: 365            (metformin label 5.1, at least annually)
+#   lithium: 60                        (lithium label, at least every two months)
+#   digoxin, sodium, calcium, ALT: 365 [LANE POLICY, not from a source; needs
+#     sign-off. The labels say "periodic" without an interval.]
+#
+# medication_class in lab_recency equals the <class> in rx_class:<class>. A drug can
+# belong to more than one class (e.g. rx_class:glyburide and rx_class:sulfonylurea;
+# rx_class:paroxetine, rx_class:ssri and rx_class:strong_anticholinergic).
+version: "1.0.0"
+clinical_review:
+  physician_approved_by: "Sanjay Basu, MD, PhD"
+  physician_approved_on: "2026-10-28"
+  pharmacist_approved_by: null
+  pharmacist_approved_on: null
+
+rules:
+  # ---- Renin-angiotensin system inhibitors (ACE inhibitors, ARBs) ----
+  - id: rasi_potassium_gt_5_5
+    kind: commission
+    when_all:
+      - [rx_class:ace_inhibitor, rx_class:arb]
+      - lab:potassium_gt_5_5
+    message: "ACE inhibitor/ARB refill with serum potassium > 5.5 mmol/L (or no recent potassium). Pharmacist review before renewal."
+    source: "KDIGO 2024 CKD guideline, Figure 32 (actions for potassium >5.5 mmol/l); lisinopril label 5.5, losartan label 5.4"
+  - id: rasi_egfr_lt_15
+    kind: commission
+    when_all:
+      - [rx_class:ace_inhibitor, rx_class:arb]
+      - lab:egfr_lt_15
+    message: "ACE inhibitor/ARB refill with eGFR < 15 mL/min/1.73 m2 (or no recent eGFR). Prescriber review before renewal."
+    source: "KDIGO 2024 CKD guideline, Practice Point 3.6.5"
+  - id: rasi_pregnancy_possible
+    kind: commission
+    when_all:
+      - [rx_class:ace_inhibitor, rx_class:arb]
+      - preg:possible
+    message: "ACE inhibitor/ARB refill and pregnancy not excluded. Boxed warning (fetal toxicity). Hold for prescriber."
+    source: "Lisinopril label, Boxed Warning and 5.1; losartan (Cozaar) label, Boxed Warning and 5.1"
+  - id: ace_inhibitor_allergy
+    kind: allergy
+    when_all: [rx_class:ace_inhibitor, allergy_class:ace_inhibitor]
+    message: "ACE inhibitor refill with recorded ACE inhibitor allergy or angioedema."
+    source: "Lisinopril label, 4 Contraindications"
+  - id: arb_allergy
+    kind: allergy
+    when_all: [rx_class:arb, allergy_class:arb]
+    message: "ARB refill with recorded ARB hypersensitivity."
+    source: "Losartan (Cozaar) label, 4 Contraindications"
+
+  # ---- Diuretics ----
+  - id: spironolactone_potassium_gt_5_5
+    kind: commission
+    when_all: [rx_class:spironolactone, lab:potassium_gt_5_5]
+    message: "Spironolactone refill with potassium > 5.5 mmol/L (or no potassium in 120 days). Hold for pharmacist."
+    source: "KDIGO 2024 CKD guideline, Figure 26 (hold MRA at K+ >5.5; applicable to steroidal MRA); spironolactone label 5.1"
+  - id: spironolactone_crcl_lt_30_age_ge_65
+    kind: commission
+    when_all: [rx_class:spironolactone, age_ge_65, lab:crcl_lt_30]
+    message: "Spironolactone refill, age >= 65, CrCl < 30 mL/min. Beers 2023: avoid."
+    source: "AGS Beers Criteria 2023, Table 6 (spironolactone, CrCl <30: avoid)"
+  - id: thiazide_sulfonamide_allergy
+    kind: allergy
+    when_all: [rx_class:thiazide, allergy_class:sulfonamide]
+    message: "Thiazide refill with recorded sulfonamide-derived drug hypersensitivity."
+    source: "Hydrochlorothiazide label, Contraindications"
+
+  # ---- Metformin ----
+  - id: metformin_egfr_lt_30
+    kind: commission
+    when_all: [rx_class:metformin, lab:egfr_lt_30]
+    message: "Metformin refill with eGFR < 30 mL/min/1.73 m2: contraindicated; discontinue per label."
+    source: "Metformin label, 2.4 and 4 Contraindications"
+  - id: metformin_egfr_lt_45
+    kind: commission
+    when_all: [rx_class:metformin, lab:egfr_lt_45]
+    message: "Metformin refill with eGFR < 45 mL/min/1.73 m2: assess benefit and risk of continuing."
+    source: "Metformin label, 2.4"
+
+  # ---- SGLT2 inhibitors (thresholds are drug specific) ----
+  - id: empagliflozin_egfr_lt_30
+    kind: commission
+    when_all: [rx_class:empagliflozin, lab:egfr_lt_30]
+    message: "Empagliflozin refill with eGFR < 30: not recommended for glycemic control. Pharmacist to confirm indication (heart failure or CKD use may continue)."
+    source: "Jardiance label, 1 Indications (limitations of use) and 2.1; KDIGO 2024 Practice Point 3.7.1"
+  - id: dapagliflozin_egfr_lt_45
+    kind: commission
+    when_all: [rx_class:dapagliflozin, lab:egfr_lt_45]
+    message: "Dapagliflozin refill with eGFR < 45: not recommended for glycemic control. Pharmacist to confirm indication (heart failure or CKD use may continue)."
+    source: "Farxiga label, 1 Indications (limitations of use) and 2.2; KDIGO 2024 Practice Point 3.7.1"
+
+  # ---- Sulfonylureas ----
+  - id: glyburide_age_ge_65
+    kind: commission
+    when_all: [rx_class:glyburide, age_ge_65]
+    message: "Glyburide refill in an adult >= 65: avoid (long-acting sulfonylurea)."
+    source: "ADA Standards of Care 2025, Section 13 (Pharmacologic Therapy, Insulin Secretagogues); AGS Beers Criteria 2023, Table 2"
+  - id: sulfonylurea_age_ge_65
+    kind: commission
+    when_all: [rx_class:sulfonylurea, age_ge_65]
+    message: "Sulfonylurea refill in an adult >= 65. Beers 2023: avoid unless substantial barriers to safer agents; prefer short-acting. Pharmacist review."
+    source: "AGS Beers Criteria 2023, Table 2 (sulfonylureas)"
+  - id: sulfonylurea_hypoglycemia
+    kind: commission
+    when_all: [rx_class:sulfonylurea, "hx:hypoglycemia_since_last_review"]
+    message: "Sulfonylurea refill with documented hypoglycemia since last review. Consider deintensification; prescriber review."
+    source: "ADA Standards of Care 2025, Recommendations 13.4 and 13.16a; glipizide label, Precautions (Hypoglycemia)"
+  - id: sulfonylurea_allergy
+    kind: allergy
+    when_all: [rx_class:sulfonylurea, allergy_class:sulfonylurea]
+    message: "Sulfonylurea refill with recorded sulfonylurea hypersensitivity."
+    source: "Glipizide label, Contraindications"
+
+  # ---- Statins ----
+  - id: statin_pregnancy_possible
+    kind: commission
+    when_all: [rx_class:statin, preg:possible]
+    message: "Statin refill and pregnancy not excluded. Label: discontinue when pregnancy is recognized. Hold for prescriber."
+    source: "Atorvastatin (Lipitor) label 8.1; simvastatin label 8.1"
+  - id: statin_allergy
+    kind: allergy
+    when_all: [rx_class:statin, allergy_class:statin]
+    message: "Statin refill with recorded statin hypersensitivity."
+    source: "Atorvastatin (Lipitor) label, 4 Contraindications"
+
+  # ---- Lithium ----
+  - id: lithium_level_gt_1_2
+    kind: commission
+    when_all: [rx_class:lithium, lab:lithium_gt_1_2]
+    message: "Lithium refill with serum lithium > 1.2 mEq/L (or none in 60 days). Toxicity range is close to therapeutic range. Pharmacist review."
+    source: "Lithium carbonate ER label, Warnings and Dosage and Administration (desirable 0.6 to 1.2 mEq/L; toxic >=1.5 mEq/L)"
+  - id: lithium_level_ge_1_5
+    kind: out_of_lane
+    when_all: [rx_class:lithium, lab:lithium_ge_1_5]
+    message: "Lithium refill with serum lithium >= 1.5 mEq/L (label toxic range). Route to the ordering clinician now; do not renew in the lane."
+    source: "Lithium carbonate ER label, Warnings (toxic concentrations >=1.5 mEq/L)"
+
+  # ---- Anticoagulants ----
+  - id: warfarin_route_pharmacist
+    kind: commission
+    when_all: [rx_class:warfarin]
+    message: "Warfarin refill: always routes to the anticoagulation pharmacist (narrow therapeutic range; INR-guided dosing)."
+    source: "Warfarin label, 2.4 Monitoring to Achieve Optimal Anticoagulation"
+  - id: rivaroxaban_crcl_lt_15
+    kind: commission
+    when_all: [rx_class:rivaroxaban, lab:crcl_lt_15]
+    message: "Rivaroxaban refill with CrCl < 15 mL/min: label says avoid use (DVT/PE indications)."
+    source: "Xarelto label, 2.1 Table 1; AGS Beers Criteria 2023, Table 6"
+  - id: rivaroxaban_crcl_le_50
+    kind: commission
+    when_all: [rx_class:rivaroxaban, lab:crcl_le_50]
+    message: "Rivaroxaban refill with CrCl <= 50 mL/min: pharmacist verifies indication-specific dose (NVAF: 15 mg daily at CrCl <= 50)."
+    source: "Xarelto label, 2.1 Table 1; AGS Beers Criteria 2023, Table 6"
+  - id: dabigatran_crcl_lt_30
+    kind: commission
+    when_all: [rx_class:dabigatran, lab:crcl_lt_30]
+    message: "Dabigatran refill with CrCl < 30 mL/min: pharmacist verifies dose (NVAF 75 mg BID at CrCl 15-30; no recommendation < 15)."
+    source: "Dabigatran etexilate label, 2.2; AGS Beers Criteria 2023, Table 6"
+  - id: apixaban_dose_reduction_criteria
+    kind: commission
+    # "At least 2 of 3" written in conjunctive normal form: (A or B) and (A or C) and (B or C).
+    when_all:
+      - [age_ge_80, weight_le_60_kg]
+      - [age_ge_80, lab:creatinine_ge_1_5]
+      - [weight_le_60_kg, lab:creatinine_ge_1_5]
+      - rx_class:apixaban
+    message: "Apixaban refill: patient meets >= 2 of age >= 80, weight <= 60 kg, creatinine >= 1.5 mg/dL. Pharmacist verifies the NVAF dose is 2.5 mg BID."
+    source: "Eliquis label, 2.1 (NVAF dose reduction criteria)"
+
+  # ---- Teratogens with pregnancy not excluded ----
+  - id: valproate_pregnancy_possible
+    kind: commission
+    when_all: [rx_class:valproate, preg:possible]
+    message: "Valproate refill and pregnancy not excluded. Boxed warning (fetal risk); contraindicated for migraine prophylaxis in pregnancy. Hold for prescriber."
+    source: "Divalproex sodium DR label, Boxed Warning, 1.4 and 4 Contraindications"
+  - id: methotrexate_pregnancy_possible
+    kind: commission
+    when_all: [rx_class:methotrexate, preg:possible]
+    message: "Methotrexate refill and pregnancy not excluded. Contraindicated in pregnancy for non-neoplastic disease. Hold for prescriber."
+    source: "Methotrexate tablets label, Boxed Warning (embryo-fetal toxicity)"
+  - id: topiramate_pregnancy_possible
+    kind: commission
+    when_all: [rx_class:topiramate, preg:possible]
+    message: "Topiramate refill and pregnancy not excluded (fetal toxicity: oral clefts). Prescriber review."
+    source: "Topiramate label, 5.7 Fetal Toxicity"
+
+  # ---- Always out of lane ----
+  - id: isotretinoin_out_of_lane
+    kind: out_of_lane
+    when_all: [rx_class:isotretinoin]
+    message: "Isotretinoin is dispensed only under the iPLEDGE REMS. Out of the refill lane."
+    source: "Isotretinoin (Zenatane) label, 5.2 iPLEDGE REMS"
+  - id: controlled_substance_out_of_lane
+    kind: out_of_lane
+    when_all: [controlled_substance]
+    message: "Controlled substance (Schedule II-V, e.g. ADHD stimulants, pregabalin). Out of the refill lane; route to the prescriber."
+    source: "21 CFR 1306.12(a) (Schedule II refills prohibited); 21 CFR 1306.22(a) (Schedule III-IV refill limits); pregabalin label 9.1 (Schedule V)"
+
+  # ---- NSAIDs, chronic use ----
+  - id: nsaid_crcl_lt_30_age_ge_65
+    kind: commission
+    when_all: [rx_class:nsaid, age_ge_65, lab:crcl_lt_30]
+    message: "NSAID refill, age >= 65, CrCl < 30 mL/min. Beers 2023: avoid."
+    source: "AGS Beers Criteria 2023, Table 6 (NSAIDs, CrCl <30: avoid)"
+  - id: nsaid_chronic_age_ge_65
+    kind: commission
+    when_all: [rx_class:nsaid, age_ge_65]
+    message: "Chronic NSAID refill, age >= 65. Beers 2023: avoid chronic use unless alternatives fail and a gastroprotective agent is used. Pharmacist review."
+    source: "AGS Beers Criteria 2023, Table 2 (non-COX-2-selective NSAIDs, oral)"
+  - id: nsaid_allergy
+    kind: allergy
+    when_all: [rx_class:nsaid, allergy_class:nsaid]
+    message: "NSAID refill with recorded NSAID or aspirin allergic-type reaction."
+    source: "Ibuprofen label, Contraindications; naproxen DR label, 4 Contraindications"
+
+  # ---- AV-nodal and conduction (beta-blockers, non-DHP CCBs, amiodarone) ----
+  - id: av_nodal_agent_conduction_disease
+    kind: commission
+    when_all:
+      - [rx_class:beta_blocker, rx_class:nondhp_ccb, rx_class:amiodarone]
+      - dx:av_block_gt_first_degree_or_sick_sinus_without_pacemaker
+    message: "Beta-blocker, diltiazem/verapamil, or amiodarone refill with second- or third-degree AV block or sick sinus syndrome and no functioning pacemaker. Label contraindication; prescriber review."
+    source: "Metoprolol succinate ER label 4; Coreg label 4; Tenormin label, Contraindications; propranolol label, Contraindications; Cardizem CD label, Contraindications; verapamil ER label, Contraindications; amiodarone label 4"
+
+  # ---- Beta-blockers ----
+  - id: nonselective_beta_blocker_asthma
+    kind: commission
+    when_all: [[rx_class:propranolol, rx_class:carvedilol], dx:asthma]
+    message: "Propranolol or carvedilol refill with asthma on the problem list. Label contraindication (bronchial asthma); prescriber review."
+    source: "Propranolol label, Contraindications (bronchial asthma); Coreg label 4 (bronchial asthma or related bronchospastic conditions)"
+  - id: atenolol_crcl_le_35
+    kind: commission
+    when_all: [rx_class:atenolol, lab:crcl_le_35]
+    message: "Atenolol refill with CrCl <= 35 mL/min/1.73 m2. Pharmacist verifies the daily dose is <= 50 mg (<= 25 mg if CrCl < 15)."
+    source: "Tenormin label, Dosage and Administration (Elderly Patients or Patients with Renal Impairment, maximum dosage table)"
+
+  # ---- Non-dihydropyridine calcium-channel blockers ----
+  - id: nondhp_ccb_sbp_lt_90
+    kind: commission
+    when_all: [rx_class:nondhp_ccb, vital:sbp_lt_90]
+    message: "Diltiazem or verapamil refill with systolic BP < 90 mm Hg. Label contraindication (hypotension); prescriber review."
+    source: "Cardizem CD label, Contraindications (hypotension, less than 90 mm Hg systolic); verapamil ER label, Contraindications (systolic pressure less than 90 mm Hg)"
+  - id: nondhp_ccb_hfref
+    kind: commission
+    when_all: [rx_class:nondhp_ccb, dx:hfref]
+    message: "Diltiazem or verapamil refill with heart failure with reduced ejection fraction. Beers 2023: avoid in HFrEF; verapamil label: contraindicated in severe LV dysfunction. Prescriber review."
+    source: "AGS Beers Criteria 2023, Table 3 (heart failure: avoid non-DHP CCBs in HFrEF); verapamil ER label, Contraindications; Cardizem CD label, Warnings (Congestive Heart Failure)"
+
+  # ---- Clonidine ----
+  - id: clonidine_supply_lapsed
+    kind: commission
+    when_all: [rx_class:clonidine, adherence:supply_lapsed]
+    message: "Clonidine refill after the previous supply ran out. Sudden cessation can cause rebound hypertension. Pharmacist checks BP and withdrawal symptoms before renewal."
+    source: "Clonidine hydrochloride tablet label, Warnings (Withdrawal)"
+  - id: clonidine_htn_age_ge_65
+    kind: commission
+    when_all: [rx_class:clonidine, age_ge_65, indication:hypertension]
+    message: "Clonidine refill for hypertension in an adult >= 65. Beers 2023: avoid as first-line antihypertensive. Pharmacist review; do not stop abruptly."
+    source: "AGS Beers Criteria 2023, Table 2 (central alpha-agonists for hypertension)"
+
+  # ---- Hydralazine and nitrates ----
+  - id: hydralazine_lupus_like_symptoms
+    kind: out_of_lane
+    when_all: [rx_class:hydralazine, sx:lupus_like_symptoms]
+    message: "Hydralazine refill with new joint pain, fever, rash, or other lupus-like symptoms. Label: discontinue unless benefit outweighs risk. Route to the prescriber."
+    source: "Hydralazine hydrochloride tablet label, Warnings (systemic lupus erythematosus-like picture)"
+  - id: hydralazine_cad_or_rheumatic_mitral
+    kind: commission
+    when_all: [rx_class:hydralazine, [dx:coronary_artery_disease, dx:rheumatic_mitral_valve_disease]]
+    message: "Hydralazine refill with coronary artery disease or rheumatic mitral valve disease (label contraindications). Pharmacist confirms the prescriber accepted this."
+    source: "Hydralazine hydrochloride tablet label, Contraindications"
+  - id: nitrate_pde5_or_riociguat
+    kind: commission
+    when_all: [rx_class:nitrate, [med:pde5_inhibitor, med:riociguat]]
+    message: "Nitrate refill with an active PDE5 inhibitor (sildenafil, tadalafil, vardenafil) or riociguat. Label contraindication (severe hypotension)."
+    source: "Isosorbide mononitrate tablet label (Coupler), Contraindications"
+
+  # ---- GLP-1 receptor agonists and DPP-4 inhibitors ----
+  - id: glp1_ra_mtc_or_men2
+    kind: commission
+    when_all: [rx_class:glp1_ra, dx:mtc_or_men2_personal_or_family]
+    message: "GLP-1 RA refill with personal or family history of medullary thyroid carcinoma or MEN 2. Label contraindication; prescriber review."
+    source: "Ozempic label 4; Trulicity label 4; Victoza label 4"
+  - id: incretin_pancreatitis_suspected
+    kind: out_of_lane
+    when_all: [[rx_class:glp1_ra, rx_class:dpp4_inhibitor], sx:pancreatitis_suspected]
+    message: "GLP-1 RA or DPP-4 inhibitor refill with persistent severe abdominal pain or suspected pancreatitis. Label: discontinue if suspected. Route to the prescriber."
+    source: "Ozempic label 5.2; Trulicity label 5.2; Victoza label 5.2; Januvia label 5.1; saxagliptin label 5.1; Tradjenta label 5.1; Nesina label 5.1"
+  - id: semaglutide_pregnancy_possible
+    kind: commission
+    when_all: [rx_class:semaglutide, preg:possible]
+    message: "Semaglutide refill and pregnancy not excluded or planned. Label: discontinue at least 2 months before a planned pregnancy. Prescriber review."
+    source: "Ozempic label 8.3 (Females and Males of Reproductive Potential)"
+  - id: sitagliptin_egfr_lt_45
+    kind: commission
+    when_all: [rx_class:sitagliptin, lab:egfr_lt_45]
+    message: "Sitagliptin refill with eGFR < 45: pharmacist verifies dose (50 mg daily at eGFR 30 to < 45; 25 mg daily at < 30)."
+    source: "Januvia label 2.2"
+  - id: saxagliptin_egfr_lt_45
+    kind: commission
+    when_all: [rx_class:saxagliptin, lab:egfr_lt_45]
+    message: "Saxagliptin refill with eGFR < 45: pharmacist verifies dose is 2.5 mg daily."
+    source: "Saxagliptin tablet label (Glenmark) 2.2"
+  - id: dpp4_heart_failure
+    kind: commission
+    when_all: [[rx_class:saxagliptin, rx_class:alogliptin], dx:heart_failure]
+    message: "Saxagliptin or alogliptin refill with heart failure. Label warning (hospitalization for heart failure); pharmacist review."
+    source: "Saxagliptin tablet label (Glenmark) 5.2; Nesina label 5.2"
+
+  # ---- Basal insulin (refill only; no dose change in this lane) ----
+  - id: basal_insulin_hypoglycemia
+    kind: commission
+    when_all: [rx_class:basal_insulin, "hx:hypoglycemia_since_last_review"]
+    message: "Basal insulin refill with documented hypoglycemia since last review. Refill only; the dose is not changed in this lane. Pharmacist review for deintensification."
+    source: "ADA Standards of Care 2026, Recommendations 6.6 and 6.10; Lantus label 5.3"
+  - id: hypoglycemic_agent_level_2_or_3_hypoglycemia
+    kind: out_of_lane
+    when_all: [[rx_class:basal_insulin, rx_class:sulfonylurea], "hx:hypoglycemia_level_2_or_3_since_last_review"]
+    message: "Insulin or sulfonylurea refill with level 2 (< 54 mg/dL) or level 3 hypoglycemia since last review. ADA: reevaluate the treatment plan. Route to the prescriber."
+    source: "ADA Standards of Care 2026, Recommendation 6.19 and Hypoglycemia section (level definitions)"
+
+  # ---- Pioglitazone ----
+  - id: pioglitazone_symptomatic_heart_failure
+    kind: commission
+    when_all: [rx_class:pioglitazone, dx:symptomatic_heart_failure]
+    message: "Pioglitazone refill with symptomatic heart failure. Boxed warning; Beers 2023: avoid in symptomatic heart failure. Prescriber review."
+    source: "Actos label, Boxed Warning and 4; AGS Beers Criteria 2023, Table 3 (heart failure)"
+  - id: pioglitazone_active_bladder_cancer
+    kind: commission
+    when_all: [rx_class:pioglitazone, dx:active_bladder_cancer]
+    message: "Pioglitazone refill with active bladder cancer. Label: do not use. Prescriber review."
+    source: "Actos label 5.4"
+
+  # ---- Xanthine oxidase inhibitors ----
+  - id: allopurinol_new_rash
+    kind: out_of_lane
+    when_all: [rx_class:allopurinol, sx:new_skin_rash]
+    message: "Allopurinol refill with a new skin rash. Label: discontinue at the first appearance of rash. Route to the prescriber."
+    source: "Allopurinol tablet label (AvPAK) 5.1"
+  - id: allopurinol_azathioprine_mercaptopurine
+    kind: commission
+    when_all: [rx_class:allopurinol, med:azathioprine_or_mercaptopurine]
+    message: "Allopurinol refill with azathioprine or mercaptopurine. Label: reduce the azathioprine or mercaptopurine dose (myelosuppression). Pharmacist review."
+    source: "Allopurinol tablet label (AvPAK) 7 (Mercaptopurine or Azathioprine)"
+  - id: febuxostat_azathioprine_mercaptopurine
+    kind: commission
+    when_all: [rx_class:febuxostat, med:azathioprine_or_mercaptopurine]
+    message: "Febuxostat refill with azathioprine or mercaptopurine. Label contraindication."
+    source: "Uloric label 4"
+  - id: febuxostat_established_cv_disease
+    kind: commission
+    when_all: [rx_class:febuxostat, dx:established_cardiovascular_disease]
+    message: "Febuxostat refill with established cardiovascular disease. Boxed warning (CV death); use only after allopurinol failure or intolerance. Pharmacist confirms."
+    source: "Uloric label, Boxed Warning and 1"
+  - id: febuxostat_crcl_lt_30_dose_gt_40
+    kind: commission
+    when_all: [rx_class:febuxostat, lab:crcl_lt_30, dose:febuxostat_daily_mg_gt_40]
+    message: "Febuxostat > 40 mg daily with CrCl < 30 mL/min. Label limits the dose to 40 mg daily in severe renal impairment."
+    source: "Uloric label 2.2 and 8.6"
+
+  # ---- Inhaled LABA, ICS/LABA, LAMA ----
+  - id: laba_monotherapy_asthma
+    kind: commission
+    when_all: [rx_class:laba_monotherapy, dx:asthma]
+    message: "Single-agent LABA (salmeterol) refill with asthma. Label: contraindicated without a concomitant ICS. Pharmacist confirms an active ICS."
+    source: "Serevent Diskus label 4"
+  - id: asthma_controller_increasing_saba_use
+    kind: out_of_lane
+    when_all: [[rx_class:ics_laba, rx_class:laba_monotherapy], dx:asthma, hx:increasing_saba_use]
+    message: "Asthma controller refill with increasing short-acting beta2-agonist use. Label: marker of deteriorating asthma; needs immediate reevaluation. Route to the prescriber."
+    source: "Advair HFA label 5.2; Serevent Diskus label 5.2"
+  - id: tiotropium_ipratropium_allergy
+    kind: allergy
+    when_all: [rx_class:tiotropium, allergy_class:tiotropium_or_ipratropium]
+    message: "Tiotropium refill with recorded tiotropium or ipratropium hypersensitivity."
+    source: "Spiriva HandiHaler label 4"
+
+  # ---- Montelukast ----
+  - id: montelukast_neuropsychiatric_symptoms
+    kind: out_of_lane
+    when_all: [rx_class:montelukast, sx:new_neuropsychiatric_symptoms]
+    message: "Montelukast refill with new mood, behavior, sleep, or suicidal symptoms. Boxed warning: discontinue. Route to the prescriber."
+    source: "Singulair label, Boxed Warning and 5.1"
+
+  # ---- Antidepressants ----
+  - id: serotonergic_or_bupropion_with_maoi
+    kind: commission
+    when_all:
+      - [rx_class:ssri, rx_class:snri, rx_class:mirtazapine, rx_class:trazodone, rx_class:bupropion]
+      - med:maoi_within_14_days
+    message: "Antidepressant refill with an MAOI taken now or within 14 days. Label contraindication (serotonin syndrome; hypertensive reaction with bupropion)."
+    source: "Zoloft label 4; Lexapro label 4; Celexa label 4; Prozac label 4; Paxil CR label 4; duloxetine DR label 4; venlafaxine ER label 4; Remeron label 4; trazodone label 4; Wellbutrin XL label 4"
+  - id: ssri_snri_with_anticoagulant
+    kind: commission
+    when_all: [[rx_class:ssri, rx_class:snri], med:anticoagulant]
+    message: "SSRI or SNRI refill with an active anticoagulant. Labels: added bleeding risk. Beers 2023: avoid warfarin with SSRIs when possible; monitor INR. Pharmacist review."
+    source: "Zoloft label 5.3; Celexa label 5.4; venlafaxine ER label 5.4; AGS Beers Criteria 2023, Table 5 (warfarin and SSRIs)"
+  - id: antidepressant_low_sodium_age_ge_65
+    kind: commission
+    when_all: [[rx_class:ssri, rx_class:snri, rx_class:mirtazapine, rx_class:carbamazepine], age_ge_65, ref:sodium_below_lln]
+    message: "SSRI, SNRI, mirtazapine, or carbamazepine refill, age >= 65, last sodium below the laboratory reference range. Beers 2023: SIADH/hyponatremia risk. Pharmacist review."
+    source: "AGS Beers Criteria 2023, Table 4 (SIADH or hyponatremia); Zoloft label 5.8; Celexa label 5.9; venlafaxine ER label 5.9; Remeron label 5.12"
+  - id: citalopram_age_gt_60_dose_gt_20
+    kind: commission
+    when_all: [rx_class:citalopram, age_gt_60, dose:citalopram_daily_mg_gt_20]
+    message: "Citalopram > 20 mg daily in a patient older than 60. Label maximum is 20 mg daily (QT prolongation). Pharmacist review."
+    source: "Celexa label 2 and Highlights (maximum 20 mg once daily for patients greater than 60 years of age)"
+  - id: duloxetine_crcl_lt_30
+    kind: commission
+    when_all: [rx_class:duloxetine, lab:crcl_lt_30]
+    message: "Duloxetine refill with CrCl < 30 mL/min. Label and Beers 2023: avoid. Prescriber review."
+    source: "Duloxetine DR label 8.10 (avoid at GFR <30 mL/min); AGS Beers Criteria 2023, Table 6"
+  - id: anticholinergic_antidepressant_age_ge_65
+    kind: commission
+    when_all: [rx_class:anticholinergic_antidepressant, age_ge_65]
+    message: "Strongly anticholinergic antidepressant (e.g. paroxetine, amitriptyline, nortriptyline) refill in an adult >= 65. Beers 2023: avoid. Pharmacist review."
+    source: "AGS Beers Criteria 2023, Table 2 (antidepressants with strong anticholinergic activity)"
+
+  # ---- Bupropion ----
+  - id: bupropion_seizure_disorder
+    kind: commission
+    when_all: [rx_class:bupropion, dx:seizure_disorder]
+    message: "Bupropion refill with a seizure disorder. Label contraindication."
+    source: "Wellbutrin XL label 4"
+  - id: bupropion_eating_disorder
+    kind: commission
+    when_all: [rx_class:bupropion, dx:bulimia_or_anorexia_nervosa]
+    message: "Bupropion refill with current or prior bulimia or anorexia nervosa. Label contraindication (seizure risk)."
+    source: "Wellbutrin XL label 4"
+  - id: bupropion_dose_gt_450
+    kind: commission
+    when_all: [rx_class:bupropion, dose:bupropion_daily_mg_gt_450]
+    message: "Bupropion > 450 mg daily. Label: seizure risk is dose related; limit to 450 mg daily."
+    source: "Wellbutrin XL label, Highlights and 5.3"
+
+  # ---- Gabapentinoids (pregabalin is Schedule V: controlled_substance_out_of_lane) ----
+  - id: gabapentin_crcl_lt_60
+    kind: commission
+    when_all: [rx_class:gabapentin, lab:crcl_lt_60]
+    message: "Gabapentin refill with CrCl < 60 mL/min. Pharmacist verifies the daily dose against the label renal table."
+    source: "Neurontin label 2, Table 1; AGS Beers Criteria 2023, Table 6"
+  - id: gabapentinoid_with_opioid
+    kind: commission
+    when_all: [[rx_class:gabapentin, rx_class:pregabalin], med:opioid]
+    message: "Gabapentin or pregabalin refill with an active opioid. Label warning (respiratory depression); Beers 2023: avoid. Pharmacist review."
+    source: "Neurontin label 5.8; AGS Beers Criteria 2023, Table 5 (opioids and gabapentinoids)"
+
+  # ---- Anticholinergics and first-generation antihistamines, age >= 65 ----
+  - id: first_gen_antihistamine_age_ge_65
+    kind: commission
+    when_all: [rx_class:first_generation_antihistamine, age_ge_65]
+    message: "First-generation antihistamine (e.g. hydroxyzine, diphenhydramine) refill in an adult >= 65. Beers 2023: avoid. Pharmacist review."
+    source: "AGS Beers Criteria 2023, Table 2 (first-generation antihistamines)"
+  - id: strong_anticholinergic_dementia_or_delirium
+    kind: commission
+    when_all: [rx_class:strong_anticholinergic, age_ge_65, [dx:dementia_or_cognitive_impairment, dx:delirium_or_high_delirium_risk]]
+    message: "Strongly anticholinergic drug refill, age >= 65, with dementia, cognitive impairment, or delirium risk. Beers 2023: avoid. Pharmacist review."
+    source: "AGS Beers Criteria 2023, Table 3 (delirium; dementia or cognitive impairment) and Table 7"
+  - id: strong_anticholinergic_combination_age_ge_65
+    kind: commission
+    when_all: [rx_class:strong_anticholinergic, age_ge_65, med:strong_anticholinergic]
+    message: "Strongly anticholinergic drug refill, age >= 65, with another strongly anticholinergic drug active. Beers 2023: avoid; minimize the number. Pharmacist review."
+    source: "AGS Beers Criteria 2023, Table 5 (anticholinergic plus anticholinergic) and Table 7"
+
+  # ---- Acid suppression ----
+  - id: ppi_scheduled_gt_8_weeks_age_ge_65
+    kind: commission
+    when_all: [rx_class:ppi, age_ge_65, therapy:scheduled_use_gt_8_weeks]
+    message: "PPI scheduled for > 8 weeks in an adult >= 65. Beers 2023: avoid unless high risk or demonstrated need. Pharmacist confirms the indication."
+    source: "AGS Beers Criteria 2023, Table 2 (proton-pump inhibitors)"
+  - id: famotidine_crcl_lt_60
+    kind: commission
+    when_all: [rx_class:famotidine, lab:crcl_lt_60]
+    message: "Famotidine refill with CrCl < 60 mL/min. Pharmacist verifies the dose against the label renal table."
+    source: "Famotidine tablet label 2.2 (dosage adjustment at creatinine clearance less than 60 mL/min); AGS Beers Criteria 2023, Table 6 (CrCl <50)"
+
+  # ---- Oral bisphosphonates ----
+  - id: alendronate_crcl_lt_35
+    kind: commission
+    when_all: [rx_class:alendronate, lab:crcl_lt_35]
+    message: "Alendronate refill with CrCl < 35 mL/min. Label: not recommended. Prescriber review."
+    source: "Alendronate sodium tablet label 5.6 and 8.6"
+  - id: risedronate_crcl_lt_30
+    kind: commission
+    when_all: [rx_class:risedronate, lab:crcl_lt_30]
+    message: "Risedronate refill with CrCl < 30 mL/min. Label: not recommended. Prescriber review."
+    source: "Risedronate sodium DR label 5.7 and 8.6"
+  - id: oral_bisphosphonate_contraindication
+    kind: commission
+    when_all: [[rx_class:alendronate, rx_class:risedronate], [ref:calcium_below_lln, sx:cannot_stay_upright_30_min]]
+    message: "Oral bisphosphonate refill with low calcium or inability to stay upright for 30 minutes. Label contraindications; prescriber review."
+    source: "Alendronate sodium tablet label 4; risedronate sodium DR label 4"
+
+  # ---- BPH drugs ----
+  - id: tamsulosin_strong_cyp3a4_inhibitor
+    kind: commission
+    when_all: [rx_class:tamsulosin, med:strong_cyp3a4_inhibitor]
+    message: "Tamsulosin refill with a strong CYP3A4 inhibitor (e.g. ketoconazole). Label: should not be used together."
+    source: "Flomax label 2 and 5.2"
+  - id: tamsulosin_sulfa_allergy
+    kind: allergy
+    when_all: [rx_class:tamsulosin, allergy_class:sulfonamide]
+    message: "Tamsulosin refill with recorded sulfa allergy. Label: caution if the allergy was serious or life-threatening. Pharmacist checks severity."
+    source: "Flomax label 5.6"
+  - id: finasteride_pregnancy_possible
+    kind: commission
+    when_all: [rx_class:finasteride, preg:possible]
+    message: "Finasteride refill for a patient who is or may be pregnant. Label contraindication. Hold for prescriber."
+    source: "Proscar label 4"
+
+  # ---- Antiepileptics ----
+  - id: carbamazepine_pregnancy_possible
+    kind: commission
+    when_all: [rx_class:carbamazepine, preg:possible]
+    message: "Carbamazepine refill and pregnancy not excluded (fetal harm, spina bifida). Prescriber review."
+    source: "Tegretol label, Warnings (Usage in Pregnancy)"
+  - id: carbamazepine_nefazodone_or_maoi
+    kind: commission
+    when_all: [rx_class:carbamazepine, [med:nefazodone, med:maoi_within_14_days]]
+    message: "Carbamazepine refill with nefazodone (contraindicated) or an MAOI within 14 days (not recommended)."
+    source: "Tegretol label, Contraindications"
+  - id: lamotrigine_new_rash
+    kind: out_of_lane
+    when_all: [rx_class:lamotrigine, sx:new_skin_rash]
+    message: "Lamotrigine refill with a new rash. Boxed warning: discontinue at the first sign of rash unless clearly not drug related. Route to the prescriber."
+    source: "Lamictal label, Boxed Warning and 5.1"
+  - id: lamotrigine_supply_lapsed
+    kind: commission
+    when_all: [rx_class:lamotrigine, adherence:supply_lapsed]
+    message: "Lamotrigine refill after the previous supply ran out. If stopped for more than 5 half-lives, the label requires re-titration from the initial dose. Pharmacist review."
+    source: "Lamictal label 2.1 (restarting therapy)"
+  - id: levetiracetam_crcl_le_80
+    kind: commission
+    when_all: [rx_class:levetiracetam, lab:crcl_le_80]
+    message: "Levetiracetam refill with CrCl <= 80 mL/min/1.73 m2. Pharmacist verifies the dose against the label renal table."
+    source: "Keppra label 2, Table 1; AGS Beers Criteria 2023, Table 6 (CrCl <=80: reduce dose)"
+
+  # ---- Amiodarone ----
+  - id: amiodarone_alt_gt_3x_uln
+    kind: commission
+    when_all: [rx_class:amiodarone, ref:alt_gt_3x_uln]
+    message: "Amiodarone refill with ALT > 3 times the upper limit of normal. Label: discontinue or reduce dose. Prescriber review."
+    source: "Amiodarone hydrochloride tablet label, Boxed Warning and 5.3 (Hepatic Injury)"
+  - id: amiodarone_warfarin_age_ge_65
+    kind: commission
+    when_all: [rx_class:amiodarone, med:warfarin, age_ge_65]
+    message: "Amiodarone refill with warfarin, age >= 65. Beers 2023: avoid when possible; monitor INR closely. Pharmacist review."
+    source: "AGS Beers Criteria 2023, Table 5 (warfarin and amiodarone)"
+
+  # ---- Digoxin ----
+  - id: digoxin_level_gt_2
+    kind: commission
+    when_all: [rx_class:digoxin, lab:digoxin_gt_2]
+    message: "Digoxin refill with serum digoxin > 2 ng/mL (or no recent level). Label: toxicity without added benefit. Pharmacist review."
+    source: "Digoxin tablet label (Amneal) 2.5 and 10.1 (levels above 2 ng/mL)"
+  - id: digoxin_dose_gt_0_125_age_ge_65
+    kind: commission
+    when_all: [rx_class:digoxin, age_ge_65, dose:digoxin_daily_mg_gt_0_125]
+    message: "Digoxin > 0.125 mg daily in an adult >= 65. Beers 2023: avoid dosages > 0.125 mg/day for AF or heart failure. Pharmacist review."
+    source: "AGS Beers Criteria 2023, Table 2 (digoxin)"
+
+lab_recency:
+  - id: metformin_egfr_annual
+    medication_class: metformin
+    loinc: ["2160-0", "98979-8", "62238-1", "33914-3"]  # creatinine or any reported eGFR
+    max_age_days: 365
+    source: "Metformin label, 5.1 (obtain an eGFR at least annually)"
+  - id: levothyroxine_tsh
+    medication_class: levothyroxine
+    loinc: "3016-3"
+    max_age_days: 365
+    source: "Levothyroxine label, 2.4 (stable dose: evaluate every 6 to 12 months)"
+  - id: lithium_level
+    medication_class: lithium
+    loinc: "14334-7"
+    max_age_days: 60
+    source: "Lithium carbonate ER label, Dosage and Administration (maintenance: at least every two months)"
+  - id: lithium_tsh
+    medication_class: lithium
+    loinc: "3016-3"
+    max_age_days: 183
+    source: "NICE CG185 recommendation 1.10.21 (thyroid function every 6 months)"
+  - id: lithium_egfr
+    medication_class: lithium
+    loinc: ["2160-0", "98979-8", "62238-1", "33914-3"]
+    max_age_days: 183
+    source: "NICE CG185 recommendation 1.10.21 (eGFR every 6 months)"
+  - id: warfarin_inr
+    medication_class: warfarin
+    loinc: "6301-6"
+    max_age_days: 28
+    source: "Warfarin label, 2 Dosage and Administration (INR every 1 to 4 weeks after stable)"
+  - id: spironolactone_potassium
+    medication_class: spironolactone
+    loinc: "2823-3"
+    max_age_days: 120
+    source: "KDIGO 2024 CKD guideline, Figure 26 (monitor K+ every 4 months; applicable to steroidal MRA)"
+  - id: sga_hba1c_annual
+    medication_class: second_generation_antipsychotic
+    loinc: ["4548-4", "17856-6", "4549-2", "1558-6"]  # HbA1c (any method) or fasting glucose
+    max_age_days: 365
+    source: "ADA Standards of Care 2025, Recommendation 2.15b; APA schizophrenia guideline 2020 via Fochtmann et al. 2020 Table 1"
+  - id: sga_lipids_annual
+    medication_class: second_generation_antipsychotic
+    loinc: "2093-3"  # total cholesterol; present in every lipid panel
+    max_age_days: 365
+    source: "APA schizophrenia guideline 2020 via Fochtmann et al. 2020 Table 1 (lipid panel at least annually)"

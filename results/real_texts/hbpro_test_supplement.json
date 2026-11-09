@@ -1,0 +1,764 @@
+{
+ "split": "test",
+ "n_tasks": 350,
+ "ours": "compass_pro_full",
+ "scoring": "score = sum of met rubric points / sum of positive points; length adjusted = score - 2.94e-5 * (characters - 2000); arm means x 100 (clipped to [0, 100]); grader GPT-5.4",
+ "arms": {
+  "amie_style": {
+   "n": 350,
+   "raw": 68.0,
+   "raw_se": 2.7,
+   "length_adjusted": 67.6,
+   "length_adjusted_se": 2.7,
+   "mean_chars": 2121,
+   "median_chars": 2026,
+   "share_le_2000_chars": 0.497
+  },
+  "compass_pro_full": {
+   "n": 350,
+   "raw": 78.2,
+   "raw_se": 2.1,
+   "length_adjusted": 76.7,
+   "length_adjusted_se": 2.1,
+   "mean_chars": 2496,
+   "median_chars": 2302,
+   "share_le_2000_chars": 0.146
+  },
+  "gpt61sol": {
+   "n": 350,
+   "raw": 66.7,
+   "raw_se": 2.5,
+   "length_adjusted": 63.3,
+   "length_adjusted_se": 2.5,
+   "mean_chars": 3148,
+   "median_chars": 2131,
+   "share_le_2000_chars": 0.451
+  },
+  "mai_dxo_style": {
+   "n": 350,
+   "raw": 66.7,
+   "raw_se": 2.6,
+   "length_adjusted": 65.2,
+   "length_adjusted_se": 2.6,
+   "mean_chars": 2519,
+   "median_chars": 2341,
+   "share_le_2000_chars": 0.337
+  },
+  "opus55": {
+   "n": 350,
+   "raw": 71.7,
+   "raw_se": 2.6,
+   "length_adjusted": 64.0,
+   "length_adjusted_se": 2.6,
+   "mean_chars": 4620,
+   "median_chars": 3779,
+   "share_le_2000_chars": 0.157
+  },
+  "physician": {
+   "n": 350,
+   "raw": 43.5,
+   "raw_se": 3.1,
+   "length_adjusted": 43.2,
+   "length_adjusted_se": 3.1,
+   "mean_chars": 2091,
+   "median_chars": 1663,
+   "share_le_2000_chars": 0.586
+  }
+ },
+ "paired_length_adjusted": {
+  "amie_style": {
+   "n": 350,
+   "diff": 9.1,
+   "ci95": [
+    4.5,
+    13.8
+   ],
+   "paired_t_p": 0.00017688276046449322,
+   "bootstrap_p": {
+    "p": 0.0005,
+    "is_upper_bound": true
+   }
+  },
+  "mai_dxo_style": {
+   "n": 350,
+   "diff": 11.5,
+   "ci95": [
+    6.8,
+    16.0
+   ],
+   "paired_t_p": 1.5837554574106675e-06,
+   "bootstrap_p": {
+    "p": 0.0005,
+    "is_upper_bound": true
+   }
+  },
+  "gpt61sol": {
+   "n": 350,
+   "diff": 13.4,
+   "ci95": [
+    9.2,
+    17.5
+   ],
+   "paired_t_p": 3.104242859401173e-10,
+   "bootstrap_p": {
+    "p": 0.0005,
+    "is_upper_bound": true
+   }
+  },
+  "opus55": {
+   "n": 350,
+   "diff": 12.7,
+   "ci95": [
+    8.1,
+    17.1
+   ],
+   "paired_t_p": 6.583500199377721e-08,
+   "bootstrap_p": {
+    "p": 0.0005,
+    "is_upper_bound": true
+   }
+  },
+  "physician": {
+   "n": 350,
+   "diff": 33.5,
+   "ci95": [
+    28.1,
+    39.6
+   ],
+   "paired_t_p": 9.258273595252949e-25,
+   "bootstrap_p": {
+    "p": 0.0005,
+    "is_upper_bound": true
+   }
+  }
+ },
+ "paired_raw": {
+  "amie_style": {
+   "n": 350,
+   "diff": 10.2,
+   "ci95": [
+    5.6,
+    14.8
+   ],
+   "paired_t_p": 2.8905387190278637e-05,
+   "bootstrap_p": {
+    "p": 0.0005,
+    "is_upper_bound": true
+   }
+  },
+  "mai_dxo_style": {
+   "n": 350,
+   "diff": 11.5,
+   "ci95": [
+    6.7,
+    15.9
+   ],
+   "paired_t_p": 1.927494894997585e-06,
+   "bootstrap_p": {
+    "p": 0.0005,
+    "is_upper_bound": true
+   }
+  },
+  "gpt61sol": {
+   "n": 350,
+   "diff": 11.4,
+   "ci95": [
+    7.2,
+    15.6
+   ],
+   "paired_t_p": 7.918806500613508e-08,
+   "bootstrap_p": {
+    "p": 0.0005,
+    "is_upper_bound": true
+   }
+  },
+  "opus55": {
+   "n": 350,
+   "diff": 6.4,
+   "ci95": [
+    1.8,
+    10.9
+   ],
+   "paired_t_p": 0.0058697824529669144,
+   "bootstrap_p": {
+    "p": 0.004,
+    "is_upper_bound": false
+   }
+  },
+  "physician": {
+   "n": 350,
+   "diff": 34.7,
+   "ci95": [
+    29.2,
+    40.9
+   ],
+   "paired_t_p": 8.135542704158965e-26,
+   "bootstrap_p": {
+    "p": 0.0005,
+    "is_upper_bound": true
+   }
+  }
+ },
+ "holm_primary_family": {
+  "family": "compass_pro_full vs amie_style and vs mai_dxo_style (2 tests per score type)",
+  "test": "two-sided paired t test on task-level differences (Holm adjusted); two-sided percentile paired bootstrap p also given (floor 1/2000)",
+  "length_adjusted": {
+   "mai_dxo_style": {
+    "p": 1.5837554574106675e-06,
+    "p_holm": 3.167510914821335e-06
+   },
+   "amie_style": {
+    "p": 0.00017688276046449322,
+    "p_holm": 0.00017688276046449322
+   }
+  },
+  "raw": {
+   "mai_dxo_style": {
+    "p": 1.927494894997585e-06,
+    "p_holm": 3.85498978999517e-06
+   },
+   "amie_style": {
+    "p": 2.8905387190278637e-05,
+    "p_holm": 2.8905387190278637e-05
+   }
+  }
+ },
+ "win_tie_loss": {
+  "amie_style": {
+   "raw": {
+    "n": 350,
+    "win": 76,
+    "tie": 237,
+    "loss": 37
+   },
+   "length_adjusted": {
+    "n": 350,
+    "win": 147,
+    "tie": 0,
+    "loss": 203
+   }
+  },
+  "mai_dxo_style": {
+   "raw": {
+    "n": 350,
+    "win": 79,
+    "tie": 242,
+    "loss": 29
+   },
+   "length_adjusted": {
+    "n": 350,
+    "win": 213,
+    "tie": 0,
+    "loss": 137
+   }
+  },
+  "gpt61sol": {
+   "raw": {
+    "n": 350,
+    "win": 76,
+    "tie": 250,
+    "loss": 24
+   },
+   "length_adjusted": {
+    "n": 350,
+    "win": 189,
+    "tie": 0,
+    "loss": 161
+   }
+  },
+  "opus55": {
+   "raw": {
+    "n": 350,
+    "win": 66,
+    "tie": 237,
+    "loss": 47
+   },
+   "length_adjusted": {
+    "n": 350,
+    "win": 267,
+    "tie": 0,
+    "loss": 83
+   }
+  },
+  "physician": {
+   "raw": {
+    "n": 350,
+    "win": 169,
+    "tie": 159,
+    "loss": 22
+   },
+   "length_adjusted": {
+    "n": 350,
+    "win": 219,
+    "tie": 0,
+    "loss": 131
+   }
+  }
+ },
+ "subgroups_vs_amie_style": {
+  "use_case=consult": {
+   "ours": 72.6,
+   "amie_style": 60.4,
+   "paired_length_adjusted": {
+    "n": 157,
+    "diff": 12.2,
+    "ci95": [
+     4.1,
+     20.9
+    ],
+    "paired_t_p": 0.005484708006813799,
+    "bootstrap_p": {
+     "p": 0.003,
+     "is_upper_bound": false
+    }
+   },
+   "paired_raw": {
+    "n": 157,
+    "diff": 12.9,
+    "ci95": [
+     4.7,
+     21.5
+    ],
+    "paired_t_p": 0.0034225503961323104,
+    "bootstrap_p": {
+     "p": 0.003,
+     "is_upper_bound": false
+    }
+   }
+  },
+  "use_case=research": {
+   "ours": 80.7,
+   "amie_style": 67.9,
+   "paired_length_adjusted": {
+    "n": 98,
+    "diff": 12.9,
+    "ci95": [
+     5.8,
+     21.4
+    ],
+    "paired_t_p": 0.0014036644414881809,
+    "bootstrap_p": {
+     "p": 0.0005,
+     "is_upper_bound": true
+    }
+   },
+   "paired_raw": {
+    "n": 98,
+    "diff": 13.5,
+    "ci95": [
+     5.9,
+     21.2
+    ],
+    "paired_t_p": 0.0010159485747115856,
+    "bootstrap_p": {
+     "p": 0.0005,
+     "is_upper_bound": true
+    }
+   }
+  },
+  "use_case=writing": {
+   "ours": 79.3,
+   "amie_style": 79.3,
+   "paired_length_adjusted": {
+    "n": 95,
+    "diff": -0.0,
+    "ci95": [
+     -5.9,
+     6.0
+    ],
+    "paired_t_p": 0.9937770578136635,
+    "bootstrap_p": {
+     "p": 0.957,
+     "is_upper_bound": false
+    }
+   },
+   "paired_raw": {
+    "n": 95,
+    "diff": 2.2,
+    "ci95": [
+     -3.3,
+     8.3
+    ],
+    "paired_t_p": 0.4643650310238712,
+    "bootstrap_p": {
+     "p": 0.451,
+     "is_upper_bound": false
+    }
+   }
+  },
+  "type=good_faith": {
+   "ours": 79.6,
+   "amie_style": 69.1,
+   "paired_length_adjusted": {
+    "n": 225,
+    "diff": 10.5,
+    "ci95": [
+     4.9,
+     15.9
+    ],
+    "paired_t_p": 0.00019948966059227783,
+    "bootstrap_p": {
+     "p": 0.0005,
+     "is_upper_bound": true
+    }
+   },
+   "paired_raw": {
+    "n": 225,
+    "diff": 11.4,
+    "ci95": [
+     6.2,
+     17.0
+    ],
+    "paired_t_p": 6.634757303108223e-05,
+    "bootstrap_p": {
+     "p": 0.0005,
+     "is_upper_bound": true
+    }
+   }
+  },
+  "type=red_teaming": {
+   "ours": 71.5,
+   "amie_style": 65.0,
+   "paired_length_adjusted": {
+    "n": 125,
+    "diff": 6.5,
+    "ci95": [
+     -2.0,
+     15.7
+    ],
+    "paired_t_p": 0.148309362160087,
+    "bootstrap_p": {
+     "p": 0.141,
+     "is_upper_bound": false
+    }
+   },
+   "paired_raw": {
+    "n": 125,
+    "diff": 8.1,
+    "ci95": [
+     -0.4,
+     17.0
+    ],
+    "paired_t_p": 0.0743853035978962,
+    "bootstrap_p": {
+     "p": 0.063,
+     "is_upper_bound": false
+    }
+   }
+  }
+ },
+ "length": {
+  "paired_both_le_2000_chars": {
+   "raw": {
+    "amie_style": {
+     "n": 50,
+     "diff": 5.5,
+     "ci95": [
+      -3.9,
+      16.1
+     ],
+     "paired_t_p": 0.2787792305713969,
+     "bootstrap_p": {
+      "p": 0.246,
+      "is_upper_bound": false
+     }
+    },
+    "mai_dxo_style": {
+     "n": 40,
+     "diff": 5.8,
+     "ci95": [
+      -4.8,
+      17.5
+     ],
+     "paired_t_p": 0.31887325867100746,
+     "bootstrap_p": {
+      "p": 0.308,
+      "is_upper_bound": false
+     }
+    },
+    "gpt61sol": {
+     "n": 51,
+     "diff": 12.0,
+     "ci95": [
+      -0.3,
+      24.0
+     ],
+     "paired_t_p": 0.0718154000666525,
+     "bootstrap_p": {
+      "p": 0.057,
+      "is_upper_bound": false
+     }
+    },
+    "opus55": {
+     "n": 35,
+     "diff": 3.6,
+     "ci95": [
+      -9.4,
+      18.1
+     ],
+     "paired_t_p": 0.6232511277225538,
+     "bootstrap_p": {
+      "p": 0.624,
+      "is_upper_bound": false
+     }
+    },
+    "physician": {
+     "n": 42,
+     "diff": 37.8,
+     "ci95": [
+      17.1,
+      58.9
+     ],
+     "paired_t_p": 0.0007283055965721288,
+     "bootstrap_p": {
+      "p": 0.0005,
+      "is_upper_bound": true
+     }
+    }
+   },
+   "length_adjusted": {
+    "amie_style": {
+     "n": 50,
+     "diff": 3.9,
+     "ci95": [
+      -5.1,
+      13.5
+     ],
+     "paired_t_p": 0.4395482414027265,
+     "bootstrap_p": {
+      "p": 0.411,
+      "is_upper_bound": false
+     }
+    },
+    "mai_dxo_style": {
+     "n": 40,
+     "diff": 4.5,
+     "ci95": [
+      -5.8,
+      15.4
+     ],
+     "paired_t_p": 0.4320639242236958,
+     "bootstrap_p": {
+      "p": 0.413,
+      "is_upper_bound": false
+     }
+    },
+    "gpt61sol": {
+     "n": 51,
+     "diff": 9.4,
+     "ci95": [
+      -3.2,
+      21.7
+     ],
+     "paired_t_p": 0.15228908574620964,
+     "bootstrap_p": {
+      "p": 0.139,
+      "is_upper_bound": false
+     }
+    },
+    "opus55": {
+     "n": 35,
+     "diff": 3.1,
+     "ci95": [
+      -10.4,
+      17.2
+     ],
+     "paired_t_p": 0.6698468580588479,
+     "bootstrap_p": {
+      "p": 0.699,
+      "is_upper_bound": false
+     }
+    },
+    "physician": {
+     "n": 42,
+     "diff": 35.4,
+     "ci95": [
+      16.5,
+      57.2
+     ],
+     "paired_t_p": 0.0014134274253549174,
+     "bootstrap_p": {
+      "p": 0.0005,
+      "is_upper_bound": true
+     }
+    }
+   }
+  },
+  "regression": {
+   "amie_style": {
+    "model": "raw score difference (points) = intercept + slope x character difference (thousands); OLS, bootstrap 95% CI over tasks",
+    "n": 350,
+    "intercept_diff_at_equal_length": 9.11,
+    "intercept_ci95": [
+     4.29,
+     14.03
+    ],
+    "slope_per_1000_chars": 2.85,
+    "slope_ci95": [
+     -0.7,
+     7.89
+    ],
+    "mean_char_diff": 375,
+    "spearman_rho": 0.1,
+    "note": "the length-adjusted difference equals the raw difference minus 2.94 points per 1,000 characters of the character difference, by construction"
+   },
+   "mai_dxo_style": {
+    "model": "raw score difference (points) = intercept + slope x character difference (thousands); OLS, bootstrap 95% CI over tasks",
+    "n": 350,
+    "intercept_diff_at_equal_length": 11.52,
+    "intercept_ci95": [
+     6.92,
+     16.12
+    ],
+    "slope_per_1000_chars": 2.55,
+    "slope_ci95": [
+     -0.95,
+     7.08
+    ],
+    "mean_char_diff": -23,
+    "spearman_rho": 0.092,
+    "note": "the length-adjusted difference equals the raw difference minus 2.94 points per 1,000 characters of the character difference, by construction"
+   },
+   "gpt61sol": {
+    "model": "raw score difference (points) = intercept + slope x character difference (thousands); OLS, bootstrap 95% CI over tasks",
+    "n": 350,
+    "intercept_diff_at_equal_length": 12.96,
+    "intercept_ci95": [
+     8.66,
+     17.19
+    ],
+    "slope_per_1000_chars": 2.31,
+    "slope_ci95": [
+     1.13,
+     3.75
+    ],
+    "mean_char_diff": -652,
+    "spearman_rho": 0.234,
+    "note": "the length-adjusted difference equals the raw difference minus 2.94 points per 1,000 characters of the character difference, by construction"
+   },
+   "opus55": {
+    "model": "raw score difference (points) = intercept + slope x character difference (thousands); OLS, bootstrap 95% CI over tasks",
+    "n": 350,
+    "intercept_diff_at_equal_length": 10.99,
+    "intercept_ci95": [
+     5.66,
+     16.46
+    ],
+    "slope_per_1000_chars": 2.15,
+    "slope_ci95": [
+     0.96,
+     3.85
+    ],
+    "mean_char_diff": -2124,
+    "spearman_rho": 0.15,
+    "note": "the length-adjusted difference equals the raw difference minus 2.94 points per 1,000 characters of the character difference, by construction"
+   },
+   "physician": {
+    "model": "raw score difference (points) = intercept + slope x character difference (thousands); OLS, bootstrap 95% CI over tasks",
+    "n": 350,
+    "intercept_diff_at_equal_length": 33.02,
+    "intercept_ci95": [
+     27.63,
+     39.01
+    ],
+    "slope_per_1000_chars": 4.17,
+    "slope_ci95": [
+     1.13,
+     7.4
+    ],
+    "mean_char_diff": 405,
+    "spearman_rho": 0.162,
+    "note": "the length-adjusted difference equals the raw difference minus 2.94 points per 1,000 characters of the character difference, by construction"
+   }
+  }
+ },
+ "cost": {
+  "n_tasks": 350,
+  "price_usd_per_million_tokens": {
+   "opus55": [
+    4.0,
+    20.0
+   ],
+   "gpt61sol": [
+    5.0,
+    30.0
+   ],
+   "amie_style": [
+    4.0,
+    20.0
+   ],
+   "mai_dxo_style": [
+    4.0,
+    20.0
+   ]
+  },
+  "web_search_usd_per_request": 0.01,
+  "comparator_chains": {
+   "amie_style": {
+    "usage_rows": 350,
+    "usd_per_task": 0.1237,
+    "input_tokens_per_task": 5092,
+    "output_tokens_per_task": 5168
+   },
+   "mai_dxo_style": {
+    "usage_rows": 350,
+    "usd_per_task": 0.3352,
+    "input_tokens_per_task": 21885,
+    "output_tokens_per_task": 12383
+   }
+  },
+  "attribution_rules": {
+   "A_file_order": {
+    "opus55_bare": {
+     "rows": 350,
+     "usd_per_task": 0.0616,
+     "input_tokens_per_task": 843,
+     "output_tokens_per_task": 2909
+    },
+    "gpt61sol_bare": {
+     "rows": 350,
+     "usd_per_task": 0.0486,
+     "input_tokens_per_task": 528,
+     "output_tokens_per_task": 1531
+    },
+    "compass_pro_full": {
+     "rows": 1020,
+     "usd_per_task": 0.5733,
+     "by_component_usd_per_task": {
+      "opus55": 0.3413,
+      "gpt61sol": 0.1939,
+      "web_search": 0.0382
+     },
+     "web_search_requests_per_task": 3.82
+    }
+   },
+   "B_smallest_input": {
+    "opus55_bare": {
+     "rows": 350,
+     "usd_per_task": 0.0615,
+     "input_tokens_per_task": 826,
+     "output_tokens_per_task": 2909
+    },
+    "gpt61sol_bare": {
+     "rows": 350,
+     "usd_per_task": 0.0539,
+     "input_tokens_per_task": 323,
+     "output_tokens_per_task": 1743
+    },
+    "compass_pro_full": {
+     "rows": 1020,
+     "usd_per_task": 0.568,
+     "by_component_usd_per_task": {
+      "opus55": 0.3413,
+      "gpt61sol": 0.1885,
+      "web_search": 0.0382
+     },
+     "web_search_requests_per_task": 3.82
+    }
+   }
+  },
+  "total_reply_usd_all_arms": 465.84,
+  "attribution_uncertainty_usd_per_task_compass": 0.0053,
+  "note": "Rule A and rule B bound the misattribution at the boundary between the bare arms and the pipeline; the bare opus55 and gpt61sol arms each made one call per task. Totals are exact; only the split is attributed. Grader usage is excluded."
+ }
+}

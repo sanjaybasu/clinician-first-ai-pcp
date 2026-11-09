@@ -1,0 +1,36 @@
+# Guideline pathway: sore throat in adults (URI lane).
+# Paper 2 development pathway, signed by S. Basu on 2026-11-05 (design/pathway_schema.md). Every source resolved in PubMed on 2026-11-04;
+# section-level support for each node stays unverified until the signing physician checks the cited section.
+pathway: sore_throat
+version: "0.1.0-dev"
+script: sore_throat@1.0.0
+status: signed
+signed_by: "S. Basu 2026-11-05"
+sources:
+  shulman2012:
+    citation: "Shulman ST, et al. Clinical practice guideline for the diagnosis and management of group A streptococcal pharyngitis: 2012 update by the IDSA. Clin Infect Dis. 2012;55(10):e86-e102"
+    pmid: "22965026"
+  harris2016:
+    citation: "Harris AM, et al. Appropriate antibiotic use for acute respiratory tract infection in adults: advice for high-value care from the ACP and the CDC. Ann Intern Med. 2016;164(6):425-434"
+    pmid: "26785402"
+  judgment:
+    citation: "Development judgment (conservative choice where no cited source sets the level)"
+nodes:
+  - id: escalate
+    when: {kinds: [escalate]}
+    disposition: {level: emergency_now, within_hours: 0}
+    source: [judgment]
+  - id: open
+    when: {kinds: [ask]}
+    standing: {level: clinician_review, within_hours: 24}
+    source: [judgment]
+  - id: defer
+    when: {kinds: [defer]}
+    disposition: {level: clinician_review, within_hours: 24}
+    source: [judgment]
+  - id: complete
+    when: {kinds: [complete]}
+    disposition: {level: self_care}
+    proposals:
+      - {kind: lab, name: "Rapid antigen detection test for group A strep only if features suggest strep (fever, tonsillar exudate, tender anterior cervical nodes, no cough); no antibiotics without a positive test", source: [shulman2012, harris2016]}
+    source: [shulman2012, harris2016]

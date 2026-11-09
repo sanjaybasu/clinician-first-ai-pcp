@@ -1,0 +1,628 @@
+{
+ "amie_style": {
+  "length_adjusted": {
+   "n": 175,
+   "score": 68.2,
+   "se": 3.3
+  },
+  "raw": {
+   "n": 175,
+   "score": 69.1,
+   "se": 3.4
+  },
+  "mean_chars": 2312,
+  "use_case=consult": {
+   "n": 79,
+   "score": 69.3,
+   "se": 5.6
+  },
+  "use_case=research": {
+   "n": 49,
+   "score": 65.1,
+   "se": 5.6
+  },
+  "use_case=writing": {
+   "n": 47,
+   "score": 69.5,
+   "se": 5.7
+  },
+  "type=good_faith": {
+   "n": 109,
+   "score": 71.1,
+   "se": 3.9
+  },
+  "type=red_teaming": {
+   "n": 66,
+   "score": 63.3,
+   "se": 6.1
+  }
+ },
+ "amie_style_g61": {
+  "length_adjusted": {
+   "n": 175,
+   "score": 62.1,
+   "se": 3.5
+  },
+  "raw": {
+   "n": 175,
+   "score": 61.8,
+   "se": 3.5
+  },
+  "mean_chars": 1898,
+  "use_case=consult": {
+   "n": 79,
+   "score": 64.6,
+   "se": 5.4
+  },
+  "use_case=research": {
+   "n": 49,
+   "score": 59.5,
+   "se": 5.8
+  },
+  "use_case=writing": {
+   "n": 47,
+   "score": 60.6,
+   "se": 7.2
+  },
+  "type=good_faith": {
+   "n": 109,
+   "score": 63.0,
+   "se": 4.1
+  },
+  "type=red_teaming": {
+   "n": 66,
+   "score": 60.7,
+   "se": 6.5
+  }
+ },
+ "compass_pro": {
+  "length_adjusted": {
+   "n": 175,
+   "score": 71.4,
+   "se": 3.1
+  },
+  "raw": {
+   "n": 175,
+   "score": 75.2,
+   "se": 3.1
+  },
+  "mean_chars": 3269,
+  "use_case=consult": {
+   "n": 79,
+   "score": 70.5,
+   "se": 5.1
+  },
+  "use_case=research": {
+   "n": 49,
+   "score": 71.8,
+   "se": 4.8
+  },
+  "use_case=writing": {
+   "n": 47,
+   "score": 72.6,
+   "se": 6.3
+  },
+  "type=good_faith": {
+   "n": 109,
+   "score": 72.5,
+   "se": 3.8
+  },
+  "type=red_teaming": {
+   "n": 66,
+   "score": 69.7,
+   "se": 5.5
+  }
+ },
+ "compass_pro_edit": {
+  "length_adjusted": {
+   "n": 175,
+   "score": 72.8,
+   "se": 3.2
+  },
+  "raw": {
+   "n": 175,
+   "score": 74.4,
+   "se": 3.2
+  },
+  "mean_chars": 2560,
+  "use_case=consult": {
+   "n": 79,
+   "score": 71.9,
+   "se": 5.2
+  },
+  "use_case=research": {
+   "n": 49,
+   "score": 73.8,
+   "se": 5.0
+  },
+  "use_case=writing": {
+   "n": 47,
+   "score": 73.2,
+   "se": 6.2
+  },
+  "type=good_faith": {
+   "n": 109,
+   "score": 75.5,
+   "se": 3.8
+  },
+  "type=red_teaming": {
+   "n": 66,
+   "score": 68.4,
+   "se": 5.7
+  }
+ },
+ "compass_pro_noreview": {
+  "length_adjusted": {
+   "n": 175,
+   "score": 73.3,
+   "se": 3.4
+  },
+  "raw": {
+   "n": 175,
+   "score": 76.7,
+   "se": 3.4
+  },
+  "mean_chars": 3152,
+  "use_case=consult": {
+   "n": 79,
+   "score": 67.6,
+   "se": 6.1
+  },
+  "use_case=research": {
+   "n": 49,
+   "score": 79.5,
+   "se": 4.0
+  },
+  "use_case=writing": {
+   "n": 47,
+   "score": 76.6,
+   "se": 5.8
+  },
+  "type=good_faith": {
+   "n": 109,
+   "score": 77.0,
+   "se": 3.5
+  },
+  "type=red_teaming": {
+   "n": 66,
+   "score": 67.2,
+   "se": 6.7
+  }
+ },
+ "compass_pro_nosearch": {
+  "length_adjusted": {
+   "n": 175,
+   "score": 71.9,
+   "se": 2.8
+  },
+  "raw": {
+   "n": 175,
+   "score": 75.8,
+   "se": 2.8
+  },
+  "mean_chars": 3309,
+  "use_case=consult": {
+   "n": 79,
+   "score": 72.5,
+   "se": 4.3
+  },
+  "use_case=research": {
+   "n": 49,
+   "score": 70.7,
+   "se": 5.1
+  },
+  "use_case=writing": {
+   "n": 47,
+   "score": 72.2,
+   "se": 5.6
+  },
+  "type=good_faith": {
+   "n": 109,
+   "score": 73.6,
+   "se": 3.4
+  },
+  "type=red_teaming": {
+   "n": 66,
+   "score": 69.2,
+   "se": 5.0
+  }
+ },
+ "compass_pro_opusonly": {
+  "length_adjusted": {
+   "n": 175,
+   "score": 75.5,
+   "se": 3.1
+  },
+  "raw": {
+   "n": 175,
+   "score": 78.1,
+   "se": 3.2
+  },
+  "mean_chars": 2869,
+  "use_case=consult": {
+   "n": 79,
+   "score": 72.7,
+   "se": 5.8
+  },
+  "use_case=research": {
+   "n": 49,
+   "score": 81.7,
+   "se": 4.2
+  },
+  "use_case=writing": {
+   "n": 47,
+   "score": 73.8,
+   "se": 4.7
+  },
+  "type=good_faith": {
+   "n": 109,
+   "score": 78.3,
+   "se": 3.9
+  },
+  "type=red_teaming": {
+   "n": 66,
+   "score": 71.0,
+   "se": 5.3
+  }
+ },
+ "compass_pro_single": {
+  "length_adjusted": {
+   "n": 175,
+   "score": 75.2,
+   "se": 2.8
+  },
+  "raw": {
+   "n": 175,
+   "score": 79.1,
+   "se": 2.8
+  },
+  "mean_chars": 3334,
+  "use_case=consult": {
+   "n": 79,
+   "score": 72.6,
+   "se": 4.7
+  },
+  "use_case=research": {
+   "n": 49,
+   "score": 76.5,
+   "se": 4.7
+  },
+  "use_case=writing": {
+   "n": 47,
+   "score": 78.1,
+   "se": 4.5
+  },
+  "type=good_faith": {
+   "n": 109,
+   "score": 75.9,
+   "se": 3.2
+  },
+  "type=red_teaming": {
+   "n": 66,
+   "score": 74.0,
+   "se": 5.1
+  }
+ },
+ "gemini31pro": {
+  "length_adjusted": {
+   "n": 175,
+   "score": 41.0,
+   "se": 4.4
+  },
+  "raw": {
+   "n": 175,
+   "score": 47.2,
+   "se": 4.5
+  },
+  "mean_chars": 4116,
+  "use_case=consult": {
+   "n": 79,
+   "score": 41.5,
+   "se": 7.1
+  },
+  "use_case=research": {
+   "n": 49,
+   "score": 57.1,
+   "se": 5.5
+  },
+  "use_case=writing": {
+   "n": 47,
+   "score": 23.5,
+   "se": 9.5
+  },
+  "type=good_faith": {
+   "n": 109,
+   "score": 57.7,
+   "se": 4.1
+  },
+  "type=red_teaming": {
+   "n": 66,
+   "score": 13.4,
+   "se": 8.7
+  }
+ },
+ "gpt55": {
+  "length_adjusted": {
+   "n": 175,
+   "score": 43.5,
+   "se": 4.7
+  },
+  "raw": {
+   "n": 175,
+   "score": 49.6,
+   "se": 4.7
+  },
+  "mean_chars": 4059,
+  "use_case=consult": {
+   "n": 79,
+   "score": 51.3,
+   "se": 7.3
+  },
+  "use_case=research": {
+   "n": 49,
+   "score": 62.4,
+   "se": 5.7
+  },
+  "use_case=writing": {
+   "n": 47,
+   "score": 10.9,
+   "se": 9.2
+  },
+  "type=good_faith": {
+   "n": 109,
+   "score": 63.8,
+   "se": 4.4
+  },
+  "type=red_teaming": {
+   "n": 66,
+   "score": 10.1,
+   "se": 8.6
+  }
+ },
+ "gpt61sol": {
+  "length_adjusted": {
+   "n": 175,
+   "score": 64.2,
+   "se": 3.3
+  },
+  "raw": {
+   "n": 175,
+   "score": 68.3,
+   "se": 3.4
+  },
+  "mean_chars": 3381,
+  "use_case=consult": {
+   "n": 79,
+   "score": 65.8,
+   "se": 5.3
+  },
+  "use_case=research": {
+   "n": 49,
+   "score": 66.1,
+   "se": 5.0
+  },
+  "use_case=writing": {
+   "n": 47,
+   "score": 59.5,
+   "se": 6.9
+  },
+  "type=good_faith": {
+   "n": 109,
+   "score": 67.0,
+   "se": 3.7
+  },
+  "type=red_teaming": {
+   "n": 66,
+   "score": 59.5,
+   "se": 6.4
+  }
+ },
+ "mai_dxo_style": {
+  "length_adjusted": {
+   "n": 175,
+   "score": 65.0,
+   "se": 3.8
+  },
+  "raw": {
+   "n": 175,
+   "score": 67.1,
+   "se": 3.8
+  },
+  "mean_chars": 2706,
+  "use_case=consult": {
+   "n": 79,
+   "score": 62.6,
+   "se": 6.5
+  },
+  "use_case=research": {
+   "n": 49,
+   "score": 68.8,
+   "se": 5.7
+  },
+  "use_case=writing": {
+   "n": 47,
+   "score": 65.0,
+   "se": 6.6
+  },
+  "type=good_faith": {
+   "n": 109,
+   "score": 70.5,
+   "se": 3.9
+  },
+  "type=red_teaming": {
+   "n": 66,
+   "score": 55.8,
+   "se": 7.5
+  }
+ },
+ "mai_dxo_style_g61": {
+  "length_adjusted": {
+   "n": 175,
+   "score": 62.3,
+   "se": 3.5
+  },
+  "raw": {
+   "n": 175,
+   "score": 62.7,
+   "se": 3.6
+  },
+  "mean_chars": 2122,
+  "use_case=consult": {
+   "n": 79,
+   "score": 58.0,
+   "se": 5.8
+  },
+  "use_case=research": {
+   "n": 49,
+   "score": 66.3,
+   "se": 5.0
+  },
+  "use_case=writing": {
+   "n": 47,
+   "score": 65.3,
+   "se": 6.8
+  },
+  "type=good_faith": {
+   "n": 109,
+   "score": 62.6,
+   "se": 3.8
+  },
+  "type=red_teaming": {
+   "n": 66,
+   "score": 61.8,
+   "se": 6.9
+  }
+ },
+ "opus55": {
+  "length_adjusted": {
+   "n": 175,
+   "score": 59.2,
+   "se": 3.7
+  },
+  "raw": {
+   "n": 175,
+   "score": 67.5,
+   "se": 3.7
+  },
+  "mean_chars": 4835,
+  "use_case=consult": {
+   "n": 79,
+   "score": 57.8,
+   "se": 6.4
+  },
+  "use_case=research": {
+   "n": 49,
+   "score": 63.9,
+   "se": 5.3
+  },
+  "use_case=writing": {
+   "n": 47,
+   "score": 56.7,
+   "se": 7.0
+  },
+  "type=good_faith": {
+   "n": 109,
+   "score": 63.8,
+   "se": 4.4
+  },
+  "type=red_teaming": {
+   "n": 66,
+   "score": 51.7,
+   "se": 6.8
+  }
+ },
+ "opus_search_edit": {
+  "length_adjusted": {
+   "n": 175,
+   "score": 72.2,
+   "se": 3.5
+  },
+  "raw": {
+   "n": 175,
+   "score": 75.4,
+   "se": 3.5
+  },
+  "mean_chars": 3093,
+  "use_case=consult": {
+   "n": 79,
+   "score": 72.2,
+   "se": 5.7
+  },
+  "use_case=research": {
+   "n": 49,
+   "score": 80.1,
+   "se": 5.0
+  },
+  "use_case=writing": {
+   "n": 47,
+   "score": 63.8,
+   "se": 7.1
+  },
+  "type=good_faith": {
+   "n": 109,
+   "score": 77.2,
+   "se": 4.0
+  },
+  "type=red_teaming": {
+   "n": 66,
+   "score": 63.9,
+   "se": 6.5
+  }
+ },
+ "physician": {
+  "length_adjusted": {
+   "n": 175,
+   "score": 45.9,
+   "se": 3.7
+  },
+  "raw": {
+   "n": 175,
+   "score": 46.6,
+   "se": 3.7
+  },
+  "mean_chars": 2246,
+  "use_case=consult": {
+   "n": 79,
+   "score": 48.3,
+   "se": 5.5
+  },
+  "use_case=research": {
+   "n": 49,
+   "score": 54.0,
+   "se": 5.8
+  },
+  "use_case=writing": {
+   "n": 47,
+   "score": 33.5,
+   "se": 7.9
+  },
+  "type=good_faith": {
+   "n": 109,
+   "score": 53.3,
+   "se": 4.0
+  },
+  "type=red_teaming": {
+   "n": 66,
+   "score": 33.6,
+   "se": 6.9
+  }
+ },
+ "_paired_vs_physician_on_common_ids": {
+  "gpt55": -2.3,
+  "gemini31pro": -4.9,
+  "opus55": 13.3,
+  "amie_style": 22.3,
+  "mai_dxo_style": 19.1,
+  "gpt61sol": 18.3,
+  "amie_style_g61": 16.2,
+  "compass_pro": 25.6,
+  "mai_dxo_style_g61": 16.4,
+  "compass_pro_edit": 26.9,
+  "compass_pro_nosearch": 26.0,
+  "compass_pro_single": 29.3,
+  "compass_pro_noreview": 27.5,
+  "compass_pro_opusonly": 29.6,
+  "opus_search_edit": 26.3
+ },
+ "_usd_list": 722.91
+}

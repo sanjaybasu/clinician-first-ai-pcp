@@ -1,0 +1,24 @@
+{
+ "n": 100,
+ "primary_run_diff_same_tasks": 7.6,
+ "primary_ci": [
+  -0.3,
+  16.1
+ ],
+ "second_run_diff": 4.0,
+ "second_ci": [
+  -2.5,
+  10.2
+ ],
+ "mean_of_two_runs_diff": 5.8,
+ "mean_ci": [
+  -0.5,
+  12.2
+ ],
+ "compass_pro_full_run1": 76.6,
+ "compass_pro_full_run2": 75.9,
+ "compass_pro_full_task_corr": 0.736,
+ "amie_style_run1": 69.0,
+ "amie_style_run2": 71.9,
+ "amie_style_task_corr": 0.674
+}

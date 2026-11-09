@@ -1,0 +1,341 @@
+{
+ "split": "development",
+ "ours": "compass_pro_edit",
+ "note": "compass_pro_edit is the development-split equivalent of compass_pro_full (step 5 applied to the stored compass_pro answer); the _g61 arms run the same comparator chains on a GPT-6.1 Sol backbone",
+ "arms": {
+  "compass_pro_edit": {
+   "n": 175,
+   "raw": 74.4,
+   "raw_se": 3.2,
+   "length_adjusted": 72.8,
+   "length_adjusted_se": 3.2,
+   "mean_chars": 2560,
+   "median_chars": 2309,
+   "share_le_2000_chars": 0.12
+  },
+  "compass_pro": {
+   "n": 175,
+   "raw": 75.2,
+   "raw_se": 3.1,
+   "length_adjusted": 71.4,
+   "length_adjusted_se": 3.1,
+   "mean_chars": 3269,
+   "median_chars": 3172,
+   "share_le_2000_chars": 0.051
+  },
+  "amie_style_g61": {
+   "n": 175,
+   "raw": 61.8,
+   "raw_se": 3.5,
+   "length_adjusted": 62.1,
+   "length_adjusted_se": 3.5,
+   "mean_chars": 1898,
+   "median_chars": 1335,
+   "share_le_2000_chars": 0.68
+  },
+  "mai_dxo_style_g61": {
+   "n": 175,
+   "raw": 62.7,
+   "raw_se": 3.6,
+   "length_adjusted": 62.3,
+   "length_adjusted_se": 3.5,
+   "mean_chars": 2122,
+   "median_chars": 1259,
+   "share_le_2000_chars": 0.657
+  },
+  "amie_style": {
+   "n": 175,
+   "raw": 69.1,
+   "raw_se": 3.4,
+   "length_adjusted": 68.2,
+   "length_adjusted_se": 3.3,
+   "mean_chars": 2312,
+   "median_chars": 2161,
+   "share_le_2000_chars": 0.423
+  },
+  "mai_dxo_style": {
+   "n": 175,
+   "raw": 67.1,
+   "raw_se": 3.8,
+   "length_adjusted": 65.0,
+   "length_adjusted_se": 3.8,
+   "mean_chars": 2706,
+   "median_chars": 2493,
+   "share_le_2000_chars": 0.286
+  },
+  "gpt61sol": {
+   "n": 175,
+   "raw": 68.3,
+   "raw_se": 3.4,
+   "length_adjusted": 64.2,
+   "length_adjusted_se": 3.3,
+   "mean_chars": 3381,
+   "median_chars": 2487,
+   "share_le_2000_chars": 0.394
+  },
+  "opus55": {
+   "n": 175,
+   "raw": 67.5,
+   "raw_se": 3.7,
+   "length_adjusted": 59.2,
+   "length_adjusted_se": 3.7,
+   "mean_chars": 4835,
+   "median_chars": 3884,
+   "share_le_2000_chars": 0.131
+  },
+  "physician": {
+   "n": 175,
+   "raw": 46.6,
+   "raw_se": 3.7,
+   "length_adjusted": 45.9,
+   "length_adjusted_se": 3.7,
+   "mean_chars": 2246,
+   "median_chars": 1808,
+   "share_le_2000_chars": 0.554
+  }
+ },
+ "paired_length_adjusted": {
+  "amie_style_g61": {
+   "n": 175,
+   "diff": 10.7,
+   "ci95": [
+    4.5,
+    17.1
+   ],
+   "paired_t_p": 0.0006701276581172065,
+   "bootstrap_p": {
+    "p": 0.0005,
+    "is_upper_bound": true
+   }
+  },
+  "mai_dxo_style_g61": {
+   "n": 175,
+   "diff": 10.5,
+   "ci95": [
+    5.0,
+    16.7
+   ],
+   "paired_t_p": 0.0006088652111485605,
+   "bootstrap_p": {
+    "p": 0.0005,
+    "is_upper_bound": true
+   }
+  },
+  "amie_style": {
+   "n": 175,
+   "diff": 4.6,
+   "ci95": [
+    -0.9,
+    10.4
+   ],
+   "paired_t_p": 0.10845825993860055,
+   "bootstrap_p": {
+    "p": 0.097,
+    "is_upper_bound": false
+   }
+  },
+  "mai_dxo_style": {
+   "n": 175,
+   "diff": 7.8,
+   "ci95": [
+    1.6,
+    13.8
+   ],
+   "paired_t_p": 0.013695552546221701,
+   "bootstrap_p": {
+    "p": 0.01,
+    "is_upper_bound": false
+   }
+  },
+  "gpt61sol": {
+   "n": 175,
+   "diff": 8.6,
+   "ci95": [
+    3.2,
+    14.3
+   ],
+   "paired_t_p": 0.003861201027282739,
+   "bootstrap_p": {
+    "p": 0.006,
+    "is_upper_bound": false
+   }
+  },
+  "opus55": {
+   "n": 175,
+   "diff": 13.6,
+   "ci95": [
+    7.8,
+    19.7
+   ],
+   "paired_t_p": 1.4628576261165503e-05,
+   "bootstrap_p": {
+    "p": 0.0005,
+    "is_upper_bound": true
+   }
+  },
+  "physician": {
+   "n": 175,
+   "diff": 26.9,
+   "ci95": [
+    19.2,
+    34.7
+   ],
+   "paired_t_p": 1.8435643934161488e-10,
+   "bootstrap_p": {
+    "p": 0.0005,
+    "is_upper_bound": true
+   }
+  }
+ },
+ "paired_raw": {
+  "amie_style_g61": {
+   "n": 175,
+   "diff": 12.6,
+   "ci95": [
+    6.1,
+    19.3
+   ],
+   "paired_t_p": 0.00010159879672874567,
+   "bootstrap_p": {
+    "p": 0.0005,
+    "is_upper_bound": true
+   }
+  },
+  "mai_dxo_style_g61": {
+   "n": 175,
+   "diff": 11.8,
+   "ci95": [
+    6.0,
+    18.1
+   ],
+   "paired_t_p": 0.00019932754049060427,
+   "bootstrap_p": {
+    "p": 0.0005,
+    "is_upper_bound": true
+   }
+  },
+  "amie_style": {
+   "n": 175,
+   "diff": 5.3,
+   "ci95": [
+    -0.2,
+    11.3
+   ],
+   "paired_t_p": 0.06421799919517224,
+   "bootstrap_p": {
+    "p": 0.063,
+    "is_upper_bound": false
+   }
+  },
+  "mai_dxo_style": {
+   "n": 175,
+   "diff": 7.4,
+   "ci95": [
+    1.0,
+    13.6
+   ],
+   "paired_t_p": 0.021768775521408493,
+   "bootstrap_p": {
+    "p": 0.02,
+    "is_upper_bound": false
+   }
+  },
+  "gpt61sol": {
+   "n": 175,
+   "diff": 6.2,
+   "ci95": [
+    0.4,
+    12.2
+   ],
+   "paired_t_p": 0.04628816811179331,
+   "bootstrap_p": {
+    "p": 0.034,
+    "is_upper_bound": false
+   }
+  },
+  "opus55": {
+   "n": 175,
+   "diff": 6.9,
+   "ci95": [
+    0.9,
+    13.3
+   ],
+   "paired_t_p": 0.027168293032969908,
+   "bootstrap_p": {
+    "p": 0.023,
+    "is_upper_bound": false
+   }
+  },
+  "physician": {
+   "n": 175,
+   "diff": 27.8,
+   "ci95": [
+    20.1,
+    35.6
+   ],
+   "paired_t_p": 4.5957798146828414e-11,
+   "bootstrap_p": {
+    "p": 0.0005,
+    "is_upper_bound": true
+   }
+  }
+ },
+ "g61_chain_minus_opus_chain": {
+  "amie_style_g61 - amie_style": {
+   "raw": {
+    "n": 175,
+    "diff": -7.3,
+    "ci95": [
+     -13.8,
+     -0.9
+    ],
+    "paired_t_p": 0.022805687992704476,
+    "bootstrap_p": {
+     "p": 0.027,
+     "is_upper_bound": false
+    }
+   },
+   "length_adjusted": {
+    "n": 175,
+    "diff": -6.1,
+    "ci95": [
+     -11.8,
+     0.1
+    ],
+    "paired_t_p": 0.05032733595305843,
+    "bootstrap_p": {
+     "p": 0.052,
+     "is_upper_bound": false
+    }
+   }
+  },
+  "mai_dxo_style_g61 - mai_dxo_style": {
+   "raw": {
+    "n": 175,
+    "diff": -4.4,
+    "ci95": [
+     -10.7,
+     2.4
+    ],
+    "paired_t_p": 0.19542771612478774,
+    "bootstrap_p": {
+     "p": 0.197,
+     "is_upper_bound": false
+    }
+   },
+   "length_adjusted": {
+    "n": 175,
+    "diff": -2.7,
+    "ci95": [
+     -9.2,
+     3.6
+    ],
+    "paired_t_p": 0.4151357621968803,
+    "bootstrap_p": {
+     "p": 0.394,
+     "is_upper_bound": false
+    }
+   }
+  }
+ }
+}

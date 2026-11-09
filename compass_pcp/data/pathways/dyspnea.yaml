@@ -1,0 +1,52 @@
+# Guideline pathway: shortness of breath in adults (high-risk lane; never closes remotely).
+# Paper 2 development pathway, signed by S. Basu on 2026-11-05 (design/pathway_schema.md). Every source resolved in PubMed on 2026-11-04;
+# section-level support for each node stays unverified until the signing physician checks the cited section.
+pathway: dyspnea
+version: "0.1.0-dev"
+script: dyspnea@1.0.0
+status: signed
+signed_by: "S. Basu 2026-11-05"
+sources:
+  heidenreich2022:
+    citation: "Heidenreich PA, et al. 2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure. Circulation. 2022;145(18):e895-e1032"
+    pmid: "35363499"
+  konstantinides2020:
+    citation: "Konstantinides SV, et al. 2019 ESC Guidelines for the diagnosis and management of acute pulmonary embolism. Eur Heart J. 2020;41(4):543-603"
+    pmid: "31504429"
+  metlay2019:
+    citation: "Metlay JP, et al. Diagnosis and treatment of adults with community-acquired pneumonia. ATS/IDSA guideline. Am J Respir Crit Care Med. 2019;200(7):e45-e67"
+    pmid: "31573350"
+  acr_ari2024:
+    citation: "Batra K, et al. ACR Appropriateness Criteria Acute Respiratory Illness in Immunocompetent Patients: 2024 Update. J Am Coll Radiol. 2025;22(5S):S14-S35"
+    pmid: "40409874"
+  judgment:
+    citation: "Development judgment (S. Basu decision of 2026-11-03: clinician workload is acceptable for open cannot-miss workups)"
+nodes:
+  - id: escalate
+    when: {kinds: [escalate]}
+    disposition: {level: emergency_now, within_hours: 0}
+    source: [heidenreich2022, konstantinides2020, metlay2019]
+  - id: hf_open
+    when: {kinds: [ask], cannot_miss: {heart_failure: [needs_workup]}}
+    standing: {level: urgent_same_day, within_hours: 24}
+    source: [heidenreich2022, judgment]
+  - id: pe_open
+    when: {kinds: [ask], cannot_miss: {pulmonary_embolism: [needs_workup]}}
+    standing: {level: urgent_same_day, within_hours: 24}
+    source: [konstantinides2020, judgment]
+  - id: pneumonia_open
+    when: {kinds: [ask], cannot_miss: {pneumonia: [needs_workup]}}
+    standing: {level: urgent_same_day, within_hours: 24}
+    source: [metlay2019, judgment]
+  - id: asking_other
+    when: {kinds: [ask]}
+    standing: {level: clinician_review, within_hours: 24}
+    source: [judgment]
+  - id: defer
+    when: {kinds: [defer]}
+    disposition: {level: urgent_same_day, within_hours: 24}
+    proposals:
+      - {kind: lab, name: "BNP or NT-proBNP", source: [heidenreich2022]}
+      - {kind: test, name: "12-lead ECG", source: [heidenreich2022]}
+      - {kind: imaging, name: "Chest radiograph", source: [heidenreich2022, acr_ari2024]}
+    source: [heidenreich2022, metlay2019]

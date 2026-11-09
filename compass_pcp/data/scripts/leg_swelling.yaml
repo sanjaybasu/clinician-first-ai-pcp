@@ -1,0 +1,83 @@
+# Illness script: leg swelling in adults (undifferentiated high-risk lane).
+# Signed by a physician on 2026-10-28. Every value and its table location is listed in
+# docs/clinical/SCRIPT_SOURCES_cardiopulm.md. Priors are literature values; a later version replaces them with Waymark claims rates. Thresholds were drafted and accepted at physician review; they are not from a formal decision analysis.
+#
+# The AI takes the history and escalates. DVT needs a D-dimer or compression
+# ultrasound to rule out, and the Wells score needs a clinician exam, so those
+# features are remote_askable: false and the engine defers.
+#
+# Wells components that a patient can answer (prior DVT, active cancer, recent
+# surgery, immobilization) are history features. The exam components (calf
+# difference, pitting edema, tenderness along the deep veins, collateral veins,
+# "alternative diagnosis as likely") are in the non-remote wells_score_3plus.
+# Sources and reference conditions:
+#   - previous_dvt, active_cancer: Heller 2021, DVT on whole-leg ultrasound in
+#     patients referred for suspected DVT (DERIVED from counts).
+#   - recent_surgery, immobilization: Courtney 2010, VTE in ED patients tested
+#     for PE. This is a different population; the reviewer must accept or remove.
+#   - ddimer_abnormal, male_sex: Biesheuvel 2008 (Oudega primary-care cohort).
+#   - wells_score_3plus: Dybowska 2015, primary care, suspected DVT.
+#   - cellulitis, chronic_venous_insufficiency: prior only; no sourced LRs.
+#
+# Hard escalation rules for the lane gate (not Bayesian): leg swelling with
+# shortness of breath, chest pain, or coughing up blood (possible PE); a red,
+# hot, spreading area with fever or chills; a cold, pale, or numb foot.
+complaint: leg_swelling
+version: "1.0.0"
+lane: undifferentiated_high_risk
+clinical_review:
+  approved_by: "Sanjay Basu, MD, PhD"
+  approved_on: "2026-10-28"
+# must_ask: DVT red flags; signed 2026-10-28. Cellulitis has no sourced features.
+must_ask: [previous_dvt, recent_surgery, immobilization, active_cancer]
+features:
+  - id: previous_dvt
+    question: "Have you ever had a blood clot in your leg (DVT)?"
+    remote_askable: true
+  - id: active_cancer
+    question: "Are you being treated for cancer right now, or were you treated in the past 6 months?"
+    remote_askable: true   # Heller 2021 recorded "active cancer"; the Wells window is 6 months
+  - id: recent_surgery
+    question: "Have you had surgery with general anesthesia (put to sleep) in the past 4 weeks?"
+    remote_askable: true
+  - id: immobilization
+    question: "In the past few days, have you been stuck in bed, unable to move a leg, or had a leg in a cast?"
+    remote_askable: true
+  - id: male_sex
+    question: "Male sex (from the record)"
+    remote_askable: true   # from the record
+  - id: ddimer_abnormal
+    question: "D-dimer at or above 500 ng/mL"
+    remote_askable: false  # blood test
+  - id: wells_score_3plus
+    question: "Wells DVT score of 3 or more on clinician assessment"
+    remote_askable: false  # needs in-person exam
+diagnoses:
+  - id: dvt
+    label: "Deep vein thrombosis of the leg"
+    cannot_miss: true
+    prior:
+      p: 0.223
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Biesheuvel CJ et al. BMC Med Res Methodol 2008;8:48 (PMID 18644127) Table 1 and Results: DVT in 289 of 1295 primary-care adults with a painful, swollen, or red leg (22%)"
+    thresholds: {benefit: 30, harm: 1, test_se: 0.97, test_sp: 0.95, test_harm: 0.05, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+    lrs:
+      previous_dvt: {lr_pos: 2.47, lr_neg: 0.80, lr_pos_ci: [1.74, 3.52], lr_neg_ci: [0.72, 0.89], source: "DERIVED from Heller T et al. BMC Emerg Med 2021;21(1):126 (PMID 34717549) Table 1 counts, Previous DVT TP46 FN111 FP52 TN387; suspected-DVT ultrasound population; log-method 95% CI"}
+      active_cancer: {lr_pos: 1.27, lr_neg: 0.96, lr_pos_ci: [0.81, 1.98], lr_neg_ci: [0.89, 1.04], source: "DERIVED from Heller 2021 (PMID 34717549) Table 1 counts, Active cancer TP24 FN133 FP53 TN386; log-method 95% CI"}
+      recent_surgery: {lr_pos: 2.57, lr_neg: 0.90, lr_pos_ci: [2.07, 3.19], lr_neg_ci: [0.87, 0.93], group: vte_provoked, source: "DERIVED from Courtney DM et al. Ann Emerg Med 2010;55(4):307-315.e1 (PMID 20045580) web-appendix counts TP86 FN482 FP434 TN6938; VTE in ED patients tested for PE (population differs); log-method 95% CI"}
+      immobilization: {lr_pos: 2.54, lr_neg: 0.85, lr_pos_ci: [2.14, 3.02], lr_neg_ci: [0.82, 0.89], group: vte_provoked, source: "DERIVED from Courtney 2010 (PMID 20045580) web-appendix counts TP125 FN443 FP638 TN6734; population differs; log-method 95% CI"}
+      male_sex: {lr_pos: 1.45, lr_neg: 0.78, lr_pos_ci: [1.24, 1.68], lr_neg_ci: [0.70, 0.88], source: "DERIVED from Biesheuvel 2008 (PMID 18644127) Table 1 counts, Male gender TP137 FN152 FP330 TN676; log-method 95% CI"}
+      ddimer_abnormal: {lr_pos: 1.52, lr_neg: 0.16, lr_pos_ci: [1.43, 1.61], lr_neg_ci: [0.10, 0.26], source: "DERIVED from Biesheuvel 2008 (PMID 18644127) Table 1 counts, D-dimer abnormal TP271 FN18 FP621 TN385; log-method 95% CI"}
+      wells_score_3plus: {lr_pos: 10.98, lr_neg: 0.35, lr_pos_ci: [8.10, 14.87], lr_neg_ci: [0.25, 0.51], source: "DERIVED from Dybowska M et al. Thromb J 2015;13:18 (PMID 26045696) Table 4, 2x2 table at Wells threshold 2 (score >2), TP40 FN20 FP60 TN928; log-method 95% CI"}
+  - id: cellulitis
+    label: "Cellulitis or erysipelas of the leg"
+    cannot_miss: true
+    prior:
+      p: 0.019
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Beller E et al. BMC Med Imaging 2020;20(1):127 (PMID 33267839) Abstract and Table 2: soft tissue inflammation/erysipelas/cellulitis in 15 of 789 patients scanned for suspected DVT (15 of 531 DVT-negative)"
+    thresholds: {benefit: 20, harm: 1, test_se: 0.90, test_sp: 0.80, test_harm: 0.05, source: "Drafted value accepted at physician review on 2026-10-28; not derived from a formal decision analysis"}
+  - id: chronic_venous_insufficiency
+    label: "Chronic venous insufficiency"
+    cannot_miss: false
+    prior:
+      p: 0.186
+      source: "Literature value (a later version replaces it with the Waymark claims rate); literature value from Beller 2020 BMC Med Imaging (PMID 33267839) Abstract: chronic venous insufficiency in 147 of 789 patients scanned for suspected DVT (147 of 531 DVT-negative)"

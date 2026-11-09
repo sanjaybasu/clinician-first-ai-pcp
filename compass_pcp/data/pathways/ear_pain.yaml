@@ -1,0 +1,33 @@
+# Guideline pathway: ear pain in adults (URI lane).
+# Paper 2 development pathway, signed by S. Basu on 2026-11-05 (design/pathway_schema.md). Every source resolved in PubMed on 2026-11-04;
+# section-level support for each node stays unverified until the signing physician checks the cited section.
+pathway: ear_pain
+version: "0.1.0-dev"
+script: ear_pain@1.0.0
+status: signed
+signed_by: "S. Basu 2026-11-05"
+sources:
+  rosenfeld2014:
+    citation: "Rosenfeld RM, et al. Clinical practice guideline: acute otitis externa. Otolaryngol Head Neck Surg. 2014;150(1 Suppl):S1-S24"
+    pmid: "24491310"
+  judgment:
+    citation: "Development judgment (conservative choice where no cited source sets the level)"
+nodes:
+  - id: escalate
+    when: {kinds: [escalate]}
+    disposition: {level: emergency_now, within_hours: 0}
+    source: [judgment]
+  - id: open
+    when: {kinds: [ask]}
+    standing: {level: clinician_review, within_hours: 24}
+    source: [judgment]
+  - id: defer
+    when: {kinds: [defer]}
+    disposition: {level: clinician_review, within_hours: 24}
+    source: [judgment]
+  - id: complete
+    when: {kinds: [complete]}
+    disposition: {level: routine_visit, within_hours: 72}
+    proposals:
+      - {kind: referral, name: "In-person otoscopy to distinguish otitis media from otitis externa before any antibiotic", source: [rosenfeld2014]}
+    source: [rosenfeld2014, judgment]
