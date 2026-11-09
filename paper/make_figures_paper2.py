@@ -20,8 +20,35 @@ from matplotlib.patches import FancyBboxPatch  # noqa: E402
 
 D = Path(__file__).resolve().parents[2] / "compass-pcp-data"
 OUT = Path.home() / "waymark-local/notebooks/compass-pcp-paper2/figures"
-ARMS = [("compass_pro_full", "Our architecture"), ("amie_style", "AMIE-style"), ("mai_dxo_style", "MAI-DxO-style"),
+ARMS = [("compass_pro_full", "Our architecture"), ("opus_search_edit", "Two-step version*"),
+        ("opus_edit", "Two-step, no web search*"), ("amie_style", "AMIE-style"),
+        ("amie_style_search", "AMIE-style with web search*"), ("amie_style_uncapped", "AMIE-style, 12,000 tokens*"),
+        ("mai_dxo_style", "MAI-DxO-style"), ("mai_dxo_style_uncapped", "MAI-DxO-style, 12,000 tokens*"),
         ("opus55", "Opus 5.5, no system prompt"), ("gpt61sol", "GPT-6.1 Sol, no system prompt"), ("physician", "Physicians")]
+
+
+def _diffs() -> dict:
+    """compass_pro_full minus each arm, from every compare file (reversed pairs negated)."""
+    out = {}
+    for f in sorted((D / "hbpro_test").glob("compare*.txt")):
+        if f.name in ("compare_g61.txt", "compare_opus.txt"):  # alternate graders
+            continue
+        txt = f.read_text()
+        objs, dec, i = [], json.JSONDecoder(), 0
+        while i < len(txt):
+            j = txt.find("{", i)
+            if j < 0:
+                break
+            o, i = dec.raw_decode(txt, j)
+            objs.append(o)
+        for o in objs:
+            for k, v in o.items():
+                a, _, b = k.partition(" - ")
+                if a == "compass_pro_full":
+                    out[b] = v
+                elif b == "compass_pro_full":
+                    out[a] = {"n": v["n"], "diff": -v["diff"], "ci95": [-v["ci95"][1], -v["ci95"][0]]}
+    return out
 C_OURS, C_OTHER = "#1b6ca8", "#8c8c8c"
 plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 8, "axes.spines.top": False,
                      "axes.spines.right": False})
@@ -81,21 +108,22 @@ def fig1(out: Path) -> None:
 
 def fig2(out: Path) -> None:
     rep = json.loads((D / "hbpro_test/report.json").read_text())
-    cmp_ = json.loads((D / "hbpro_test/compare.txt").read_text())
-    fig, (a, b) = plt.subplots(1, 2, figsize=(7.2, 2.8), gridspec_kw={"width_ratios": [1.1, 1]})
-    for k, (arm, lab) in enumerate(ARMS):
+    cmp_ = _diffs()
+    arms = [x for x in ARMS if x[0] in rep]
+    fig, (a, b) = plt.subplots(1, 2, figsize=(7.4, 3.9), gridspec_kw={"width_ratios": [1.1, 1]})
+    for k, (arm, lab) in enumerate(arms):
         s = rep[arm]["length_adjusted"]
         a.errorbar(s["score"], k, xerr=1.96 * s["se"], fmt="o", color=C_OURS if k == 0 else C_OTHER, ms=4, capsize=2)
-    a.set_yticks(range(len(ARMS)), [x[1] for x in ARMS])
+    a.set_yticks(range(len(arms)), [x[1] for x in arms])
     a.invert_yaxis()
     a.set_xlabel("Length-adjusted score (95% CI)")
     a.set_title("a  HealthBench Professional, 350 test tasks", loc="left", fontsize=8)
-    for k, (arm, lab) in enumerate(ARMS[1:]):
-        d = cmp_[f"compass_pro_full - {arm}"]
+    for k, (arm, lab) in enumerate(arms[1:]):
+        d = cmp_[arm]
         b.errorbar(d["diff"], k, xerr=[[d["diff"] - d["ci95"][0]], [d["ci95"][1] - d["diff"]]], fmt="o", color=C_OURS,
                    ms=4, capsize=2)
     b.axvline(0, color="#333", lw=0.6)
-    b.set_yticks(range(len(ARMS) - 1), [x[1] for x in ARMS[1:]])
+    b.set_yticks(range(len(arms) - 1), [x[1] for x in arms[1:]])
     b.invert_yaxis()
     b.set_xlabel("Paired difference, ours minus system (95% CI)")
     b.set_title("b  Paired differences", loc="left", fontsize=8)
@@ -128,8 +156,10 @@ def fig3(out: Path) -> None:
     lk = json.loads((D / "paper2_final/derived/texts_gate_test_and_leak.json").read_text())
     m, ins, sl = t["main"], t["ai_emergency_instructions"], t["same_safety_layer"]["metrics"]
     fig, (a, b) = plt.subplots(1, 2, figsize=(7.4, 3.2), gridspec_kw={"width_ratios": [1.35, 1]})
-    offs = {"ours": (-62, -12), "v22": (6, 4), "amie_style": (8, -2), "mai_dxo_style": (8, -10), "raw_llm": (6, 4),
+    offs = {"ours": (-78, -16), "v22": (-122, 10), "amie_style": (10, -3), "mai_dxo_style": (10, -10), "raw_llm": (6, 4),
             "gate_alone": (6, 4)}
+    bb = {"fc": "white", "ec": "none", "alpha": 0.85, "pad": 0.4}
+    absl = {"ours": (14, 57.8), "v22": (183, 58.4)}  # label positions in data units, clear of the CI bars
     for arm, lab in TEXT_ARMS:
         r = m[arm]
         x, y = r["escalation_no_hazard_per_1000_weighted"], 100 * r["hazard_sensitivity_weighted"]
@@ -137,7 +167,10 @@ def fig3(out: Path) -> None:
         yl, yh = (100 * v for v in r["hazard_sensitivity_weighted_ci"])
         a.errorbar(x, y, xerr=[[x - xl], [xh - x]], yerr=[[y - yl], [yh - y]], fmt="o", ms=4, capsize=2,
                    color=C_OURS if arm == "ours" else C_OTHER, alpha=1 if arm == "ours" else 0.8)
-        a.annotate(lab, (x, y), textcoords="offset points", xytext=offs.get(arm, (4, 4)), fontsize=6.3)
+        if arm in absl:
+            a.annotate(lab, (x, y), xytext=absl[arm], textcoords="data", fontsize=6.3, va="center", bbox=bb)
+        else:
+            a.annotate(lab, (x, y), textcoords="offset points", xytext=offs.get(arm, (4, 4)), fontsize=6.3, bbox=bb)
     for k, lab in [("amie_style+layer", "AMIE-style + same gate and check"), ("mai_dxo_style+layer", "MAI-DxO-style + layer"),
                    ("v22+layer", "v22 + layer")]:
         r = sl[k]
@@ -147,15 +180,17 @@ def fig3(out: Path) -> None:
         a.errorbar(x, y, xerr=[[x - xl], [xh - x]], yerr=[[y - yl], [yh - y]], fmt="o", ms=4, mfc="white", mec=C_OTHER,
                    ecolor="#cccccc", capsize=2, ls="none")
         a.annotate(lab, (r["escalation_no_hazard_per_1000_weighted"], 100 * r["hazard_sensitivity_weighted"]),
-                   textcoords="offset points", xytext=(4, 3 if k != "v22+layer" else -9), fontsize=6.0, color="#555")
+                   xytext=(98, 72.6) if k == "v22+layer" else (6, 3),
+                   textcoords="data" if k == "v22+layer" else "offset points", fontsize=6.0, color="#555", bbox=bb)
     a.set_xlabel("Escalations per 1,000 texts without a hazard (95% CI)")
     a.set_ylabel("Hazard sensitivity, % (95% CI)")
     a.set_title("a  Real patient texts (949; open = same safety layer)", loc="left", fontsize=8)
     arms = [("ours", "Our architecture"), ("raw_llm", "Opus 5.5, persona only"), ("v22", "Rule-based (v22)"),
             ("amie_style", "AMIE-style"), ("mai_dxo_style", "MAI-DxO-style")]
     pat = [0.0 if k == "ours" else ins[k]["unconditional_instruction_per_1000_replies"] for k, _ in arms]
-    cls = [lk["released_raw_llm_replies"]["emergency_now_per_1000_released"] if k == "ours"
-           else lk["classifier_emergency_now_all_replies"][k]["per_1000"] for k, _ in arms]
+    em = json.loads((D / "paper2_final/derived/texts_routing_endpoints.json").read_text())[
+        "emergency_now_reaching_patient_per_1000_all_replies"]
+    cls = [em[k] for k, _ in arms]
     yy = range(len(arms))
     b.barh([y - 0.2 for y in yy], pat, height=0.38, color="#bbbbbb", label="text patterns (unconditional)")
     b.barh([y + 0.2 for y in yy], cls, height=0.38, color=C_OURS, label="classifier (emergency care now)")

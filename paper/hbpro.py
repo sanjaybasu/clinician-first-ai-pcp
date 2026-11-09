@@ -38,10 +38,10 @@ ALT_GRADERS = {"g61": "gpt-6.1-sol", "opus": "claude-opus-5-5"}
 PRICE = {"opus55": (4.0, 20.0), "gpt55": (2.5, 15.0), "gpt61sol": (5.0, 30.0), "gemini31pro": (2.0, 12.0), "grader": (2.5, 15.0),
          "mai_dxo_style": (4.0, 20.0), "amie_style": (4.0, 20.0), "mai_dxo_style_g61": (5.0, 30.0),
          "amie_style_g61": (5.0, 30.0), "web_search": (10000.0, 0.0), "grader_g61": (5.0, 30.0), "grader_opus": (4.0, 20.0),
-         "amie_style_uncapped": (4.0, 20.0), "mai_dxo_style_uncapped": (4.0, 20.0)}  # web_search: "in" counts requests (USD 10/1,000)  # USD per million tokens (list), cost report only
+         "amie_style_uncapped": (4.0, 20.0), "mai_dxo_style_uncapped": (4.0, 20.0), "amie_style_search": (4.0, 20.0)}  # web_search: "in" counts requests (USD 10/1,000)  # USD per million tokens (list), cost report only
 ARMS = ["opus55", "gpt61sol", "gpt55", "gemini31pro", "mai_dxo_style", "amie_style", "mai_dxo_style_g61", "amie_style_g61",
         "compass_pro", "compass_pro_nosearch", "compass_pro_single", "compass_pro_noreview", "compass_pro_edit", "compass_pro_full", "compass_pro_opusonly", "opus_search_edit",
-        "amie_style_uncapped", "mai_dxo_style_uncapped", "opus_edit", "physician"]
+        "amie_style_uncapped", "mai_dxo_style_uncapped", "opus_edit", "amie_style_search", "physician"]
 PRO_FLAGS = {"compass_pro": {}, "compass_pro_nosearch": {"search": False}, "compass_pro_single": {"dual": False},
              "compass_pro_noreview": {"review": False}, "compass_pro_full": {"edit": True},
              "compass_pro_opusonly": {"edit": True, "second": "opus"},  # single-developer pipeline (post hoc, dev)
@@ -132,6 +132,18 @@ def answer(arm: str, conv: list[dict], out: Path) -> str:
         text, _ = sysm.next_message(_text_of(conv), context=NO_RECORD_CONTEXT)
         _append(out / "usage.jsonl", {"who": arm, "in": llm.usage.input_tokens, "out": llm.usage.output_tokens})
         return text
+    if arm == "amie_style_search":  # post hoc (test): AMIE-style chain whose draft step has the same web search as ours
+        from compass_pcp.arms.baselines import AMIE_ANALYZE, AMIE_DRAFT, AMIE_REFINE, OUTPUT_LIMITS
+        from compass_pcp.arms.pro import SEARCH_NOTE, ProPipeline
+        p = ProPipeline()
+        msgs = _text_of(conv)
+        analysis = p._opus(AMIE_ANALYZE, msgs, search=False, max_tokens=4000)
+        draft = p._opus(AMIE_DRAFT + SEARCH_NOTE + "\n\nANALYSIS:\n" + analysis, msgs, search=True, max_tokens=12000)
+        final = p._opus(AMIE_REFINE + " " + OUTPUT_LIMITS,
+                        [*msgs, {"role": "user", "content": f"DRAFT REPLY TO REVIEW:\n{draft}"}], search=False, max_tokens=12000)
+        for who, (i, o) in p.usage.items():
+            _append(out / "usage.jsonl", {"who": who, "in": i, "out": o})
+        return final
     if arm == "compass_pro_edit":  # development: step 5 applied to the stored step-4 answer of compass_pro
         from compass_pcp.arms.pro import ProPipeline
         base = {(r["id"]): r["text"] for r in _rows(out / "replies.jsonl") if r["arm"] == "compass_pro"}

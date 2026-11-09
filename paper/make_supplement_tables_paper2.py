@@ -107,7 +107,7 @@ def t4() -> str:
             cost["compass_pro_full"] = v["usd_per_task"]
     for arm in ["compass_pro_full", "amie_style", "mai_dxo_style", "opus55", "gpt61sol", "physician"]:
         m = h["arms"][arm]
-        cc = f"{cost[arm]:.2f}" if arm in cost else "—"
+        cc = f"{cost[arm]:.3f}" if arm in cost else "—"
         rows.append(f"| {NAMES[arm]} | {cc} | {m['mean_chars']:,} | {m['median_chars']:,} | {_pct(m['share_le_2000_chars'])}% |")
     L = h["length"]
     reg = L.get("regression", {}).get("amie_style", {})
@@ -160,6 +160,18 @@ def t5() -> str:
         lab = "One searched Opus 5.5 draft + editor minus " + ("AMIE-style" if arm == "amie_style" else "full pipeline")
         rows.append(f"| {lab} | GPT-5.4, length-adjusted | {d['n'] if d else ''} | "
                     f"{(format(d['diff'], '+.1f') + ' (' + _ci(d['ci95']) + ')') if d else 'pending'} |")
+    ns = _cmp_lines(D / "hbpro_test/compare_nosearch.txt")
+    for key, lab in [("opus_edit - opus_search_edit", "Two-step without web search minus two-step with search"),
+                     ("opus_edit - amie_style", "Two-step without web search minus AMIE-style")]:
+        d = ns.get(key)
+        rows.append(f"| {lab} | GPT-5.4, length-adjusted | {d['n'] if d else ''} | "
+                    f"{(format(d['diff'], '+.1f') + ' (' + _ci(d['ci95']) + ')') if d else 'pending'} |")
+    asr = _cmp_lines(D / "hbpro_test/compare_amie_search.txt")
+    for key, lab in [("compass_pro_full - amie_style_search", "Ours minus AMIE-style with the same web search"),
+                     ("opus_search_edit - amie_style_search", "Two-step version minus AMIE-style with the same web search")]:
+        d = asr.get(key)
+        rows.append(f"| {lab} | GPT-5.4, length-adjusted | {d['n'] if d else ''} | "
+                    f"{(format(d['diff'], '+.1f') + ' (' + _ci(d['ci95']) + ')') if d else 'pending'} |")
     hp = h["holm_primary_family"]
     wt = h["win_tie_loss"]
     foot = (f"Holm-adjusted paired t-test P (length-adjusted): vs AMIE-style {hp['length_adjusted']['amie_style']['p_holm']:.1e}; "
@@ -168,7 +180,8 @@ def t5() -> str:
             f"and against MAI-DxO-style {wt['mai_dxo_style']['raw']['win']}/{wt['mai_dxo_style']['raw']['tie']}/"
             f"{wt['mai_dxo_style']['raw']['loss']}.")
     return ("Supplementary Table 5 | Grader and run sensitivity on the HealthBench Professional test split. The "
-            "alternate graders and the second run are post hoc.\n\n" + "\n".join(rows) + "\n\n" + foot)
+            "alternate graders, the second run, the raised reply limit, the two-step versions and the AMIE-style agent with "
+            "web search are post hoc.\n\n" + "\n".join(rows) + "\n\n" + foot)
 
 
 def _trow(name, m, sens_key="hazard_sensitivity_weighted"):
@@ -213,21 +226,39 @@ def t6() -> str:
 
 def t7() -> str:
     s = _j(DER / "texts_supplement.json")["same_safety_layer"]
-    rows = ["| Writer + same gate + same check | Sensitivity, weighted % (95% CI) | Unweighted % | Escalations per 1,000 without hazard (95% CI) | Unweighted | Replies held per 1,000 |",
-            "|---|---|---|---|---|---|"]
+    r = _j(DER / "texts_routing_endpoints.json")
+    em = r["emergency_now_reaching_patient_per_1000_all_replies"]
+    rows = ["| Writer + same gate + same check | Sensitivity, weighted % (95% CI) | Unweighted % | Escalations per 1,000 without hazard (95% CI) | Unweighted | Replies held by the check per 1,000 (unconditional by its text patterns) | Doctor-call texts escalated, % (95% CI) | Advice to seek emergency care now released, per 1,000 replies (classifier) |",
+            "|---|---|---|---|---|---|---|---|"]
     for k in ["raw_llm+layer", "amie_style+layer", "mai_dxo_style+layer", "v22+layer"]:
         m = s["metrics"][k]
         nm = {"raw_llm+layer": "Persona-only writer (= our architecture)", "amie_style+layer": "AMIE-style writer",
               "mai_dxo_style+layer": "MAI-DxO-style writer", "v22+layer": "Rule-based writer (v22)"}[k]
-        rows.append(_trow(nm, m) + f" {s['replies_held_per_1000'][k]} |")
+        rk = "ours" if k == "raw_llm+layer" else k
+        q = r[rk]
+        rows.append(_trow(nm, m) + f" {s['replies_held_per_1000'][k]} | {_pct(q['sens_doctor_call'])} "
+                    f"({_ci([100 * x for x in q['sens_doctor_call_ci']])}) | {em[rk]} |")
     pd_ = s.get("paired_diffs", {})
     pr = ["| Comparison | Sensitivity difference (95% CI) | Escalations per 1,000 difference (95% CI) |", "|---|---|---|"]
     for k, v in pd_.items():
         pr.append(f"| {k} | {100 * v['sens_diff_weighted']:+.1f} ({_ci([100 * x for x in v['sens_diff_weighted_ci']])}) | "
                   f"{v['nohaz_diff_per1000_weighted']:+.1f} ({_ci(v['nohaz_diff_weighted_ci'])}) |")
+    ro, w = r["ours_routed_only"], r["withheld"]
+    dc = ["| Doctor-call endpoint (53 texts), post hoc | Difference, percentage points (95% CI) |", "|---|---|"]
+    for b in ("amie_style", "mai_dxo_style", "v22"):
+        v = r[f"ours - {b} (doctor_call)"]
+        dc.append(f"| ours - {b} | {100 * v['diff']:+.1f} ({_ci([100 * x for x in v['ci']])}) |")
+    note = (f"Routing split (post hoc): counting only texts that reached a physician (gate page or review, or the reply held "
+            f"by the check), the architecture escalated {_pct(ro['sens_safety_positive'])}% of safety-positive texts "
+            f"({_ci([100 * x for x in ro['sens_safety_positive_ci']])}) and {ro['per1000_no_hazard']} per 1,000 texts without a "
+            f"hazard. Of {3 * 949:,} replies, the architecture withheld {w['total']}: {w['replies_withheld_by_page']} because the "
+            f"gate paged on {w['texts_paged']} texts and {w['replies_held_by_check_not_paged']} held by the check; the gate sent "
+            f"{w['texts_review']} further texts to review, and their replies were sent.")
     return ("Supplementary Table 7 | The same safety layer (paging gate and check) added to each writer (post hoc). "
-            "Unconditional emergency instructions reaching the patient are 0 for every row by construction.\n\n"
-            + "\n".join(rows) + "\n\n" + "\n".join(pr))
+            "Unconditional emergency instructions found by the check's text patterns reach the patient in 0 replies for every "
+            "row by construction; the classifier column counts advice to seek emergency care now among released replies, over "
+            "all 2,847 replies of each writer.\n\n"
+            + "\n".join(rows) + "\n\n" + "\n".join(pr) + "\n\n" + "\n".join(dc) + "\n\n" + note)
 
 
 def t8() -> str:
@@ -300,7 +331,21 @@ def _gate_test() -> str:
     return (f" On the 949 test texts (later period, patient texts on the service), the deployed thresholds paged on {e[1]} of "
             f"{e[0]} 'call 911 or 988' texts and paged or sent to review {s_[1]} of {s_[0]} texts labeled as a hazard needing "
             f"a doctor's call or more; weighted to the test frame, {100 * t['weighted_page_share']:.1f}% of texts were paged "
-            f"and {100 * t['weighted_review_share']:.1f}% sent to review.")
+            f"and {100 * t['weighted_review_share']:.1f}% sent to review." + _refit())
+
+
+def _refit() -> str:
+    g = _j(Path.home() / "waymark-local/packaging/ai-pcp/data/gate_thresholds.json")
+    if not g:
+        return ""
+    e = [x for x in g["split_sample_check"]["safety"]["evaluations"] if x["choice"] == "target"][0]
+    return (f" Refit of the review threshold on the 949 test texts (post hoc; conformal risk control on the "
+            f"{g['fit_on']['sources']['compass_2026']['safety_positives']} doctor-call texts, target miss 10%): t = "
+            f"{g['split_sample_check']['safety']['chosen']['t']:.4f}; over {e['splits_used']} random 50/50 splits, mean miss in "
+            f"the held-out half {100 * e['miss_mean']:.1f}% (95th percentile {100 * e['miss_p95']:.1f}%; above 10% in "
+            f"{100 * e['share_splits_miss_above_alpha']:.1f}% of splits), weighted share sent to review "
+            f"{100 * e['gated_weighted_mean']:.1f}%. The page threshold, refit on all 1,446 texts pooled, was unchanged "
+            f"(t = {g['t_e']:.6f}).")
 
 
 def t10() -> str:

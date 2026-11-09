@@ -1,0 +1,193 @@
+{
+ "definition": {
+  "routed": "paging gate page or review, or the reply held by check_unconditional",
+  "doctor_call_endpoint": "physician action label Contact Doctor or Call 911/988, any hazard category (incl. 'other'); weighted (all such texts are screen-positive)"
+ },
+ "ours": {
+  "sens_safety_positive": 0.578,
+  "sens_safety_positive_ci": [
+   0.475,
+   0.675
+  ],
+  "sens_doctor_call": 0.686,
+  "sens_doctor_call_ci": [
+   0.562,
+   0.805
+  ],
+  "per1000_no_hazard": 139.5
+ },
+ "ours_routed_only": {
+  "sens_safety_positive": 0.388,
+  "sens_safety_positive_ci": [
+   0.285,
+   0.498
+  ],
+  "sens_doctor_call": 0.497,
+  "sens_doctor_call_ci": [
+   0.359,
+   0.631
+  ],
+  "per1000_no_hazard": 42.2
+ },
+ "amie_style": {
+  "sens_safety_positive": 0.519,
+  "sens_safety_positive_ci": [
+   0.426,
+   0.61
+  ],
+  "sens_doctor_call": 0.799,
+  "sens_doctor_call_ci": [
+   0.728,
+   0.863
+  ],
+  "per1000_no_hazard": 156.7
+ },
+ "amie_style+layer": {
+  "sens_safety_positive": 0.696,
+  "sens_safety_positive_ci": [
+   0.607,
+   0.784
+  ],
+  "sens_doctor_call": 0.862,
+  "sens_doctor_call_ci": [
+   0.795,
+   0.922
+  ],
+  "per1000_no_hazard": 210.9
+ },
+ "mai_dxo_style": {
+  "sens_safety_positive": 0.464,
+  "sens_safety_positive_ci": [
+   0.366,
+   0.557
+  ],
+  "sens_doctor_call": 0.711,
+  "sens_doctor_call_ci": [
+   0.61,
+   0.81
+  ],
+  "per1000_no_hazard": 178.9
+ },
+ "mai_dxo_style+layer": {
+  "sens_safety_positive": 0.667,
+  "sens_safety_positive_ci": [
+   0.571,
+   0.76
+  ],
+  "sens_doctor_call": 0.824,
+  "sens_doctor_call_ci": [
+   0.725,
+   0.915
+  ],
+  "per1000_no_hazard": 289.0
+ },
+ "raw_llm": {
+  "sens_safety_positive": 0.359,
+  "sens_safety_positive_ci": [
+   0.262,
+   0.449
+  ],
+  "sens_doctor_call": 0.572,
+  "sens_doctor_call_ci": [
+   0.456,
+   0.7
+  ],
+  "per1000_no_hazard": 120.9
+ },
+ "v22": {
+  "sens_safety_positive": 0.595,
+  "sens_safety_positive_ci": [
+   0.496,
+   0.691
+  ],
+  "sens_doctor_call": 0.824,
+  "sens_doctor_call_ci": [
+   0.725,
+   0.914
+  ],
+  "per1000_no_hazard": 147.2
+ },
+ "v22+layer": {
+  "sens_safety_positive": 0.696,
+  "sens_safety_positive_ci": [
+   0.604,
+   0.788
+  ],
+  "sens_doctor_call": 0.843,
+  "sens_doctor_call_ci": [
+   0.753,
+   0.93
+  ],
+  "per1000_no_hazard": 157.7
+ },
+ "ours_registered_check": {
+  "sens_safety_positive": 0.709,
+  "sens_safety_positive_ci": [
+   0.612,
+   0.805
+  ],
+  "sens_doctor_call": 0.849,
+  "sens_doctor_call_ci": [
+   0.755,
+   0.936
+  ],
+  "per1000_no_hazard": 752.1
+ },
+ "gate_alone": {
+  "sens_safety_positive": 0.38,
+  "sens_safety_positive_ci": [
+   0.276,
+   0.493
+  ],
+  "sens_doctor_call": 0.491,
+  "sens_doctor_call_ci": [
+   0.353,
+   0.625
+  ],
+  "per1000_no_hazard": 10.1
+ },
+ "ours - amie_style (doctor_call)": {
+  "diff": -0.113,
+  "ci": [
+   -0.232,
+   0.0
+  ]
+ },
+ "ours - mai_dxo_style (doctor_call)": {
+  "diff": -0.025,
+  "ci": [
+   -0.144,
+   0.092
+  ]
+ },
+ "ours - v22 (doctor_call)": {
+  "diff": -0.138,
+  "ci": [
+   -0.241,
+   -0.033
+  ]
+ },
+ "n": {
+  "safety_positive": 79,
+  "doctor_call": 53,
+  "no_hazard": 571
+ },
+ "withheld": {
+  "texts_paged": 33,
+  "texts_review": 35,
+  "replies_withheld_by_page": 99,
+  "replies_held_by_check_not_paged": 62,
+  "total": 161
+ },
+ "emergency_now_reaching_patient_per_1000_all_replies": {
+  "ours": 1.4,
+  "amie_style": 3.5,
+  "mai_dxo_style": 5.6,
+  "raw_llm": 3.5,
+  "v22": 26.7,
+  "amie_style+layer": 0.7,
+  "mai_dxo_style+layer": 1.1,
+  "v22+layer": 0.4,
+  "ours_registered_check": 0.7
+ }
+}

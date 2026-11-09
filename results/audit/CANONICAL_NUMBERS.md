@@ -71,7 +71,6 @@
 | hb_test.redteam_diff | 6.5; −2.0 to 15.7 | hbpro_test_supplement.json | ok |
 | cost.ours | USD 0.57 | hbpro_test_supplement.json | ok |
 | cost.amie | USD 0.12 | hbpro_test_supplement.json | ok |
-| cost.mai | USD 0.34 | hbpro_test_supplement.json | ok |
 | cost.ratio | about 4.6 times | derived | ok |
 | retest.primary | 7.6 points (−0.3 to 16.1) | hbpro_retest_summary.json | ok |
 | retest.second | 4.0 points (−2.5 to 10.2) | hbpro_retest_summary.json | ok |
@@ -109,7 +108,6 @@
 | txt.instr.amie_style | 55.5 | texts_supplement.json | ok |
 | txt.instr.mai_dxo_style | 146.8 | texts_supplement.json | ok |
 | txt.instr.raw_llm | 25.3 | texts_supplement.json | ok |
-| txt.instr.v22 | 35.8 | texts_supplement.json | ok |
 | txt.writer_alone | 36.7 | texts_supplement.json | ok |
 | txt.unweighted.ours | 57.8 | texts_supplement.json | ok |
 | txt.unweighted.amie | 51.9 | texts_supplement.json | ok |
@@ -148,11 +146,33 @@
 | gate.miss_p95 | 10.9% | paging_gate_497/report.json | ok |
 | intake.instr | 23 of 219 (AMIE-style) and 61 of 216 | intake_instructions.json | ok |
 | intake.none | none in 180 | intake_instructions.json | ok |
-| leak.released | Of the 2,686 replies that the architecture released, the classifier placed 4 (1.5 per 1,000) | texts_gate_test_and_leak.json | ok |
+| leak.released | The architecture released 2,686 of its 2,847 replies, and the classifier placed 4 of them in that class (1.4 per 1,000 of all replies | texts_gate_test_and_leak.json + routing | ok |
+| route.only | escalated 38.8% of hazard texts (28.5 to 49.8) at 42.2 per 1,000 | texts_routing_endpoints.json | ok |
+| route.withheld | the architecture withheld 161: 99 because the gate paged on 33 texts, and 62 | texts_routing_endpoints.json | ok |
+| route.review | The gate sent another 35 texts to review | texts_routing_endpoints.json | ok |
+| doc.n | the 53 texts that the physician labeled as needing at least a call from a doctor | texts_routing_endpoints.json | ok |
+| doc.vals | the architecture escalated 68.6% (56.2 to 80.5), against 79.9% for the AMIE-style agent, 71.1% for the MAI-DxO-style agent and 82.4% for the rule-based system | texts_routing_endpoints.json | ok |
+| doc.diffs | the differences were −11.3 points (−23.2 to 0.0), −2.5 points (−14.4 to 9.2) and −13.8 points (−24.1 to −3.3) | texts_routing_endpoints.json | ok |
+| reg.sens | escalated 70.9% of hazard texts (61.2 to 80.5) and 752.1 of every 1,000 | texts_routing_endpoints.json | ok |
+| leak.layer | released 0.4 to 1.1 such replies per 1,000 | texts_routing_endpoints.json | ok |
+| refit | missed 8.1% of the doctor-call texts in the held-out half on average (95th percentile 22.2%; above 10% in 31.4% of splits), but it sent 40.2% of texts to review | ai-pcp/data/gate_thresholds.json | ok |
+| cost | USD 0.573 per task at list prices, against USD 0.124 for the AMIE-style agent and USD 0.335 | hbpro_test_supplement.json | ok |
+| t1.opus_search_edit | 75.2 (2.3) | 78.3 | 72.6 | 77.3 | 77.4 | 76.8 | 72.4 | 3,030 | | hbpro_test/report.json | ok |
+| t1.opus_edit | 70.4 (2.4) | 73.2 | 63.7 | 73.4 | 78.2 | 72.2 | 67.1 | 2,962 | | hbpro_test/report.json | ok |
+| t1.amie_style_uncapped | 68.5 (2.5) | 70.0 | 64.2 | 66.3 | 78.0 | 69.9 | 66.1 | 2,486 | | hbpro_test/report.json | ok |
+| t1.mai_dxo_style_uncapped | 66.7 (2.5) | 69.2 | 63.6 | 66.6 | 72.1 | 68.4 | 63.7 | 2,823 | | hbpro_test/report.json | ok |
+| t1.amie_style_search | 72.3 (2.4) | 73.6 | 68.9 | 71.1 | 79.4 | 74.8 | 67.9 | 2,431 | | hbpro_test/report.json | ok |
+| search.abstract | the AMIE-style agent scored 72.3 (difference 4.4; 0.3–8.5) | compare_amie_search.txt | ok |
+| search.results | It then scored 72.3, 4.7 points above the AMIE-style agent without search; the architecture scored 4.4 points higher (0.3 to 8.5), and the two-step version 2.9 points higher (−0.7 to 6.6) | compare_amie_search.txt | ok |
+| search.discussion | the pipeline's lead fell to 4.4 points (0.3 to 8.5), and the two-step version's lead to 2.9 points (−0.7 to 6.6) | compare_amie_search.txt | ok |
+| search.lift | by 4.7 points | report.json | ok |
+| layer.range.abstract | hazard sensitivity of 57.8–69.6% | same_safety_layer | ok |
+| layer.range.discussion | hazard sensitivity of 57.8% to 69.6% | same_safety_layer | ok |
+| nosearch.vs_search | 4.9 points (1.3 to 8.4) | compare_nosearch.txt | ok |
+| nosearch.vs_amie | 2.7 points (−1.0 to 6.5) | compare_nosearch.txt | ok |
 | leak.cls | 3.5 (AMIE-style), 5.6 (MAI-DxO-style) and 3.5 (bare writer) | texts_gate_test_and_leak.json | ok |
 | hb.simple_raw | two-step version scored 78.3 and the full pipeline 78.2 | hbpro_test/report.json | ok |
 | hb.simple_chars | averaged 2,496 characters and the two-step version's 3,030 | hbpro_test/report.json | ok |
-| layer.abstract | other writers reached 66.7–69.6% | same_safety_layer | ok |
 | gate.test | 26 of the 53 texts labeled | texts_gate_test_and_leak.json | ok |
 | gate.test_share | paged on 1.4% of texts and sent 1.8% to review | texts_gate_test_and_leak.json | ok |
 | intake.4.71 | 4.71 | intake_eval/report.md | ok |

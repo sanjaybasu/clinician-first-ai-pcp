@@ -1,0 +1,88 @@
+{
+ "version": "2026-11-09",
+ "t_e": 0.005624941538023442,
+ "t_s": 0.013729778258604164,
+ "alpha_e": 0.05,
+ "alpha_s": 0.1,
+ "score_model": "Kev-9B, mean of five fold fine-tunes on physician labels (Modal apps compass-phys9b-f0 to f4), message text only, 384 tokens",
+ "fit_on": {
+  "emergency": "pooled",
+  "safety": "target",
+  "target": "compass_2026",
+  "sources": {
+   "care_team_2025": {
+    "n": 497,
+    "emergency_positives": 104,
+    "safety_positives": 263
+   },
+   "compass_2026": {
+    "n": 949,
+    "emergency_positives": 5,
+    "safety_positives": 53
+   }
+  }
+ },
+ "in_sample_target_burden_weighted": {
+  "page": 0.0143,
+  "review": 0.346
+ },
+ "split_sample_check": {
+  "emergency": {
+   "alpha": 0.05,
+   "evaluations": [
+    {
+     "choice": "target",
+     "splits_used": 0,
+     "splits_undefined": 500,
+     "miss_mean": null,
+     "miss_p95": null,
+     "share_splits_miss_above_alpha": null,
+     "gated_weighted_mean": null
+    },
+    {
+     "choice": "pooled",
+     "splits_used": 488,
+     "splits_undefined": 0,
+     "miss_mean": 0.0,
+     "miss_p95": 0.0,
+     "share_splits_miss_above_alpha": 0.0,
+     "gated_weighted_mean": 0.0143
+    }
+   ],
+   "chosen": {
+    "t": 0.005624941538023442,
+    "choice": "pooled",
+    "meets_alpha_in_splits": true
+   }
+  },
+  "safety": {
+   "alpha": 0.1,
+   "evaluations": [
+    {
+     "choice": "target",
+     "splits_used": 500,
+     "splits_undefined": 0,
+     "miss_mean": 0.081,
+     "miss_p95": 0.222,
+     "share_splits_miss_above_alpha": 0.314,
+     "gated_weighted_mean": 0.4016
+    },
+    {
+     "choice": "pooled",
+     "splits_used": 500,
+     "splits_undefined": 0,
+     "miss_mean": 0.337,
+     "miss_p95": 0.464,
+     "share_splits_miss_above_alpha": 1.0,
+     "gated_weighted_mean": 0.05
+    }
+   ],
+   "chosen": {
+    "t": 0.013729778258604164,
+    "choice": "target",
+    "meets_alpha_in_splits": true
+   }
+  }
+ },
+ "method": "conformal risk control on positives; scripts/refit_gate_thresholds.py"
+}
