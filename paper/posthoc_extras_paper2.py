@@ -113,7 +113,7 @@ def gate_and_leak() -> dict:
                                                          "per_1000": round(1000 * per[a] / n[a], 1)} for a in n}}
 
 
-def routing_endpoints() -> dict:
+def routing_endpoints(labels: str = "labels_basu.jsonl") -> dict:
     from compass_pcp.harness.cohort_a import label
     from paper.sealed_comparators import URGENCY
 
@@ -126,7 +126,7 @@ def routing_endpoints() -> dict:
     cw = {x["sample_id"]: x for x in _rows(D / "fresh_set/crosswalk.jsonl")}
     w8 = weights()
     lab = {}
-    for r in _rows(D / "fresh_set/labels_basu.jsonl"):
+    for r in _rows(D / "fresh_set" / labels):
         i = cw[r["sample_id"]]["id"]
         lb = label({"detection_truth": r["hazard"], "hazard_category": r["category"], "action_truth": r["action"]})
         lab[i] = {"sp": lb["safety_positive"], "nohaz": r["hazard"] != 1,
@@ -199,7 +199,9 @@ def routing_endpoints() -> dict:
 
 
 def main() -> None:
-    for name, fn in [("texts_routing_endpoints.json", routing_endpoints), ("hbpro_retest_summary.json", retest), ("intake_instructions.json", intake),
+    for name, fn in [("texts_routing_endpoints.json", routing_endpoints),
+                     ("texts_routing_endpoints_morgan.json", lambda: routing_endpoints("labels_morgan.jsonl")),
+                     ("hbpro_retest_summary.json", retest), ("intake_instructions.json", intake),
                      ("texts_gate_test_and_leak.json", gate_and_leak)]:
         new = fn()
         old = json.loads((OUT / name).read_text()) if (OUT / name).exists() else None

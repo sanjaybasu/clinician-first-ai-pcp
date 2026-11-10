@@ -270,11 +270,38 @@ def t8() -> str:
         rows.append(f"| {k.replace('_', ' ')} | {_pct(v['observed_agreement'])}% | {v['kappa']:.3f} | "
                     f"{v['positives_basu'] if v['positives_basu'] is not None else '—'} | "
                     f"{v['positives_morgan'] if v['positives_morgan'] is not None else '—'} |")
-    sp = ["| System | Sensitivity, S.B. labels (n positive) | Sensitivity, J.M. labels (n positive) |", "|---|---|---|"]
-    for a in ["ours", "amie_style", "mai_dxo_style"]:
-        b, m = t["second_physician"]["basu_labels_on_200"][a], t["second_physician"]["morgan_labels_on_200"][a]
-        sp.append(f"| {NAMES[a]} | {_pct(b['hazard_sensitivity_weighted'])}% ({b['safety_positive']}) | "
-                  f"{_pct(m['hazard_sensitivity_weighted'])}% ({m['safety_positive']}) |")
+    sp2 = t["second_physician"]
+    rm = _j(DER / "texts_routing_endpoints_morgan.json")
+    rb = _j(DER / "texts_routing_endpoints.json")
+    nb, nm = sp2["basu_labels"]["ours"]["safety_positive"], sp2["morgan_labels"]["ours"]["safety_positive"]
+    sp = [f"| System | Hazard sensitivity, S.B. labels ({nb} texts), % (95% CI) | Hazard sensitivity, J.M. labels ({nm} texts), "
+          f"% (95% CI) | Texts needing a doctor's call escalated, S.B. labels ({rb['n']['doctor_call']} texts), % (95% CI) | "
+          f"Texts needing a doctor's call escalated, J.M. labels ({rm['n']['doctor_call']} texts), % (95% CI) |",
+          "|---|---|---|---|---|"]
+    for a in ["ours", "amie_style", "mai_dxo_style", "raw_llm", "v22", "amie_style+layer", "mai_dxo_style+layer", "v22+layer"]:
+        b, m = sp2["basu_labels"][a], sp2["morgan_labels"][a]
+        nm_ = NAMES.get(a) or NAMES[a.split("+")[0]] + " + layer"
+        sp.append(f"| {nm_} | {_pct(b['hazard_sensitivity_weighted'])} ({_ci([100 * x for x in b['hazard_sensitivity_weighted_ci']])}) | "
+                  f"{_pct(m['hazard_sensitivity_weighted'])} ({_ci([100 * x for x in m['hazard_sensitivity_weighted_ci']])}) | "
+                  f"{_pct(rb[a]['sens_doctor_call'])} ({_ci([100 * x for x in rb[a]['sens_doctor_call_ci']])}) | "
+                  f"{_pct(rm[a]['sens_doctor_call'])} ({_ci([100 * x for x in rm[a]['sens_doctor_call_ci']])}) |")
+    dd = ["| Comparison | Difference in hazard sensitivity, S.B. labels, points (95% CI) | Same, J.M. labels | "
+          "Difference in escalation burden, S.B. labels, per 1,000 (95% CI) | Same, J.M. labels |", "|---|---|---|---|---|"]
+    for k, v in sp2["paired_diffs_basu"].items():
+        w = sp2["paired_diffs_morgan"][k]
+        b_ = k.split(" - ")[1]
+        nm_ = NAMES.get(b_) or NAMES[b_.split("+")[0]] + " + layer"
+        dd.append(f"| Our architecture - {nm_} | {100 * v['sens_diff_weighted']:.1f} ({_ci([100 * x for x in v['sens_diff_weighted_ci']])}) | "
+                  f"{100 * w['sens_diff_weighted']:.1f} ({_ci([100 * x for x in w['sens_diff_weighted_ci']])}) | "
+                  f"{v['nohaz_diff_per1000_weighted']:.1f} ({_ci(v['nohaz_diff_weighted_ci'])}) | "
+                  f"{w['nohaz_diff_per1000_weighted']:.1f} ({_ci(w['nohaz_diff_weighted_ci'])}) |")
+    dis = sp2["disagreements"]
+    disl = (f"The two physicians differed on {dis['safety_positive_or_call_911']} of {sp2['n_double_labeled']} texts on a "
+            f"safety hazard or a call to 911 or 988 ({dis['call_911']} on a call to 911 or 988). On the "
+            f"{sp2['both_agree']['n']} texts where they agreed on both a safety hazard and any hazard, hazard sensitivity was "
+            f"{_pct(sp2['both_agree']['metrics']['ours']['hazard_sensitivity_weighted'])}% for our architecture and "
+            f"{_pct(sp2['both_agree']['metrics']['amie_style']['hazard_sensitivity_weighted'])}% for the AMIE-style agent.")
+    sp += [""] + dd + ["", disl]
     u = _j(DER / "urgency_agreement.json")
     ur = ["| Writer | Replies | Escalation agreement | κ (escalation) | κ (5 levels) | Escalation rate, primary | Escalation rate, second |",
           "|---|---|---|---|---|---|---|"]
@@ -294,8 +321,8 @@ def t8() -> str:
           f"the gate only {_pct(g['gate_only'])}%, the writer only {_pct(g['writer_only'])}%, and neither "
           f"{_pct(g['neither'])}%. The gate paged or sent to review {gw['texts_paged']} of 949 texts "
           f"({gw['texts_paged_emergency_threshold']} at the emergency threshold).")
-    return ("Supplementary Table 8 | Label agreement on the 200 double-labeled texts, results under each physician's "
-            "labels, agreement of a second reply classifier (GPT-6.1 Sol, post hoc) with the primary classifier (Claude "
+    return ("Supplementary Table 8 | Label agreement between two physicians on all 949 test texts, results under each "
+            "physician's labels, agreement of a second reply classifier (GPT-6.1 Sol, post hoc) with the primary classifier (Claude "
             "Sonnet 5.5) on a stratified random sample of replies, and repeat consistency.\n\n" + "\n".join(rows)
             + "\n\n" + "\n".join(sp) + "\n\n" + "\n".join(ur) + "\n\n" + "\n".join(rr) + "\n\n" + gl)
 
@@ -428,8 +455,100 @@ def t13() -> str:
             "de-identified and went only to vendors with a business associate agreement.\n\n" + "\n".join(rows))
 
 
+def t14() -> str:
+    a = _j(DER / "a2_rating.json")
+    if not a:
+        return "Supplementary Table 14 | Reply quality rated by physicians. pending"
+    nm = {"ai": "Separated design (as the patient saw it)", "physician": "Physician-written reply", "amie": "AMIE-style agent",
+          "care_team": "Care team (first texted reply within 48 h)"}
+    d = a["design"]
+    head = ("| Reply source | Replies | Accuracy, 1-5 (95% CI) | Usefulness, 1-5 (95% CI) | Moderate or severe harm, % (95% CI) | "
+            "Critical omission, % (95% CI) | Ranked best, % |")
+    out = []
+    for pop, title in (("all_texts_weighted", f"All {d['texts']} rated texts, weighted to the 949 test texts"),
+                       ("safety_positive_texts", f"The {d['safety_positive_texts']} texts with a safety hazard")):
+        out += [f"*{title}.*", "", head, "|---|---|---|---|---|---|---|"]
+        for k in ("ai", "physician", "amie", "care_team"):
+            v = a[pop][k]
+            out.append(f"| {nm[k]} | {v['n_replies']} | {v['accuracy']:.2f} ({_ci(v['accuracy_ci'], '{:.2f}')}) | "
+                       f"{v['usefulness']:.2f} ({_ci(v['usefulness_ci'], '{:.2f}')}) | {_pct(v['moderate_or_severe_harm'])} "
+                       f"({_ci([100 * x for x in v['moderate_or_severe_harm_ci']])}) | {_pct(v['critical_omission'])} "
+                       f"({_ci([100 * x for x in v['critical_omission_ci']])}) | {_pct(v['ranked_best'])} |")
+        out.append("")
+    u = a["unweighted_counts"]
+    out += ["*Unweighted counts (rater C.M.).*", "", "| Reply source | Replies | Moderate or severe harm | Severe harm | "
+            "Critical omission | Ranked best |", "|---|---|---|---|---|---|"]
+    for k in ("ai", "physician", "amie", "care_team"):
+        out.append(f"| {nm[k]} | {u[k]['replies']} | {u[k]['moderate_or_severe']} | {u[k]['severe']} | {u[k]['critical_omission']} | "
+                   f"{u[k]['ranked_best']} |")
+    p1, p2 = a["primary"]["P1_safety_noninferiority_ai_minus_physician"], a["primary"]["P2_accuracy_superiority_ai_minus_care_team"]
+    out += ["", "*Pre-specified comparisons.*", "", "| Comparison | Texts | Difference (95% CI) | P (Holm) | Result |",
+            "|---|---|---|---|---|",
+            f"| Moderate or severe harm, separated design - physician (non-inferiority, margin 5 points) | {p1['texts']} | "
+            f"{100 * p1['diff']:.1f} points ({_ci([100 * x for x in p1['ci95']])}) | {p1['p_holm']:.3f} | "
+            f"{'non-inferior' if p1['met'] else 'not shown non-inferior'} |",
+            f"| Accuracy, separated design - care team (superiority) | {p2['texts']} | {p2['diff']:.2f} ({_ci(p2['ci95'], '{:.2f}')}) | "
+            f"{p2['p_holm']:.3f} | {'superior' if p2['superior'] else 'not shown superior'} |"]
+    out += ["", "*Other paired comparisons (descriptive).*", "", "| Comparison | Measure | Texts | All texts, difference (95% CI) | "
+            "Texts with a safety hazard, difference (95% CI) |", "|---|---|---|---|---|"]
+    sec = a["secondary_paired"]
+    for pair in ("ai - physician", "ai - amie", "ai - care_team", "amie - physician"):
+        x, y = pair.split(" - ")
+        for k, lab, sc in (("accuracy", "Accuracy", 1), ("usefulness", "Usefulness", 1),
+                           ("moderate_or_severe_harm", "Moderate or severe harm, points", 100),
+                           ("critical_omission", "Critical omission, points", 100)):
+            al, sp = sec[f"{pair} | {k} | all"], sec[f"{pair} | {k} | safety_positive"]
+            f = "{:.2f}" if sc == 1 else "{:.1f}"
+            out.append(f"| {nm[x].split(' (')[0]} - {nm[y].split(' (')[0]} | {lab} | {al['texts']} | "
+                       f"{f.format(sc * al['diff'])} ({_ci([sc * z for z in al['ci95']], f)}) | "
+                       f"{f.format(sc * sp['diff'])} ({_ci([sc * z for z in sp['ci95']], f)}) |")
+    ir = a["inter_rater"]
+    out += ["", f"*Agreement between raters ({ir['replies']} replies to {ir['texts']} texts).*", "",
+            "| Measure | Exact agreement, % | κ |", "|---|---|---|"]
+    for k, lab in (("accuracy_quadratic_weighted", "Accuracy (quadratic-weighted κ)"),
+                   ("usefulness_quadratic_weighted", "Usefulness (quadratic-weighted κ)"),
+                   ("harm_4_level_quadratic_weighted", "Harm, 4 levels (quadratic-weighted κ)"),
+                   ("moderate_or_severe_harm", "Moderate or severe harm"), ("critical_omission", "Critical omission"),
+                   ("disposition_5_level_quadratic_weighted", "Advised care, 5 levels (quadratic-weighted κ)")):
+        out.append(f"| {lab} | {_pct(ir[k]['exact_agreement'])} | {ir[k]['kappa']:.3f} |")
+    bt = a["separated_design_by_reply_type"]
+    al_, ge = bt["alert_text"], bt["generated_reply"]
+    out += ["", (f"*Separated design by reply type (rater C.M.).* The fixed alert text was {al_['replies']} of the separated "
+                 f"design's replies ({al_['safety_positive']} to texts with a safety hazard): the rater marked "
+                 f"{al_['critical_omission']} as a critical omission and {al_['moderate_or_severe_harm']} as moderate or "
+                 f"severe harm ({al_['severe_harm']} severe), and its mean accuracy on texts with a safety hazard was "
+                 f"{al_['mean_accuracy_safety_positive']:.2f}. The {ge['replies']} generated replies had "
+                 f"{ge['critical_omission']} critical omissions and {ge['moderate_or_severe_harm']} with moderate or severe "
+                 f"harm; on the {ge['safety_positive']} texts with a safety hazard that got a generated reply, mean accuracy "
+                 f"was {ge['mean_accuracy_safety_positive']:.2f} against {ge['amie_mean_accuracy_same_texts']:.2f} for the "
+                 f"AMIE-style agent, with {ge['critical_omission_safety_positive']} and "
+                 f"{ge['amie_critical_omission_same_texts']} critical omissions.")]
+    cv = a["classifier_validation"]
+    rj = a["rater_judged_escalation_safety_positive"]
+    out += ["", (f"*Reply classifier against the rater.* On {cv['replies']} generated replies (the reply model's and the "
+                 f"AMIE-style agent's, first reply; alert text excluded), the rater judged {cv['rater_escalates']} to advise "
+                 f"routine follow-up or more urgent care and the classifier {cv['classifier_escalates']} (κ = "
+                 f"{cv['agreement']['kappa']:.3f}; classifier sensitivity {_pct(cv['classifier_sensitivity_vs_rater'])}% and "
+                 f"specificity {_pct(cv['classifier_specificity_vs_rater'])}% against the rater). With escalation judged by "
+                 f"the rater on the {rj['texts']} texts with a safety hazard (post hoc), every reply source advised routine "
+                 f"follow-up or more urgent care for every text; for same-day or more urgent care, the separated design "
+                 f"escalated {_pct(rj['same_day_or_more']['separated_design']['sens'])}% "
+                 f"({_ci([100 * x for x in rj['same_day_or_more']['separated_design']['ci95']])}), the AMIE-style agent "
+                 f"{_pct(rj['same_day_or_more']['amie']['sens'])}% "
+                 f"({_ci([100 * x for x in rj['same_day_or_more']['amie']['ci95']])}) and the physician-written replies "
+                 f"{_pct(rj['same_day_or_more']['physician']['sens'])}% "
+                 f"({_ci([100 * x for x in rj['same_day_or_more']['physician']['ci95']])})."), ""]
+    return ("Supplementary Table 14 | Reply quality rated by physicians. C.M. rated every reply to "
+            f"{d['texts']} test texts; the physician-written replies came from three Waymark physicians who saw only the text ({d['safety_positive_texts']} with a safety hazard and 71 drawn at random from the other "
+            "870), blind to source; R.B. rated the replies to a random 50 of the texts for agreement. The separated design's "
+            f"reply is the one the patient would see: on {d['ai_replies_urgent_page_text']} texts this was the fixed alert text, "
+            "sent when the emergency screen alerts a physician or the filter holds the reply. Weights are the two-phase "
+            "sampling weights divided by the probability of selection for rating (1 for texts with a safety hazard, 71/870 "
+            "otherwise). CIs are from 2,000 bootstrap resamples of texts.\n\n" + "\n".join(out))
+
+
 def main() -> None:
-    parts = [t2(), t3(), t4(), t5(), t6(), t7(), t8(), t9(), t10(), t11(), t12(), t13()]
+    parts = [t2(), t3(), t4(), t5(), t6(), t7(), t8(), t9(), t10(), t11(), t12(), t13(), t14()]
     OUT.write_text("\n\n".join(parts) + "\n")
     print(OUT, sum(p.count("pending") for p in parts), "pending cells")
 

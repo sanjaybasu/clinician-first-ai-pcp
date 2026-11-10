@@ -165,10 +165,53 @@ def export_second(out: Path, n: int = 200) -> None:
     print(json.dumps({"second_physician_rows": len(pick)}))
 
 
+def export_second_rest(out: Path) -> None:
+    """Complete double labeling: every row of the label sheet that the second physician has not labeled, in a new random
+    order, with the same sample ids and empty label columns. No sampling stratum or first-physician label is shown."""
+    with (out / "label_sheet.csv").open(newline="") as fh:
+        rows = list(csv.reader(fh))
+    head, body = rows[0], rows[1:]
+    done = {json.loads(x)["sample_id"] for x in (out / "labels_morgan.jsonl").read_text().splitlines() if x.strip()}
+    rest = [r for r in body if r[0] not in done]
+    random.Random(SEED + 4).shuffle(rest)
+    with (out / "label_sheet_second_physician_rest.csv").open("w", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow(head)
+        for r in rest:
+            w.writerow([r[0], r[1], "", "", "", ""])
+    print(json.dumps({"second_physician_rest_rows": len(rest), "already_labeled": len(done)}))
+
+
+def export_adjudication(out: Path) -> None:
+    """Third-physician adjudication sheet: the texts where the two physicians differ on safety-positive or "Call
+    911/988" (cohort_a.label), in a new random order, message only. Neither physician's label, the sampling stratum
+    and all system output are hidden."""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from compass_pcp.harness.cohort_a import label
+
+    def lab(p):
+        return {r["sample_id"]: label({"detection_truth": r["hazard"], "hazard_category": r["category"],
+                                       "action_truth": r["action"]})
+                for r in map(json.loads, (out / p).read_text().splitlines()) if r}
+
+    b, m = lab("labels_basu.jsonl"), lab("labels_morgan.jsonl")
+    dis = {s for s in b if b[s]["safety_positive"] != m[s]["safety_positive"] or b[s]["call_911"] != m[s]["call_911"]}
+    with (out / "label_sheet.csv").open(newline="") as fh:
+        rows = list(csv.reader(fh))
+    pick = [r for r in rows[1:] if r[0] in dis]
+    random.Random(SEED + 5).shuffle(pick)
+    with (out / "label_sheet_adjudication.csv").open("w", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow(rows[0])
+        for r in pick:
+            w.writerow([r[0], r[1], "", "", "", ""])
+    print(json.dumps({"adjudication_rows": len(pick)}))
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("step", choices=["pull", "sample", "screen", "screen_random", "enrich", "export",
-                                        "export_second", "all"])
+                                        "export_second", "export_second_rest", "export_adjudication", "all"])
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--threads", type=int, default=8)
     a = ap.parse_args()
@@ -181,7 +224,9 @@ def main() -> None:
             continue
         {"pull": lambda: pull(a.out), "sample": lambda: sample(a.out), "screen": lambda: screen(a.out, a.threads),
          "screen_random": lambda: screen(a.out, a.threads, "random_ids", "screen_random.jsonl"),
-         "enrich": lambda: enrich(a.out), "export": lambda: export(a.out), "export_second": lambda: export_second(a.out)}[s]()
+         "enrich": lambda: enrich(a.out), "export": lambda: export(a.out), "export_second": lambda: export_second(a.out),
+         "export_second_rest": lambda: export_second_rest(a.out),
+         "export_adjudication": lambda: export_adjudication(a.out)}[s]()
 
 
 if __name__ == "__main__":

@@ -139,22 +139,52 @@ def registry():
     ag = t["second_physician"]["agreement"]["safety_positive"]
     R.append(("kappa.sp", f"κ = {ag['kappa']:.3f}", "texts_supplement.json"))
     sp = t["second_physician"]
-    R.append(("200.basu", f"our system escalated {pc(sp['basu_labels_on_200']['ours']['hazard_sensitivity_weighted'])}% and the AMIE-style agent {pc(sp['basu_labels_on_200']['amie_style']['hazard_sensitivity_weighted'])}%", "texts_supplement.json"))
-    R.append(("200.morgan", f"our system escalated {pc(sp['morgan_labels_on_200']['ours']['hazard_sensitivity_weighted'])}% and the AMIE-style agent {pc(sp['morgan_labels_on_200']['amie_style']['hazard_sensitivity_weighted'])}%", "texts_supplement.json"))
+    m = lambda x: x.replace("-", "−")  # noqa: E731
+    sm, sb = sp["morgan_labels"], sp["paired_diffs_morgan"]
+    R.append(("jm.n", f"found {sm['ours']['safety_positive']} texts with a safety hazard (Cohen's κ = {ag['kappa']:.3f}; the two physicians differed on {sp['disagreements']['safety_positive_or_call_911']} texts)", "texts_supplement.json"))
+    R.append(("jm.sens", f"the separated design escalated {pc(sm['ours']['hazard_sensitivity_weighted'])}% of texts with a safety hazard ({pc(sm['ours']['hazard_sensitivity_weighted_ci'][0])} to {pc(sm['ours']['hazard_sensitivity_weighted_ci'][1])}) and the AMIE-style agent {pc(sm['amie_style']['hazard_sensitivity_weighted'])}% ({pc(sm['amie_style']['hazard_sensitivity_weighted_ci'][0])} to {pc(sm['amie_style']['hazard_sensitivity_weighted_ci'][1])})", "texts_supplement.json"))
+    d = sb["ours - amie_style"]
+    R.append(("jm.diff", f"a difference of {pc(d['sens_diff_weighted'])} points ({m(pc(d['sens_diff_weighted_ci'][0]))} to {pc(d['sens_diff_weighted_ci'][1])})", "texts_supplement.json"))
+    d = sb["ours - amie_style+layer"]
+    R.append(("jm.layer", f"escalated {pc(-d['sens_diff_weighted'])} points more than the separated design ({pc(-d['sens_diff_weighted_ci'][1])} to {pc(-d['sens_diff_weighted_ci'][0])})", "texts_supplement.json"))
+    R.append(("jm.lim", f"agreed moderately (κ = {ag['kappa']:.3f}) and found fewer texts with a safety hazard ({sm['ours']['safety_positive']} against {sp['basu_labels']['ours']['safety_positive']})", "texts_supplement.json"))
+    a2 = j(DER / "a2_rating.json")
+    p1, p2 = a2["primary"]["P1_safety_noninferiority_ai_minus_physician"], a2["primary"]["P2_accuracy_superiority_ai_minus_care_team"]
+    R.append(("a2.p1", f"{pc(p1['diff'])} percentage points more frequent in the separated design's replies than in physician-written replies (95% CI, {pc(p1['ci95'][0])} to {pc(p1['ci95'][1])})", "a2_rating.json"))
+    R.append(("a2.p1.holm", f"margin of {round(100 * 0.05)} points (Holm-adjusted P = {p1['p_holm']:.3f})", "a2_rating.json"))
+    R.append(("a2.p2", f"scored {p2['diff']:.2f} points higher than care-team replies for accuracy on a 5-point scale ({p2['ci95'][0]:.2f} to {p2['ci95'][1]:.2f}; P = {p2['p_holm']:.3f})", "a2_rating.json"))
+    d2 = a2["design"]
+    R.append(("a2.design", f"all {d2['safety_positive_texts']} texts with a safety hazard and 71 random others", "a2_rating.json"))
+    R.append(("a2.ct", f"for {d2['care_team_texts']} texts, the care team's reply", "a2_rating.json"))
+    u2 = a2["unweighted_counts"]["ai"]
+    sp2 = a2["safety_positive_texts"]["ai"]
+    R.append(("a2.sp.harm", f"{u2['moderate_or_severe']} of the separated design's replies ({pc(sp2['moderate_or_severe_harm'])}%) had moderate or severe harm", "a2_rating.json"))
+    bt = a2["separated_design_by_reply_type"]
+    R.append(("a2.alert", f"which the separated design sent on {bt['alert_text']['replies']} texts", "a2_rating.json"))
+    R.append(("a2.alert.disc", f"harmful in {bt['alert_text']['moderate_or_severe_harm']} of {bt['alert_text']['replies']} texts", "a2_rating.json"))
+    R.append(("a2.gen", f"The {bt['generated_reply']['replies']} generated replies had no moderate or severe harm", "a2_rating.json"))
+    assert bt["generated_reply"]["moderate_or_severe_harm"] == 0 and bt["alert_text"]["moderate_or_severe_harm"] == u2["moderate_or_severe"]
+    R.append(("a2.gen.acc", f"{bt['generated_reply']['safety_positive']} texts with a safety hazard that got a generated reply, mean accuracy was {bt['generated_reply']['mean_accuracy_safety_positive']:.2f} for the separated design and {bt['generated_reply']['amie_mean_accuracy_same_texts']:.2f}", "a2_rating.json"))
+    R.append(("a2.irr", f"moderate or severe harm with κ = {a2['inter_rater']['moderate_or_severe_harm']['kappa']:.3f}", "a2_rating.json"))
+    cv = a2["classifier_validation"]
+    R.append(("a2.cls", f"({cv['classifier_escalates']} against {cv['rater_escalates']} of {cv['replies']} generated replies; κ = {cv['agreement']['kappa']:.3f})", "a2_rating.json"))
+    rj = a2["rater_judged_escalation_safety_positive"]["same_day_or_more"]
+    R.append(("a2.rj", f"escalated {pc(rj['separated_design']['sens'])}% of the 79 texts with a safety hazard ({pc(rj['separated_design']['ci95'][0])} to {pc(rj['separated_design']['ci95'][1])}) and the AMIE-style agent {pc(rj['amie']['sens'])}% ({pc(rj['amie']['ci95'][0])} to {pc(rj['amie']['ci95'][1])})", "a2_rating.json"))
+    R.append(("a2.cls.lim", f"κ = {cv['agreement']['kappa']:.3f}", "a2_rating.json"))
     rc = t["repeat_consistency"]
-    R.append(("repeat", f"{pc(rc['ours']['share_all_3_agree'])}% of texts with our system and {pc(rc['amie_style']['share_all_3_agree'])}%", "texts_supplement.json"))
+    R.append(("repeat", f"{pc(rc['ours']['share_all_3_agree'])}% of texts with the separated design and {pc(rc['amie_style']['share_all_3_agree'])}%", "texts_supplement.json"))
     u = j(DER / "urgency_agreement.json")["_all"]
-    R.append(("urg.agree", f"{pc(u['escalation_agreement'])}% (κ = {u['escalation_kappa']:.3f})", "urgency_agreement.json"))
+    R.append(("urg.agree", f"{pc(u['escalation_agreement'])}% of 800 sampled replies (κ = {u['escalation_kappa']:.3f})", "urgency_agreement.json"))
     R.append(("urg.rates", f"{pc(u['g61_escalation_rate'])}% of replies an escalation, and the primary\nclassifier {pc(u['sonnet_escalation_rate'])}%", "urgency_agreement.json"))
     reg = j(D / "paper2_final/texts/report.json")
-    R.append(("strict.held", f"{reg['_writer_replies_held_per_1000']} of every 1,000 replies from our reply\nmodel", "texts/report.json"))
+    R.append(("strict.held", f"{reg['_writer_replies_held_per_1000']} of every 1,000 replies from the reply\nmodel", "texts/report.json"))
     R.append(("strict.nohaz", f"{reg['clinician_first']['escalation_no_hazard_per_1000_weighted']} of every 1,000 texts without\na hazard", "texts/report.json"))
     rh = t["registered_hypotheses_v22"]
     R.append(("h1a", f"{pc(rh['H1a']['majority_diff'])} points; {pc(rh['H1a']['majority_diff_ci95'][0])} to {pc(rh['H1a']['majority_diff_ci95'][1])}", "registered_hypotheses_v22"))
     R.append(("h1b", f"{pc(rh['H1b']['majority_diff'])} points; exact McNemar P = {rh['H1b']['mcnemar_exact_two_sided_p']:.3f}", "registered_hypotheses_v22"))
     e = j(DER / "texts_errors.json")
     R.append(("err.med", f"{e['missed_by_category']['ours']['med_safety']:.1f} unescalated, and the AMIE-style agent {e['missed_by_category']['amie_style']['med_safety']:.1f}", "texts_errors.json"))
-    R.append(("err.house", f"our system left {e['missed_by_category']['ours']['environmental_housing_safety']:.1f} unescalated, and the AMIE-style agent {e['missed_by_category']['amie_style']['environmental_housing_safety']:.1f}", "texts_errors.json"))
+    R.append(("err.house", f"the separated design left {e['missed_by_category']['ours']['environmental_housing_safety']:.1f} unescalated, and the AMIE-style agent {e['missed_by_category']['amie_style']['environmental_housing_safety']:.1f}", "texts_errors.json"))
     R.append(("groups", f"{e['label_groups']['other_hazard']} texts with a hazard", "texts_errors.json"))
     # gate
     g = j(D / "paper2_dev/paging_gate_497/report.json")["outcomes"]
@@ -177,13 +207,13 @@ def registry():
     rl = lk["released_raw_llm_replies"]
     re_ = j(DER / "texts_routing_endpoints.json")
     em = re_["emergency_now_reaching_patient_per_1000_all_replies"]
-    R.append(("leak.released", f"Our system\nreleased {rl['n_released']:,} of its 2,847 replies,\nand the classifier placed {rl['emergency_now']} of them in that class ({em['ours']} per 1,000 of all replies", "texts_gate_test_and_leak.json + routing"))
+    R.append(("leak.released", f"The separated design\nreleased {rl['n_released']:,} of its 2,847 replies,\nand the classifier placed {rl['emergency_now']} of them in that class ({em['ours']} per 1,000 of all replies", "texts_gate_test_and_leak.json + routing"))
     ro, w = re_["ours_routed_only"], re_["withheld"]
     R.append(("route.only", f"escalated {pc(ro['sens_safety_positive'])}% of texts with a safety hazard ({pc(ro['sens_safety_positive_ci'][0])} to {pc(ro['sens_safety_positive_ci'][1])}) and {ro['per1000_no_hazard']} per 1,000", "texts_routing_endpoints.json"))
-    R.append(("route.withheld", f"our system withheld {w['total']}: {w['replies_withheld_by_page']}\nbecause the emergency screen sent an alert for {w['texts_paged']} texts, and {w['replies_held_by_check_not_paged']}", "texts_routing_endpoints.json"))
+    R.append(("route.withheld", f"the separated design withheld {w['total']}: {w['replies_withheld_by_page']}\nbecause the emergency screen sent an alert for {w['texts_paged']} texts, and {w['replies_held_by_check_not_paged']}", "texts_routing_endpoints.json"))
     R.append(("route.review", f"The emergency\nscreen sent another {w['texts_review']} texts to physician review", "texts_routing_endpoints.json"))
-    R.append(("doc.n", f"the {re_['n']['doctor_call']} texts that the physician labeled as needing at least\na call from a doctor", "texts_routing_endpoints.json"))
-    R.append(("doc.vals", f"Our system escalated {pc(re_['ours']['sens_doctor_call'])}% of these texts ({pc(re_['ours']['sens_doctor_call_ci'][0])} to {pc(re_['ours']['sens_doctor_call_ci'][1])}), the AMIE-style\nagent {pc(re_['amie_style']['sens_doctor_call'])}%, the MAI-DxO-style agent {pc(re_['mai_dxo_style']['sens_doctor_call'])}% and the rule-based system {pc(re_['v22']['sens_doctor_call'])}%", "texts_routing_endpoints.json"))
+    R.append(("doc.n", f"the {re_['n']['doctor_call']} texts that S.B. labeled as needing at least\na call from a doctor", "texts_routing_endpoints.json"))
+    R.append(("doc.vals", f"the separated design escalated {pc(re_['ours']['sens_doctor_call'])}% ({pc(re_['ours']['sens_doctor_call_ci'][0])} to {pc(re_['ours']['sens_doctor_call_ci'][1])}), the AMIE-style\nagent {pc(re_['amie_style']['sens_doctor_call'])}%, the MAI-DxO-style agent {pc(re_['mai_dxo_style']['sens_doctor_call'])}% and the rule-based system {pc(re_['v22']['sens_doctor_call'])}%", "texts_routing_endpoints.json"))
     dd = [re_[f"ours - {b} (doctor_call)"] for b in ("amie_style", "mai_dxo_style", "v22")]
     R.append(("doc.diffs", "The differences were " + f"{100*dd[0]['diff']:.1f}".replace('-', '−') + f"\npoints ({100*dd[0]['ci'][0]:.1f} to {100*dd[0]['ci'][1]:.1f})".replace('-', '−') + ", " + f"{100*dd[1]['diff']:.1f} points ({100*dd[1]['ci'][0]:.1f} to {100*dd[1]['ci'][1]:.1f})".replace('-', '−') + " and " + f"{100*dd[2]['diff']:.1f} points ({100*dd[2]['ci'][0]:.1f} to {100*dd[2]['ci'][1]:.1f})".replace('-', '−'), "texts_routing_endpoints.json"))
     rc = re_["ours_registered_check"]
@@ -203,20 +233,21 @@ def registry():
     ca = cmp_file(D / "hbpro_test/compare_amie_search.txt")
     xa, xb = ca["compass_pro_full - amie_style_search"], ca["opus_search_edit - amie_style_search"]
     sc = rep2["amie_style_search"]["length_adjusted"]["score"]
-    R.append(("search.abstract", f"With the same web search, the difference was {f1(xa['diff'])} ({f1(xa['ci95'][0])}–{f1(xa['ci95'][1])})", "compare_amie_search.txt"))
-    R.append(("search.results", f"The AMIE-style agent then scored {f1(sc)}, {f1(sc - rep2['amie_style']['length_adjusted']['score'])} points higher than without search. Our\npipeline scored {f1(xa['diff'])} points higher than the AMIE-style agent with search ({f1(xa['ci95'][0])} to {f1(xa['ci95'][1])}), and the two-step pipeline\ndescribed below scored {f1(xb['diff'])} points higher ({f1(xb['ci95'][0])} to {f1(xb['ci95'][1])})".replace('-0', '−0'), "compare_amie_search.txt"))
-    R.append(("search.discussion", f"our pipeline's lead fell to {f1(xa['diff'])} points ({f1(xa['ci95'][0])} to {f1(xa['ci95'][1])}), and the two-step pipeline's lead fell to {f1(xb['diff'])} points ({f1(xb['ci95'][0])} to {f1(xb['ci95'][1])})".replace('-0', '−0'), "compare_amie_search.txt"))
+    R.append(("search.abstract", f"cut the pipeline's lead from 9.1 points (95% CI, 4.5–13.8) to\n{f1(xa['diff'])} ({f1(xa['ci95'][0])}–{f1(xa['ci95'][1])})", "compare_amie_search.txt"))
+    R.append(("search.results", f"the AMIE-style agent scored {f1(sc)}, {f1(sc - rep2['amie_style']['length_adjusted']['score'])} points higher than without search, and the multi-model pipeline's lead fell to {f1(xa['diff'])} points ({f1(xa['ci95'][0])} to {f1(xa['ci95'][1])})", "compare_amie_search.txt"))
+    R.append(("search.twostep", f"the two-step\npipeline's lead was {f1(xb['diff'])} points ({f1(xb['ci95'][0])} to {f1(xb['ci95'][1])})".replace('-0', '−0'), "compare_amie_search.txt"))
+    R.append(("search.discussion", f"the multi-model pipeline's lead fell to {f1(xa['diff'])} points ({f1(xa['ci95'][0])} to {f1(xa['ci95'][1])}), and the two-step pipeline's lead fell to {f1(xb['diff'])} points ({f1(xb['ci95'][0])} to {f1(xb['ci95'][1])})".replace('-0', '−0'), "compare_amie_search.txt"))
     R.append(("search.lift", f"by {f1(sc - rep2['amie_style']['length_adjusted']['score'])} points", "report.json"))
     sl = t["same_safety_layer"]["metrics"]
     lo, hi = pc(sl["raw_llm+layer"]["hazard_sensitivity_weighted"]), pc(max(sl[k]["hazard_sensitivity_weighted"] for k in sl))
-    R.append(("layer.range.abstract", f"hazard sensitivity of {lo}–{hi}%", "same_safety_layer"))
+    R.append(("layer.range.abstract", f"{lo}–{hi}% hazard sensitivity", "same_safety_layer"))
     R.append(("layer.range.discussion", f"hazard sensitivity of {lo}% to {hi}%", "same_safety_layer"))
     cn = cmp_file(D / "hbpro_test/compare_nosearch.txt")
     for k, lab in [("opus_edit - opus_search_edit", "nosearch.vs_search"), ("opus_edit - amie_style", "nosearch.vs_amie")]:
         d = cn[k]
         R.append((lab, f"{f1(abs(d['diff']))} points ({f1(d['ci95'][0])} to {f1(d['ci95'][1])})".replace('-', '−') if lab.endswith("amie") else f"{f1(abs(d['diff']))} points ({f1(-d['ci95'][1])} to {f1(-d['ci95'][0])})", "compare_nosearch.txt"))
     cl = lk["classifier_emergency_now_all_replies"]
-    R.append(("leak.cls", f"in {cl['amie_style']['per_1000']} of every 1,000 replies, the MAI-DxO-style agent in {cl['mai_dxo_style']['per_1000']} and our reply model in {cl['raw_llm']['per_1000']}", "texts_gate_test_and_leak.json"))
+    R.append(("leak.cls", f"in {cl['amie_style']['per_1000']} of every 1,000 replies, the MAI-DxO-style agent in {cl['mai_dxo_style']['per_1000']} and the reply model in {cl['raw_llm']['per_1000']}", "texts_gate_test_and_leak.json"))
     R.append(("hb.simple_raw", f"two-step pipeline scored {rep2['opus_search_edit']['raw']['score']} and the full pipeline {rep2['compass_pro_full']['raw']['score']}", "hbpro_test/report.json"))
     R.append(("hb.simple_chars", f"averaged {rep2['compass_pro_full']['mean_chars']:,} characters\nand the two-step pipeline's {rep2['opus_search_edit']['mean_chars']:,}", "hbpro_test/report.json"))
     gt = lk["gate_test"]["hazard_contact_doctor_or_911_gated"]
@@ -229,12 +260,33 @@ def registry():
     return R
 
 
+SUPP = MS.parent / "compass_clinician_first_ai_pcp_npj_supplement.md"
+SUPP_ONLY = {"hb_test.uncapped.mai_dxo_style_uncapped", "retest.primary", "txt.gate_only", "txt.writer_only", "a2.ct",
+             "a2.gen.acc", "repeat", "urg.agree", "route.withheld", "doc.diffs", "intake.40.9%", "intake.55.8%", "dev.opusonly", "dev.simple", "hb_test.len_reg", "hb_test.redteam_diff", "retest.ours", "retest.amie",
+             "hb_dev.amie_style_g61", "hb_dev.chars", "abl.search", "abl.single", "abl.review", "abl.editor",
+             "txt.instr.amie_style", "txt.instr.mai_dxo_style", "txt.instr.raw_llm", "txt.gate_paged", "urg.rates", "strict.held", "h1a", "h1b", "err.house", "gate.above", "gate.full_paged",
+             "gate.auroc_w", "route.review", "hb.simple_raw", "hb.simple_chars", "intake.6.43", "intake.7.82",
+             "intake.7.71", "intake.19.0%", "intake.19.4%"}  # reported in the Supplementary Information, not the main text
+
+
+RETIRED = {"retest.ours", "retest.amie", "h1b", "gate.auroc_w", "hb.simple_raw", "hb.simple_chars"}  # no longer stated
+# in the main text; the same values are in the supplement tables, which are generated from the same result files
+
+
 def main() -> None:
     ms = MS.read_text()
     flat = re.sub(r"\s+", " ", ms)
+    sup = re.sub(r"\s+", " ", SUPP.read_text())
     rows, bad = [], 0
     for key, val, src in registry():
-        ok = re.sub(r"\s+", " ", val) in flat and src != "MISSING IN SOURCE"
+        if key in RETIRED:
+            continue
+        if key in SUPP_ONLY:
+            nums = re.findall(r"\d[\d,]*\.?\d*", val)
+            ok = all(n.rstrip(".") in sup for n in nums) and src != "MISSING IN SOURCE"
+            src += " [supplement]"
+        else:
+            ok = re.sub(r"\s+", " ", val) in flat and src != "MISSING IN SOURCE"
         bad += not ok
         rows.append(f"| {key} | {val.replace(chr(10), ' ')} | {src} | {'ok' if ok else 'NOT FOUND'} |")
     out = ["# CANONICAL_NUMBERS (Paper 2, generated by verify_canonical_paper2.py)", "",

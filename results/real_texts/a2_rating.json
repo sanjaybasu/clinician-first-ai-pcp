@@ -1,0 +1,849 @@
+{
+ "design": {
+  "texts": 150,
+  "safety_positive_texts": 79,
+  "replies_rated_moher": 503,
+  "replies_rated_batniji": 172,
+  "care_team_texts": 53,
+  "ai_replies_urgent_page_text": 21,
+  "weights": "Hajek: two-phase test-set weight / inclusion probability (1 for the 79 safety-positive, 71/870 otherwise)",
+  "provenance": "rater attestation confirmed to S. Basu 2026-11-10"
+ },
+ "all_texts_weighted": {
+  "ai": {
+   "n_replies": 150,
+   "accuracy": 4.594,
+   "accuracy_ci": [
+    4.389,
+    4.776
+   ],
+   "usefulness": 4.261,
+   "usefulness_ci": [
+    4.081,
+    4.442
+   ],
+   "moderate_or_severe_harm": 0.003,
+   "moderate_or_severe_harm_ci": [
+    0.001,
+    0.005
+   ],
+   "severe_harm": 0.001,
+   "severe_harm_ci": [
+    0.0,
+    0.002
+   ],
+   "critical_omission": 0.033,
+   "critical_omission_ci": [
+    0.007,
+    0.083
+   ],
+   "ranked_best": 0.194,
+   "ranked_best_ci": [
+    0.106,
+    0.3
+   ]
+  },
+  "physician": {
+   "n_replies": 150,
+   "accuracy": 5.0,
+   "accuracy_ci": [
+    5.0,
+    5.0
+   ],
+   "usefulness": 4.976,
+   "usefulness_ci": [
+    4.949,
+    4.995
+   ],
+   "moderate_or_severe_harm": 0.0,
+   "moderate_or_severe_harm_ci": [
+    0.0,
+    0.0
+   ],
+   "severe_harm": 0.0,
+   "severe_harm_ci": [
+    0.0,
+    0.0
+   ],
+   "critical_omission": 0.0,
+   "critical_omission_ci": [
+    0.0,
+    0.0
+   ],
+   "ranked_best": 0.719,
+   "ranked_best_ci": [
+    0.603,
+    0.821
+   ]
+  },
+  "amie": {
+   "n_replies": 150,
+   "accuracy": 4.389,
+   "accuracy_ci": [
+    4.152,
+    4.615
+   ],
+   "usefulness": 3.958,
+   "usefulness_ci": [
+    3.756,
+    4.142
+   ],
+   "moderate_or_severe_harm": 0.0,
+   "moderate_or_severe_harm_ci": [
+    0.0,
+    0.0
+   ],
+   "severe_harm": 0.0,
+   "severe_harm_ci": [
+    0.0,
+    0.0
+   ],
+   "critical_omission": 0.041,
+   "critical_omission_ci": [
+    0.001,
+    0.101
+   ],
+   "ranked_best": 0.067,
+   "ranked_best_ci": [
+    0.029,
+    0.121
+   ]
+  },
+  "care_team": {
+   "n_replies": 53,
+   "accuracy": 2.56,
+   "accuracy_ci": [
+    2.088,
+    3.077
+   ],
+   "usefulness": 2.49,
+   "usefulness_ci": [
+    2.041,
+    2.964
+   ],
+   "moderate_or_severe_harm": 0.025,
+   "moderate_or_severe_harm_ci": [
+    0.007,
+    0.063
+   ],
+   "severe_harm": 0.002,
+   "severe_harm_ci": [
+    0.0,
+    0.007
+   ],
+   "critical_omission": 0.46,
+   "critical_omission_ci": [
+    0.245,
+    0.68
+   ],
+   "ranked_best": 0.055,
+   "ranked_best_ci": [
+    0.0,
+    0.189
+   ]
+  }
+ },
+ "safety_positive_texts": {
+  "ai": {
+   "n_replies": 79,
+   "accuracy": 4.127,
+   "accuracy_ci": [
+    3.893,
+    4.349
+   ],
+   "usefulness": 4.051,
+   "usefulness_ci": [
+    3.753,
+    4.338
+   ],
+   "moderate_or_severe_harm": 0.089,
+   "moderate_or_severe_harm_ci": [
+    0.028,
+    0.154
+   ],
+   "severe_harm": 0.025,
+   "severe_harm_ci": [
+    0.0,
+    0.063
+   ],
+   "critical_omission": 0.278,
+   "critical_omission_ci": [
+    0.181,
+    0.381
+   ],
+   "ranked_best": 0.253,
+   "ranked_best_ci": [
+    0.16,
+    0.353
+   ]
+  },
+  "physician": {
+   "n_replies": 79,
+   "accuracy": 5.0,
+   "accuracy_ci": [
+    5.0,
+    5.0
+   ],
+   "usefulness": 4.987,
+   "usefulness_ci": [
+    4.959,
+    5.0
+   ],
+   "moderate_or_severe_harm": 0.0,
+   "moderate_or_severe_harm_ci": [
+    0.0,
+    0.0
+   ],
+   "severe_harm": 0.0,
+   "severe_harm_ci": [
+    0.0,
+    0.0
+   ],
+   "critical_omission": 0.0,
+   "critical_omission_ci": [
+    0.0,
+    0.0
+   ],
+   "ranked_best": 0.456,
+   "ranked_best_ci": [
+    0.346,
+    0.56
+   ]
+  },
+  "amie": {
+   "n_replies": 79,
+   "accuracy": 4.696,
+   "accuracy_ci": [
+    4.579,
+    4.812
+   ],
+   "usefulness": 4.671,
+   "usefulness_ci": [
+    4.537,
+    4.8
+   ],
+   "moderate_or_severe_harm": 0.0,
+   "moderate_or_severe_harm_ci": [
+    0.0,
+    0.0
+   ],
+   "severe_harm": 0.0,
+   "severe_harm_ci": [
+    0.0,
+    0.0
+   ],
+   "critical_omission": 0.051,
+   "critical_omission_ci": [
+    0.012,
+    0.103
+   ],
+   "ranked_best": 0.291,
+   "ranked_best_ci": [
+    0.192,
+    0.392
+   ]
+  },
+  "care_team": {
+   "n_replies": 31,
+   "accuracy": 2.645,
+   "accuracy_ci": [
+    2.143,
+    3.125
+   ],
+   "usefulness": 2.613,
+   "usefulness_ci": [
+    2.125,
+    3.094
+   ],
+   "moderate_or_severe_harm": 0.355,
+   "moderate_or_severe_harm_ci": [
+    0.182,
+    0.538
+   ],
+   "severe_harm": 0.065,
+   "severe_harm_ci": [
+    0.0,
+    0.167
+   ],
+   "critical_omission": 0.548,
+   "critical_omission_ci": [
+    0.364,
+    0.727
+   ],
+   "ranked_best": 0.0,
+   "ranked_best_ci": [
+    0.0,
+    0.0
+   ]
+  }
+ },
+ "unweighted_counts": {
+  "ai": {
+   "replies": 150,
+   "moderate_or_severe": 7,
+   "severe": 2,
+   "critical_omission": 24,
+   "mean_accuracy": 4.367,
+   "ranked_best": 37
+  },
+  "physician": {
+   "replies": 150,
+   "moderate_or_severe": 0,
+   "severe": 0,
+   "critical_omission": 0,
+   "mean_accuracy": 5.0,
+   "ranked_best": 80
+  },
+  "amie": {
+   "replies": 150,
+   "moderate_or_severe": 0,
+   "severe": 0,
+   "critical_omission": 6,
+   "mean_accuracy": 4.587,
+   "ranked_best": 32
+  },
+  "care_team": {
+   "replies": 53,
+   "moderate_or_severe": 12,
+   "severe": 2,
+   "critical_omission": 28,
+   "mean_accuracy": 2.604,
+   "ranked_best": 1
+  }
+ },
+ "primary": {
+  "P1_safety_noninferiority_ai_minus_physician": {
+   "measure": "share of replies with moderate or severe harm (weighted)",
+   "margin": 0.05,
+   "diff": 0.003,
+   "ci95": [
+    0.001,
+    0.005
+   ],
+   "p_one_sided": 0.0005,
+   "p_holm": 0.001,
+   "met": true,
+   "texts": 150
+  },
+  "P2_accuracy_superiority_ai_minus_care_team": {
+   "measure": "mean accuracy 1-5 (weighted), texts with a care-team reply",
+   "diff": 1.845,
+   "ci95": [
+    1.297,
+    2.366
+   ],
+   "p_two_sided": 0.0005,
+   "p_holm": 0.001,
+   "texts": 53,
+   "superior": true
+  }
+ },
+ "secondary_paired": {
+  "ai - physician | accuracy | all": {
+   "diff": -0.406,
+   "ci95": [
+    -0.611,
+    -0.224
+   ],
+   "texts": 150
+  },
+  "ai - physician | accuracy | safety_positive": {
+   "diff": -0.873,
+   "ci95": [
+    -1.107,
+    -0.651
+   ],
+   "texts": 79
+  },
+  "ai - physician | usefulness | all": {
+   "diff": -0.715,
+   "ci95": [
+    -0.899,
+    -0.531
+   ],
+   "texts": 150
+  },
+  "ai - physician | usefulness | safety_positive": {
+   "diff": -0.937,
+   "ci95": [
+    -1.238,
+    -0.651
+   ],
+   "texts": 79
+  },
+  "ai - physician | moderate_or_severe_harm | all": {
+   "diff": 0.003,
+   "ci95": [
+    0.001,
+    0.005
+   ],
+   "texts": 150
+  },
+  "ai - physician | moderate_or_severe_harm | safety_positive": {
+   "diff": 0.089,
+   "ci95": [
+    0.028,
+    0.154
+   ],
+   "texts": 79
+  },
+  "ai - physician | critical_omission | all": {
+   "diff": 0.033,
+   "ci95": [
+    0.007,
+    0.083
+   ],
+   "texts": 150
+  },
+  "ai - physician | critical_omission | safety_positive": {
+   "diff": 0.278,
+   "ci95": [
+    0.181,
+    0.381
+   ],
+   "texts": 79
+  },
+  "ai - amie | accuracy | all": {
+   "diff": 0.205,
+   "ci95": [
+    -0.016,
+    0.411
+   ],
+   "texts": 150
+  },
+  "ai - amie | accuracy | safety_positive": {
+   "diff": -0.57,
+   "ci95": [
+    -0.8,
+    -0.359
+   ],
+   "texts": 79
+  },
+  "ai - amie | usefulness | all": {
+   "diff": 0.302,
+   "ci95": [
+    0.076,
+    0.541
+   ],
+   "texts": 150
+  },
+  "ai - amie | usefulness | safety_positive": {
+   "diff": -0.62,
+   "ci95": [
+    -0.922,
+    -0.324
+   ],
+   "texts": 79
+  },
+  "ai - amie | moderate_or_severe_harm | all": {
+   "diff": 0.003,
+   "ci95": [
+    0.001,
+    0.005
+   ],
+   "texts": 150
+  },
+  "ai - amie | moderate_or_severe_harm | safety_positive": {
+   "diff": 0.089,
+   "ci95": [
+    0.028,
+    0.154
+   ],
+   "texts": 79
+  },
+  "ai - amie | critical_omission | all": {
+   "diff": -0.008,
+   "ci95": [
+    -0.078,
+    0.064
+   ],
+   "texts": 150
+  },
+  "ai - amie | critical_omission | safety_positive": {
+   "diff": 0.228,
+   "ci95": [
+    0.138,
+    0.325
+   ],
+   "texts": 79
+  },
+  "ai - care_team | accuracy | all": {
+   "diff": 1.845,
+   "ci95": [
+    1.297,
+    2.366
+   ],
+   "texts": 53
+  },
+  "ai - care_team | accuracy | safety_positive": {
+   "diff": 1.484,
+   "ci95": [
+    0.935,
+    2.067
+   ],
+   "texts": 31
+  },
+  "ai - care_team | usefulness | all": {
+   "diff": 1.662,
+   "ci95": [
+    1.223,
+    2.083
+   ],
+   "texts": 53
+  },
+  "ai - care_team | usefulness | safety_positive": {
+   "diff": 1.387,
+   "ci95": [
+    0.759,
+    2.036
+   ],
+   "texts": 31
+  },
+  "ai - care_team | moderate_or_severe_harm | all": {
+   "diff": -0.021,
+   "ci95": [
+    -0.056,
+    -0.004
+   ],
+   "texts": 53
+  },
+  "ai - care_team | moderate_or_severe_harm | safety_positive": {
+   "diff": -0.226,
+   "ci95": [
+    -0.387,
+    -0.088
+   ],
+   "texts": 31
+  },
+  "ai - care_team | critical_omission | all": {
+   "diff": -0.435,
+   "ci95": [
+    -0.651,
+    -0.22
+   ],
+   "texts": 53
+  },
+  "ai - care_team | critical_omission | safety_positive": {
+   "diff": -0.226,
+   "ci95": [
+    -0.429,
+    -0.029
+   ],
+   "texts": 31
+  },
+  "physician - care_team | accuracy | all": {
+   "diff": 2.44,
+   "ci95": [
+    1.923,
+    2.912
+   ],
+   "texts": 53
+  },
+  "physician - care_team | accuracy | safety_positive": {
+   "diff": 2.355,
+   "ci95": [
+    1.875,
+    2.857
+   ],
+   "texts": 31
+  },
+  "physician - care_team | usefulness | all": {
+   "diff": 2.51,
+   "ci95": [
+    2.036,
+    2.959
+   ],
+   "texts": 53
+  },
+  "physician - care_team | usefulness | safety_positive": {
+   "diff": 2.387,
+   "ci95": [
+    1.906,
+    2.875
+   ],
+   "texts": 31
+  },
+  "physician - care_team | moderate_or_severe_harm | all": {
+   "diff": -0.025,
+   "ci95": [
+    -0.063,
+    -0.007
+   ],
+   "texts": 53
+  },
+  "physician - care_team | moderate_or_severe_harm | safety_positive": {
+   "diff": -0.355,
+   "ci95": [
+    -0.538,
+    -0.182
+   ],
+   "texts": 31
+  },
+  "physician - care_team | critical_omission | all": {
+   "diff": -0.46,
+   "ci95": [
+    -0.68,
+    -0.245
+   ],
+   "texts": 53
+  },
+  "physician - care_team | critical_omission | safety_positive": {
+   "diff": -0.548,
+   "ci95": [
+    -0.727,
+    -0.364
+   ],
+   "texts": 31
+  },
+  "amie - physician | accuracy | all": {
+   "diff": -0.611,
+   "ci95": [
+    -0.848,
+    -0.385
+   ],
+   "texts": 150
+  },
+  "amie - physician | accuracy | safety_positive": {
+   "diff": -0.304,
+   "ci95": [
+    -0.421,
+    -0.188
+   ],
+   "texts": 79
+  },
+  "amie - physician | usefulness | all": {
+   "diff": -1.018,
+   "ci95": [
+    -1.22,
+    -0.826
+   ],
+   "texts": 150
+  },
+  "amie - physician | usefulness | safety_positive": {
+   "diff": -0.316,
+   "ci95": [
+    -0.452,
+    -0.181
+   ],
+   "texts": 79
+  },
+  "amie - physician | moderate_or_severe_harm | all": {
+   "diff": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ],
+   "texts": 150
+  },
+  "amie - physician | moderate_or_severe_harm | safety_positive": {
+   "diff": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ],
+   "texts": 79
+  },
+  "amie - physician | critical_omission | all": {
+   "diff": 0.041,
+   "ci95": [
+    0.001,
+    0.101
+   ],
+   "texts": 150
+  },
+  "amie - physician | critical_omission | safety_positive": {
+   "diff": 0.051,
+   "ci95": [
+    0.012,
+    0.103
+   ],
+   "texts": 79
+  }
+ },
+ "inter_rater": {
+  "replies": 172,
+  "texts": 50,
+  "accuracy_quadratic_weighted": {
+   "n": 172,
+   "exact_agreement": 0.698,
+   "kappa": 0.861
+  },
+  "usefulness_quadratic_weighted": {
+   "n": 172,
+   "exact_agreement": 0.529,
+   "kappa": 0.783
+  },
+  "harm_4_level_quadratic_weighted": {
+   "n": 172,
+   "exact_agreement": 0.86,
+   "kappa": 0.791
+  },
+  "moderate_or_severe_harm": {
+   "n": 172,
+   "exact_agreement": 0.983,
+   "kappa": 0.791
+  },
+  "critical_omission": {
+   "n": 172,
+   "exact_agreement": 0.953,
+   "kappa": 0.774
+  },
+  "disposition_5_level_quadratic_weighted": {
+   "n": 172,
+   "exact_agreement": 0.628,
+   "kappa": 0.398
+  },
+  "best_reply_same": 0.66,
+  "batniji_vs_moher_moderate_or_severe_by_arm": {
+   "ai": [
+    3,
+    4,
+    50
+   ],
+   "physician": [
+    0,
+    0,
+    50
+   ],
+   "amie": [
+    0,
+    0,
+    50
+   ],
+   "care_team": [
+    4,
+    4,
+    22
+   ]
+  },
+  "kappa": "Cohen's kappa; quadratic weights for ordered scales"
+ },
+ "classifier_validation": {
+  "replies": 279,
+  "escalation": "rater: routine or more urgent; classifier: routine_followup or more urgent",
+  "agreement": {
+   "n": 279,
+   "exact_agreement": 0.52,
+   "kappa": 0.21
+  },
+  "rater_escalates": 218,
+  "classifier_escalates": 86,
+  "classifier_sensitivity_vs_rater": 0.39,
+  "classifier_specificity_vs_rater": 0.984,
+  "five_level_quadratic_weighted": {
+   "n": 279,
+   "exact_agreement": 0.362,
+   "kappa": 0.278
+  }
+ },
+ "separated_design_by_reply_type": {
+  "alert_text": {
+   "replies": 21,
+   "safety_positive": 20,
+   "critical_omission": 21,
+   "moderate_or_severe_harm": 7,
+   "severe_harm": 2,
+   "mean_accuracy_safety_positive": 2.7,
+   "amie_mean_accuracy_same_texts": 4.6,
+   "critical_omission_safety_positive": 20,
+   "amie_critical_omission_same_texts": 3
+  },
+  "generated_reply": {
+   "replies": 129,
+   "safety_positive": 59,
+   "critical_omission": 3,
+   "moderate_or_severe_harm": 0,
+   "severe_harm": 0,
+   "mean_accuracy_safety_positive": 4.61,
+   "amie_mean_accuracy_same_texts": 4.729,
+   "critical_omission_safety_positive": 2,
+   "amie_critical_omission_same_texts": 1
+  }
+ },
+ "rater_judged_escalation_safety_positive": {
+  "texts": 79,
+  "note": "post hoc; repeat 0; rater C. Moher",
+  "routine_or_more": {
+   "separated_design": {
+    "sens": 1.0,
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "escalated": 79
+   },
+   "separated_design_reply_alone": {
+    "sens": 1.0,
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "escalated": 79
+   },
+   "amie": {
+    "sens": 1.0,
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "escalated": 79
+   },
+   "physician": {
+    "sens": 1.0,
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "escalated": 79
+   },
+   "separated_design - amie": {
+    "diff": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   }
+  },
+  "same_day_or_more": {
+   "separated_design": {
+    "sens": 0.734,
+    "ci95": [
+     0.633,
+     0.823
+    ],
+    "escalated": 58
+   },
+   "separated_design_reply_alone": {
+    "sens": 0.684,
+    "ci95": [
+     0.57,
+     0.785
+    ],
+    "escalated": 54
+   },
+   "amie": {
+    "sens": 0.759,
+    "ci95": [
+     0.658,
+     0.848
+    ],
+    "escalated": 60
+   },
+   "physician": {
+    "sens": 0.506,
+    "ci95": [
+     0.392,
+     0.62
+    ],
+    "escalated": 40
+   },
+   "separated_design - amie": {
+    "diff": -0.025,
+    "ci95": [
+     -0.114,
+     0.063
+    ]
+   }
+  }
+ }
+}

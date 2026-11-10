@@ -14,6 +14,26 @@
    "median_chars": 2026,
    "share_le_2000_chars": 0.497
   },
+  "amie_style_search": {
+   "n": 350,
+   "raw": 73.6,
+   "raw_se": 2.4,
+   "length_adjusted": 72.3,
+   "length_adjusted_se": 2.4,
+   "mean_chars": 2431,
+   "median_chars": 2141,
+   "share_le_2000_chars": 0.434
+  },
+  "amie_style_uncapped": {
+   "n": 350,
+   "raw": 70.0,
+   "raw_se": 2.5,
+   "length_adjusted": 68.5,
+   "length_adjusted_se": 2.5,
+   "mean_chars": 2486,
+   "median_chars": 2076,
+   "share_le_2000_chars": 0.451
+  },
   "compass_pro_full": {
    "n": 350,
    "raw": 78.2,
@@ -44,6 +64,16 @@
    "median_chars": 2341,
    "share_le_2000_chars": 0.337
   },
+  "mai_dxo_style_uncapped": {
+   "n": 350,
+   "raw": 69.2,
+   "raw_se": 2.5,
+   "length_adjusted": 66.7,
+   "length_adjusted_se": 2.5,
+   "mean_chars": 2823,
+   "median_chars": 2461,
+   "share_le_2000_chars": 0.32
+  },
   "opus55": {
    "n": 350,
    "raw": 71.7,
@@ -53,6 +83,26 @@
    "mean_chars": 4620,
    "median_chars": 3779,
    "share_le_2000_chars": 0.157
+  },
+  "opus_edit": {
+   "n": 350,
+   "raw": 73.2,
+   "raw_se": 2.4,
+   "length_adjusted": 70.4,
+   "length_adjusted_se": 2.4,
+   "mean_chars": 2962,
+   "median_chars": 2368,
+   "share_le_2000_chars": 0.129
+  },
+  "opus_search_edit": {
+   "n": 350,
+   "raw": 78.3,
+   "raw_se": 2.2,
+   "length_adjusted": 75.2,
+   "length_adjusted_se": 2.3,
+   "mean_chars": 3030,
+   "median_chars": 2376,
+   "share_le_2000_chars": 0.129
   },
   "physician": {
    "n": 350,
@@ -73,7 +123,7 @@
     4.5,
     13.8
    ],
-   "paired_t_p": 0.00017688276046449322,
+   "paired_t_p": 0.0001768827604644932,
    "bootstrap_p": {
     "p": 0.0005,
     "is_upper_bound": true
@@ -86,7 +136,7 @@
     6.8,
     16.0
    ],
-   "paired_t_p": 1.5837554574106675e-06,
+   "paired_t_p": 1.583755457410666e-06,
    "bootstrap_p": {
     "p": 0.0005,
     "is_upper_bound": true
@@ -99,7 +149,7 @@
     9.2,
     17.5
    ],
-   "paired_t_p": 3.104242859401173e-10,
+   "paired_t_p": 3.104242859401193e-10,
    "bootstrap_p": {
     "p": 0.0005,
     "is_upper_bound": true
@@ -112,7 +162,7 @@
     8.1,
     17.1
    ],
-   "paired_t_p": 6.583500199377721e-08,
+   "paired_t_p": 6.583500199377685e-08,
    "bootstrap_p": {
     "p": 0.0005,
     "is_upper_bound": true
@@ -125,7 +175,7 @@
     28.1,
     39.6
    ],
-   "paired_t_p": 9.258273595252949e-25,
+   "paired_t_p": 9.258273595253075e-25,
    "bootstrap_p": {
     "p": 0.0005,
     "is_upper_bound": true
@@ -140,7 +190,7 @@
     5.6,
     14.8
    ],
-   "paired_t_p": 2.8905387190278637e-05,
+   "paired_t_p": 2.890538719027861e-05,
    "bootstrap_p": {
     "p": 0.0005,
     "is_upper_bound": true
@@ -153,7 +203,7 @@
     6.7,
     15.9
    ],
-   "paired_t_p": 1.927494894997585e-06,
+   "paired_t_p": 1.92749489499759e-06,
    "bootstrap_p": {
     "p": 0.0005,
     "is_upper_bound": true
@@ -166,7 +216,7 @@
     7.2,
     15.6
    ],
-   "paired_t_p": 7.918806500613508e-08,
+   "paired_t_p": 7.918806500613496e-08,
    "bootstrap_p": {
     "p": 0.0005,
     "is_upper_bound": true
@@ -179,7 +229,7 @@
     1.8,
     10.9
    ],
-   "paired_t_p": 0.0058697824529669144,
+   "paired_t_p": 0.005869782452966905,
    "bootstrap_p": {
     "p": 0.004,
     "is_upper_bound": false
@@ -192,7 +242,7 @@
     29.2,
     40.9
    ],
-   "paired_t_p": 8.135542704158965e-26,
+   "paired_t_p": 8.135542704158977e-26,
    "bootstrap_p": {
     "p": 0.0005,
     "is_upper_bound": true
@@ -204,22 +254,22 @@
   "test": "two-sided paired t test on task-level differences (Holm adjusted); two-sided percentile paired bootstrap p also given (floor 1/2000)",
   "length_adjusted": {
    "mai_dxo_style": {
-    "p": 1.5837554574106675e-06,
-    "p_holm": 3.167510914821335e-06
+    "p": 1.583755457410666e-06,
+    "p_holm": 3.167510914821332e-06
    },
    "amie_style": {
-    "p": 0.00017688276046449322,
-    "p_holm": 0.00017688276046449322
+    "p": 0.0001768827604644932,
+    "p_holm": 0.0001768827604644932
    }
   },
   "raw": {
    "mai_dxo_style": {
-    "p": 1.927494894997585e-06,
-    "p_holm": 3.85498978999517e-06
+    "p": 1.92749489499759e-06,
+    "p_holm": 3.85498978999518e-06
    },
    "amie_style": {
-    "p": 2.8905387190278637e-05,
-    "p_holm": 2.8905387190278637e-05
+    "p": 2.890538719027861e-05,
+    "p_holm": 2.890538719027861e-05
    }
   }
  },
@@ -306,7 +356,7 @@
      4.1,
      20.9
     ],
-    "paired_t_p": 0.005484708006813799,
+    "paired_t_p": 0.005484708006813804,
     "bootstrap_p": {
      "p": 0.003,
      "is_upper_bound": false
@@ -319,7 +369,7 @@
      4.7,
      21.5
     ],
-    "paired_t_p": 0.0034225503961323104,
+    "paired_t_p": 0.00342255039613231,
     "bootstrap_p": {
      "p": 0.003,
      "is_upper_bound": false
@@ -336,7 +386,7 @@
      5.8,
      21.4
     ],
-    "paired_t_p": 0.0014036644414881809,
+    "paired_t_p": 0.0014036644414881806,
     "bootstrap_p": {
      "p": 0.0005,
      "is_upper_bound": true
@@ -379,7 +429,7 @@
      -3.3,
      8.3
     ],
-    "paired_t_p": 0.4643650310238712,
+    "paired_t_p": 0.4643650310238715,
     "bootstrap_p": {
      "p": 0.451,
      "is_upper_bound": false
@@ -396,7 +446,7 @@
      4.9,
      15.9
     ],
-    "paired_t_p": 0.00019948966059227783,
+    "paired_t_p": 0.0001994896605922777,
     "bootstrap_p": {
      "p": 0.0005,
      "is_upper_bound": true
@@ -409,7 +459,7 @@
      6.2,
      17.0
     ],
-    "paired_t_p": 6.634757303108223e-05,
+    "paired_t_p": 6.634757303108217e-05,
     "bootstrap_p": {
      "p": 0.0005,
      "is_upper_bound": true
@@ -439,7 +489,7 @@
      -0.4,
      17.0
     ],
-    "paired_t_p": 0.0743853035978962,
+    "paired_t_p": 0.07438530359789618,
     "bootstrap_p": {
      "p": 0.063,
      "is_upper_bound": false
@@ -457,7 +507,7 @@
       -3.9,
       16.1
      ],
-     "paired_t_p": 0.2787792305713969,
+     "paired_t_p": 0.2787792305713973,
      "bootstrap_p": {
       "p": 0.246,
       "is_upper_bound": false
@@ -470,7 +520,7 @@
       -4.8,
       17.5
      ],
-     "paired_t_p": 0.31887325867100746,
+     "paired_t_p": 0.3188732586710077,
      "bootstrap_p": {
       "p": 0.308,
       "is_upper_bound": false
@@ -496,7 +546,7 @@
       -9.4,
       18.1
      ],
-     "paired_t_p": 0.6232511277225538,
+     "paired_t_p": 0.6232511277225541,
      "bootstrap_p": {
       "p": 0.624,
       "is_upper_bound": false
@@ -509,7 +559,7 @@
       17.1,
       58.9
      ],
-     "paired_t_p": 0.0007283055965721288,
+     "paired_t_p": 0.0007283055965721266,
      "bootstrap_p": {
       "p": 0.0005,
       "is_upper_bound": true
@@ -524,7 +574,7 @@
       -5.1,
       13.5
      ],
-     "paired_t_p": 0.4395482414027265,
+     "paired_t_p": 0.4395482414027262,
      "bootstrap_p": {
       "p": 0.411,
       "is_upper_bound": false
@@ -537,7 +587,7 @@
       -5.8,
       15.4
      ],
-     "paired_t_p": 0.4320639242236958,
+     "paired_t_p": 0.43206392422369577,
      "bootstrap_p": {
       "p": 0.413,
       "is_upper_bound": false
@@ -576,7 +626,7 @@
       16.5,
       57.2
      ],
-     "paired_t_p": 0.0014134274253549174,
+     "paired_t_p": 0.0014134274253549163,
      "bootstrap_p": {
       "p": 0.0005,
       "is_upper_bound": true
@@ -757,7 +807,7 @@
     }
    }
   },
-  "total_reply_usd_all_arms": 465.84,
+  "total_reply_usd_all_arms": 399.84,
   "attribution_uncertainty_usd_per_task_compass": 0.0053,
   "note": "Rule A and rule B bound the misattribution at the boundary between the bare arms and the pipeline; the bare opus55 and gpt61sol arms each made one call per task. Totals are exact; only the split is attributed. Grader usage is excluded."
  }

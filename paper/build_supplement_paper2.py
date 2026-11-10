@@ -15,22 +15,22 @@ M = Path.home() / "waymark-local/notebooks/compass-pcp-paper2/manuscript"
 import re
 
 # Supplementary Table numbers in order of first mention in the main text (generator numbering -> published numbering)
-TABLE_MAP = {1: 1, 4: 2, 5: 3, 2: 4, 3: 5, 12: 6, 7: 7, 6: 8, 11: 9, 8: 10, 9: 11, 10: 12, 13: 16}
-CHECKLISTS = [(13, "TRIPOD-LLM_checklist.md", "TRIPOD-LLM reporting checklist"),
-              (14, "CHART_checklist.md", "CHART reporting checklist"),
-              (15, "STARD2015_checklist.md", "STARD 2015 reporting checklist")]
+TABLE_MAP = {1: 1, 4: 2, 5: 3, 2: 4, 3: 5, 12: 6, 7: 7, 6: 8, 11: 9, 8: 10, 14: 11, 9: 12, 10: 13, 13: 17}
+CHECKLISTS = [(14, "TRIPOD-LLM_checklist.md", "TRIPOD-LLM reporting checklist"),
+              (15, "CHART_checklist.md", "CHART reporting checklist"),
+              (16, "STARD2015_checklist.md", "STARD 2015 reporting checklist")]
 HB_TABLES = {2, 3, 4, 5}  # generator numbers of the HealthBench Professional tables
-ARM_NAMES = {"amie_style+layer": "the AMIE-style agent with our safety layer",
-             "mai_dxo_style+layer": "the MAI-DxO-style agent with our safety layer",
-             "v22+layer": "the rule-based system with our safety layer", "amie_style": "the AMIE-style agent",
-             "mai_dxo_style": "the MAI-DxO-style agent", "v22": "the rule-based system", "raw_llm": "our reply model alone"}
+ARM_NAMES = {"amie_style+layer": "the AMIE-style agent with the safety layer",
+             "mai_dxo_style+layer": "the MAI-DxO-style agent with the safety layer",
+             "v22+layer": "the rule-based system with the safety layer", "amie_style": "the AMIE-style agent",
+             "mai_dxo_style": "the MAI-DxO-style agent", "v22": "the rule-based system", "raw_llm": "the reply model alone"}
 TERMS = [  # display terms for the reader; one term per concept, as in the main text
     (r" \((?:paper|scripts)/[\w./]+\)", ""), (r"\s*\((?:v22|version 22)\)", ""),
-    ("Our architecture, registered check", "Our system with the registered filter"),
-    ("Persona-only writer (= our architecture)", "Our reply model (= our system)"),
-    ("Writer + same gate + same check", "System with our safety layer"),
+    ("Our architecture, registered check", "Separated design with the registered filter"),
+    ("Persona-only writer (= our architecture)", "Reply model (= separated design)"),
+    ("Writer + same gate + same check", "System with the safety layer"),
     ("Writer alone (no gate)", "Reply model with the filter, without the emergency screen"),
-    ("Opus 5.5, primary care persona", "Our reply model alone"), ("Registered rule-based system", "Rule-based system"),
+    ("Opus 5.5, primary care persona", "Reply model alone"), ("Registered rule-based system", "Rule-based system"),
     ("Rule-based writer", "Rule-based system"), ("registered system", "rule-based system"),
     ("Paging gate alone", "Emergency screen alone"), ("paging-gate", "emergency-screen"),
     ("Paging gate", "Emergency screen"), ("paging gate", "emergency screen"), ("paging thresholds", "emergency screen's thresholds"),
@@ -38,21 +38,21 @@ TERMS = [  # display terms for the reader; one term per concept, as in the main 
     ("Clinician-first check", "Emergency-instruction filter"), ("clinician-first check", "emergency-instruction filter"),
     ("Registered check", "Registered filter"), ("registered check", "registered filter"), ("deployable check", "filter"),
     ("The check", "The filter"), ("the check", "the filter"), ("deployable", "final"),
-    ("Our architecture", "Our system"), ("our architecture", "our system"), ("The architecture", "Our system"),
-    ("the architecture", "our system"), (r"\barchitecture\b", "system"),
+    ("Our architecture", "Separated design"), ("our architecture", "the separated design"), ("The architecture", "The separated design"),
+    ("the architecture", "the separated design"), (r"\barchitecture\b", "design"),
     (r"(\d+) safety-positive (real |test |patient )?texts", r"\1 \2texts with a safety hazard"),
     ("safety-positive texts", "texts with a safety hazard"), ("Safety-positive", "With a safety hazard"),
     ("safety-positive", "with a safety hazard"), ("safety positive", "safety hazard"),
     ("Emergency-enriched texts", "Calibration texts"), ("emergency-enriched texts", "calibration texts"),
     ("emergency-enriched", "calibration"), ("Emergency-enriched", "Calibration"),
     ("persona-only", "reply-model-only"), ("Persona-only", "Reply-model-only"),
-    ("writer replies", "replies from our reply model"), ("Writers", "Reply models"), ("writers", "reply models"),
+    ("writer replies", "replies from the reply model"), ("Writers", "Reply models"), ("writers", "reply models"),
     ("Writer", "Reply model"), ("writer", "reply model"), ("length editor", "shortening step"), ("Length editor", "Shortening step"),
     ("care-team texts", "texts to care teams"), ("Real patient texts", "Patient texts"), ("real patient texts", "patient texts"),
     ("real texts", "patient texts"), ("Real texts", "Patient texts"), ("real-text", "patient-text"), ("Real-text", "Patient-text"),
     ("Paged", "Alerted"), (r"\bpaged\b", "alerted"), ("pages the physician", "alerts the physician"),
     ('Results "Real patient texts"', 'Results "Patient texts"'), ('"Paging gate"', '"Transfer of the emergency screen"'),
-    ('"The architecture"', '"Our system"'), ('"Setting and data"', '"Setting and data partitions"'),
+    ('"The architecture"', '"Designs studied"'), ('"Setting and data"', '"Setting and data partitions"'),
     ('Methods "HealthBench Professional"', 'Methods "Physician-facing tasks"'),
     ('Results "HealthBench Professional"', 'Results "Physician-facing tasks"'),
     (r"Abstract sentences? [0-9–, and]+", "Abstract"),
@@ -72,10 +72,10 @@ def _arm(m: re.Match) -> str:
 
 
 def reader_terms(text: str, hb: bool = False) -> str:
-    text = re.sub(r"\bours - (\w+\+?\w*)", lambda m: ("Our pipeline" if hb else "Our system") + " minus " + _arm(m), text)
+    text = re.sub(r"\bours - (\w+\+?\w*)", lambda m: ("Multi-model pipeline" if hb else "Separated design") + " minus " + _arm(m), text)
     text = re.sub(r"\b(amie_style\+layer|mai_dxo_style\+layer|v22\+layer|amie_style|mai_dxo_style|raw_llm)\b", _arm, text)
-    text = re.sub(r"\bOurs\b", "Our pipeline" if hb else "Our system", text)
-    text = re.sub(r"\bours\b", "our pipeline" if hb else "our system", text)
+    text = re.sub(r"\bOurs\b", "Multi-model pipeline" if hb else "Separated design", text)
+    text = re.sub(r"\bours\b", "the multi-model pipeline" if hb else "the separated design", text)
     for a, b in TERMS:
         text = re.sub(a, b, text) if any(c in a for c in "\\()[]") or a.startswith("\\b") else text.replace(a, b)
     return re.sub(r"\bv22\b", "the rule-based system", text)

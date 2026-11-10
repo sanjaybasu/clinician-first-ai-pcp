@@ -141,7 +141,11 @@ def _cost(out: Path, n_tasks: int, bare_counts: dict) -> dict:
     arm (the bare arm sends only the conversation; the pipeline adds system prompts, drafts and search results).
     """
     P = hbpro.PRICE
-    u = [x for x in hbpro._rows(out / "usage.jsonl") if not x["who"].startswith("grader")]
+    u = hbpro._rows(out / "usage.jsonl")
+    # the post hoc test runs (two-step pipeline, no search, AMIE-style with search, raised reply limit) appended unlabeled
+    # opus55 and web_search rows after the primary run; the primary run's sampling ends where its grading starts
+    end = next(i for i, x in enumerate(u) if x["who"].startswith("grader"))
+    u = [x for x in u[:end] if not x["who"].startswith("grader")]
     cost = lambda x: x["in"] / 1e6 * P[x["who"]][0] + x["out"] / 1e6 * P[x["who"]][1]  # noqa: E731
     per = {}
     for who in ("amie_style", "mai_dxo_style"):
@@ -423,7 +427,7 @@ def texts() -> dict:
     basu, morgan, rep, paged, page_e = _texts_data()
     E = _per_repeat(rep, paged)
     ids = sorted(i for i in E["ours"] if i in basu)
-    res = {"labels": "S. Basu labels on all 949 texts; J. Morgan labels on 200; Hajek two-phase weights (paper/fresh_weights.py)",
+    res = {"labels": "S. Basu and J. Morgan labels on all 949 texts; Hajek two-phase weights (paper/fresh_weights.py)",
            "policy": "ours = paging gate + raw_llm writer + check_unconditional (final policy; conditional safety-net "
                      "lines allowed). clinician_first_any_hit_held = the registered report.json rule (any check() hit held).",
            "arms": "amie_style, mai_dxo_style, raw_llm, v22 as run; writer_alone = raw_llm escalation or unconditional "
@@ -458,19 +462,29 @@ def texts() -> dict:
         strata[s] = {"metrics": _metrics(E, basu, sid, Bs),
                      "paired_diffs": _diffs(E, basu, sid, Bs, "ours", ["amie_style", "mai_dxo_style"])}
     res["by_stratum"] = strata
-    # second physician
+    # second physician (J. Morgan labeled all 949 texts: 200 first, then the remaining 749)
     mid = sorted(i for i in morgan if i in E["ours"])
     Bm = _B(len(mid), np.random.default_rng(SEED))
     agree_ids = [i for i in mid if basu[i]["safety_positive"] == morgan[i]["safety_positive"]
                  and basu[i]["hazard"] == morgan[i]["hazard"]]
     agree_lab = {i: basu[i] for i in agree_ids}
     Ba = _B(len(agree_ids), np.random.default_rng(SEED))
+    comps = ["amie_style", "mai_dxo_style", "raw_llm"]
+    lay = [f"{a}+layer" for a in ("amie_style", "mai_dxo_style", "v22")]
+    EL = {**E, **{k: v for k, v in L.items() if k != "ours"}}
+    dis_sp = sum(basu[i]["safety_positive"] != morgan[i]["safety_positive"] for i in mid)
+    dis_911 = sum(basu[i]["call_911"] != morgan[i]["call_911"] for i in mid)
+    dis_any = sum(basu[i]["safety_positive"] != morgan[i]["safety_positive"] or basu[i]["call_911"] != morgan[i]["call_911"]
+                  for i in mid)
     res["second_physician"] = {
         "n_double_labeled": len(mid), "strata": {s: sum(basu[i]["stratum"] == s for i in mid) for s in ("random", "enriched")},
-        "basu_labels_on_200": _metrics(E, basu, mid, Bm),
-        "morgan_labels_on_200": _metrics(E, morgan, mid, Bm),
+        "basu_labels": _metrics(EL, basu, mid, Bm),
+        "morgan_labels": _metrics(EL, morgan, mid, Bm),
+        "paired_diffs_basu": _diffs(EL, basu, mid, Bm, "ours", comps + lay),
+        "paired_diffs_morgan": _diffs(EL, morgan, mid, Bm, "ours", comps + lay),
         "both_agree": {"definition": "texts where both physicians give the same safety_positive and the same any-hazard label",
                        "n": len(agree_ids), "metrics": _metrics(E, agree_lab, agree_ids, Ba)},
+        "disagreements": {"safety_positive": dis_sp, "call_911": dis_911, "safety_positive_or_call_911": dis_any},
         "agreement": {"safety_positive": _kappa([basu[i]["safety_positive"] for i in mid], [morgan[i]["safety_positive"] for i in mid]),
                       "call_911": _kappa([basu[i]["call_911"] for i in mid], [morgan[i]["call_911"] for i in mid]),
                       "any_hazard": _kappa([basu[i]["hazard"] for i in mid], [morgan[i]["hazard"] for i in mid]),

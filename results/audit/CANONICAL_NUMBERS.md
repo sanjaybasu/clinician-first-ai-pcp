@@ -61,30 +61,28 @@
 | hb_test.mai_dxo_style_uncapped.score | 66.7 | hbpro_test/report.json | ok |
 | hb_test.opus_search_edit.score | 75.2 | hbpro_test/report.json | ok |
 | hb_test.uncapped.amie_style_uncapped | 8.2 points (3.9 to 12.6) | compare_uncapped.txt | ok |
-| hb_test.uncapped.mai_dxo_style_uncapped | 10.0 points (5.5 to 14.6) | compare_uncapped.txt | ok |
+| hb_test.uncapped.mai_dxo_style_uncapped | 10.0 points (5.5 to 14.6) | compare_uncapped.txt [supplement] | ok |
 | hb_test.simple_vs_full | 1.5 points below the full pipeline (−5.4 to 2.5) | compare_simple.txt | ok |
 | hb_test.simple_vs_amie | 7.6 points above the AMIE-style agent (3.5 to 11.9) | compare_simple.txt | ok |
-| dev.opusonly | 2.7 points higher than the full pipeline (−3.1 to 8.3) | compare_compute_175.txt | ok |
-| dev.simple | 0.6 points lower (−6.9 to 5.4) | compare_compute_175.txt | ok |
+| dev.opusonly | 2.7 points higher than the full pipeline (−3.1 to 8.3) | compare_compute_175.txt [supplement] | ok |
+| dev.simple | 0.6 points lower (−6.9 to 5.4) | compare_compute_175.txt [supplement] | ok |
 | hb_test.raw_diff.amie | 10.2 points (5.6 to 14.8) | hbpro_test_supplement.json | ok |
-| hb_test.len_reg | 9.1 points (4.3 to 14.0) | hbpro_test_supplement.json | ok |
-| hb_test.redteam_diff | 6.5; −2.0 to 15.7 | hbpro_test_supplement.json | ok |
+| hb_test.len_reg | 9.1 points (4.3 to 14.0) | hbpro_test_supplement.json [supplement] | ok |
+| hb_test.redteam_diff | 6.5; −2.0 to 15.7 | hbpro_test_supplement.json [supplement] | ok |
 | cost.ours | USD 0.57 | hbpro_test_supplement.json | ok |
 | cost.amie | USD 0.12 | hbpro_test_supplement.json | ok |
 | cost.ratio | about 4.6 times | derived | ok |
-| retest.primary | 7.6 points (−0.3 to 16.1) | hbpro_retest_summary.json | ok |
+| retest.primary | 7.6 points (−0.3 to 16.1) | hbpro_retest_summary.json [supplement] | ok |
 | retest.second | 4.0 points (−2.5 to 10.2) | hbpro_retest_summary.json | ok |
-| retest.ours | 76.6 and 75.9 | hbpro_retest_summary.json | ok |
-| retest.amie | 69.0 and 71.9 | hbpro_retest_summary.json | ok |
 | hb_dev.amie_style | 68.2 | hbpro_dev/report.json | ok |
-| hb_dev.amie_style_g61 | 62.1 | hbpro_dev/report.json | ok |
+| hb_dev.amie_style_g61 | 62.1 | hbpro_dev/report.json [supplement] | ok |
 | hb_dev.mai_dxo_style | 65.0 | hbpro_dev/report.json | ok |
 | hb_dev.mai_dxo_style_g61 | 62.3 | hbpro_dev/report.json | ok |
-| hb_dev.chars | 3,269 to 2,560 | hbpro_dev/report.json | ok |
-| abl.search | +0.5 points (−3.9 to 5.1 | compare_ablations_175.txt | ok |
-| abl.single | +3.7 (−0.8 to 8.6 | compare_ablations_175.txt | ok |
-| abl.review | +1.9 (−4.1 to 7.1 | compare_ablations_175.txt | ok |
-| abl.editor | 1.3 points (−0.5 to 2.8) | compare_ablations_175.txt | ok |
+| hb_dev.chars | 3,269 to 2,560 | hbpro_dev/report.json [supplement] | ok |
+| abl.search | +0.5 points (−3.9 to 5.1 | compare_ablations_175.txt [supplement] | ok |
+| abl.single | +3.7 (−0.8 to 8.6 | compare_ablations_175.txt [supplement] | ok |
+| abl.review | +1.9 (−4.1 to 7.1 | compare_ablations_175.txt [supplement] | ok |
+| abl.editor | 1.3 points (−0.5 to 2.8) | compare_ablations_175.txt [supplement] | ok |
 | txt.ours.sens.table | 57.8 (47.5–67.5) | texts_supplement.json | ok |
 | txt.ours.nohaz.table | 139.5 (113.7–166.9) | texts_supplement.json | ok |
 | txt.amie_style.sens.table | 51.9 (42.6–61.0) | texts_supplement.json | ok |
@@ -105,15 +103,15 @@
 | txt.diff.mai_dxo_style.sens_ci | 0.4 to 22.2 | texts_supplement.json | ok |
 | txt.diff.mai_dxo_style.nohaz | −39.5 per 1,000 | texts_supplement.json | ok |
 | txt.diff.mai_dxo_style.nohaz_ci | −63.9 to −14.3 | texts_supplement.json | ok |
-| txt.instr.amie_style | 55.5 | texts_supplement.json | ok |
-| txt.instr.mai_dxo_style | 146.8 | texts_supplement.json | ok |
-| txt.instr.raw_llm | 25.3 | texts_supplement.json | ok |
+| txt.instr.amie_style | 55.5 | texts_supplement.json [supplement] | ok |
+| txt.instr.mai_dxo_style | 146.8 | texts_supplement.json [supplement] | ok |
+| txt.instr.raw_llm | 25.3 | texts_supplement.json [supplement] | ok |
 | txt.writer_alone | 36.7 | texts_supplement.json | ok |
 | txt.unweighted.ours | 57.8 | texts_supplement.json | ok |
 | txt.unweighted.amie | 51.9 | texts_supplement.json | ok |
-| txt.gate_paged | 68 of the 949 | texts_supplement.json | ok |
-| txt.gate_only | 21.1 | texts_supplement.json | ok |
-| txt.writer_only | 19.8 | texts_supplement.json | ok |
+| txt.gate_paged | 68 of the 949 | texts_supplement.json [supplement] | ok |
+| txt.gate_only | 21.1 | texts_supplement.json [supplement] | ok |
+| txt.writer_only | 19.8 | texts_supplement.json [supplement] | ok |
 | layer.amie | 69.6% of texts with a safety hazard (60.7 to 78.4) | same_safety_layer | ok |
 | layer.amie_style+layer.nohaz | 210.9 | same_safety_layer | ok |
 | layer.amie_style+layer.sens | 69.6 | same_safety_layer | ok |
@@ -123,36 +121,51 @@
 | layer.v22+layer.sens | 69.6 | same_safety_layer | ok |
 | layer.diff.amie | 11.8 points lower (−19.7 to −4.0) | same_safety_layer | ok |
 | layer.diff.amie.nohaz | 71.5 per 1,000 lower (−95.2 to −47.6) | same_safety_layer | ok |
-| kappa.sp | κ = 0.769 | texts_supplement.json | ok |
-| 200.basu | our system escalated 50.0% and the AMIE-style agent 53.7% | texts_supplement.json | ok |
-| 200.morgan | our system escalated 40.0% and the AMIE-style agent 42.2% | texts_supplement.json | ok |
-| repeat | 86.4% of texts with our system and 76.9% | texts_supplement.json | ok |
-| urg.agree | 87.6% (κ = 0.648) | urgency_agreement.json | ok |
-| urg.rates | 25.0% of replies an escalation, and the primary classifier 20.4% | urgency_agreement.json | ok |
-| strict.held | 556.4 of every 1,000 replies from our reply model | texts/report.json | ok |
+| kappa.sp | κ = 0.617 | texts_supplement.json | ok |
+| jm.n | found 43 texts with a safety hazard (Cohen's κ = 0.617; the two physicians differed on 44 texts) | texts_supplement.json | ok |
+| jm.sens | the separated design escalated 53.5% of texts with a safety hazard (39.3 to 66.7) and the AMIE-style agent 50.4% (36.4 to 63.3) | texts_supplement.json | ok |
+| jm.diff | a difference of 3.1 points (−13.8 to 20.0) | texts_supplement.json | ok |
+| jm.layer | escalated 13.2 points more than the separated design (2.1 to 24.8) | texts_supplement.json | ok |
+| jm.lim | agreed moderately (κ = 0.617) and found fewer texts with a safety hazard (43 against 79) | texts_supplement.json | ok |
+| a2.p1 | 0.3 percentage points more frequent in the separated design's replies than in physician-written replies (95% CI, 0.1 to 0.5) | a2_rating.json | ok |
+| a2.p1.holm | margin of 5 points (Holm-adjusted P = 0.001) | a2_rating.json | ok |
+| a2.p2 | scored 1.84 points higher than care-team replies for accuracy on a 5-point scale (1.30 to 2.37; P = 0.001) | a2_rating.json | ok |
+| a2.design | all 79 texts with a safety hazard and 71 random others | a2_rating.json | ok |
+| a2.ct | for 53 texts, the care team's reply | a2_rating.json [supplement] | ok |
+| a2.sp.harm | 7 of the separated design's replies (8.9%) had moderate or severe harm | a2_rating.json | ok |
+| a2.alert | which the separated design sent on 21 texts | a2_rating.json | ok |
+| a2.alert.disc | harmful in 7 of 21 texts | a2_rating.json | ok |
+| a2.gen | The 129 generated replies had no moderate or severe harm | a2_rating.json | ok |
+| a2.gen.acc | 59 texts with a safety hazard that got a generated reply, mean accuracy was 4.61 for the separated design and 4.73 | a2_rating.json [supplement] | ok |
+| a2.irr | moderate or severe harm with κ = 0.791 | a2_rating.json | ok |
+| a2.cls | (86 against 218 of 279 generated replies; κ = 0.210) | a2_rating.json | ok |
+| a2.rj | escalated 73.4% of the 79 texts with a safety hazard (63.3 to 82.3) and the AMIE-style agent 75.9% (65.8 to 84.8) | a2_rating.json | ok |
+| a2.cls.lim | κ = 0.210 | a2_rating.json | ok |
+| repeat | 86.4% of texts with the separated design and 76.9% | texts_supplement.json [supplement] | ok |
+| urg.agree | 87.6% of 800 sampled replies (κ = 0.648) | urgency_agreement.json [supplement] | ok |
+| urg.rates | 25.0% of replies an escalation, and the primary classifier 20.4% | urgency_agreement.json [supplement] | ok |
+| strict.held | 556.4 of every 1,000 replies from the reply model | texts/report.json [supplement] | ok |
 | strict.nohaz | 752.1 of every 1,000 texts without a hazard | texts/report.json | ok |
-| h1a | 25.3 points; 11.9 to 38.3 | registered_hypotheses_v22 | ok |
-| h1b | 12.7 points; exact McNemar P = 0.064 | registered_hypotheses_v22 | ok |
+| h1a | 25.3 points; 11.9 to 38.3 | registered_hypotheses_v22 [supplement] | ok |
 | err.med | 18.0 unescalated, and the AMIE-style agent 10.3 | texts_errors.json | ok |
-| err.house | our system left 10.3 unescalated, and the AMIE-style agent 20.7 | texts_errors.json | ok |
+| err.house | the separated design left 10.3 unescalated, and the AMIE-style agent 20.7 | texts_errors.json [supplement] | ok |
 | groups | 299 texts with a hazard | texts_errors.json | ok |
 | gate.auroc | 0.909 (95% CI, 0.878 to 0.934) | paging_gate_497/report.json | ok |
 | gate.miss | 3.9% of | paging_gate_497/report.json | ok |
 | gate.paged | 3.0% of texts to care teams | paging_gate_497/report.json | ok |
-| gate.above | 33.2% of the splits | paging_gate_497/report.json | ok |
-| gate.full_paged | 2.5% of texts to care teams | paging_gate_497/report.json | ok |
+| gate.above | 33.2% of the splits | paging_gate_497/report.json [supplement] | ok |
+| gate.full_paged | 2.5% of texts to care teams | paging_gate_497/report.json [supplement] | ok |
 | gate.safety_auroc | 0.923 (0.896 to 0.945) | paging_gate_497/report.json | ok |
-| gate.auroc_w | 0.996 (0.990 to 0.999) | paging_gate_497/report.json | ok |
 | gate.miss_p95 | 10.9% | paging_gate_497/report.json | ok |
 | intake.instr | 23 of 219 messages, the MAI-DxO-style agent in 61 of 216 | intake_instructions.json | ok |
 | intake.none | none of 180 | intake_instructions.json | ok |
-| leak.released | Our system released 2,686 of its 2,847 replies, and the classifier placed 4 of them in that class (1.4 per 1,000 of all replies | texts_gate_test_and_leak.json + routing | ok |
+| leak.released | The separated design released 2,686 of its 2,847 replies, and the classifier placed 4 of them in that class (1.4 per 1,000 of all replies | texts_gate_test_and_leak.json + routing | ok |
 | route.only | escalated 38.8% of texts with a safety hazard (28.5 to 49.8) and 42.2 per 1,000 | texts_routing_endpoints.json | ok |
-| route.withheld | our system withheld 161: 99 because the emergency screen sent an alert for 33 texts, and 62 | texts_routing_endpoints.json | ok |
-| route.review | The emergency screen sent another 35 texts to physician review | texts_routing_endpoints.json | ok |
-| doc.n | the 53 texts that the physician labeled as needing at least a call from a doctor | texts_routing_endpoints.json | ok |
-| doc.vals | Our system escalated 68.6% of these texts (56.2 to 80.5), the AMIE-style agent 79.9%, the MAI-DxO-style agent 71.1% and the rule-based system 82.4% | texts_routing_endpoints.json | ok |
-| doc.diffs | The differences were −11.3 points (−23.2 to 0.0), −2.5 points (−14.4 to 9.2) and −13.8 points (−24.1 to −3.3) | texts_routing_endpoints.json | ok |
+| route.withheld | the separated design withheld 161: 99 because the emergency screen sent an alert for 33 texts, and 62 | texts_routing_endpoints.json [supplement] | ok |
+| route.review | The emergency screen sent another 35 texts to physician review | texts_routing_endpoints.json [supplement] | ok |
+| doc.n | the 53 texts that S.B. labeled as needing at least a call from a doctor | texts_routing_endpoints.json | ok |
+| doc.vals | the separated design escalated 68.6% (56.2 to 80.5), the AMIE-style agent 79.9%, the MAI-DxO-style agent 71.1% and the rule-based system 82.4% | texts_routing_endpoints.json | ok |
+| doc.diffs | The differences were −11.3 points (−23.2 to 0.0), −2.5 points (−14.4 to 9.2) and −13.8 points (−24.1 to −3.3) | texts_routing_endpoints.json [supplement] | ok |
 | reg.sens | escalated 70.9% of texts with a safety hazard (61.2 to 80.5) and 752.1 of every 1,000 | texts_routing_endpoints.json | ok |
 | leak.layer | released 0.4 to 1.1 such replies per 1,000 | texts_routing_endpoints.json | ok |
 | refit | missed 8.1% of the texts needing a doctor's call in the held-out half on average (95th percentile 22.2%; above 10% in 31.4% of splits), but it sent 40.2% of texts to review | ai-pcp/data/gate_thresholds.json | ok |
@@ -162,28 +175,27 @@
 | t1.amie_style_uncapped | 68.5 (2.5) | 70.0 | 64.2 | 66.3 | 78.0 | 69.9 | 66.1 | 2,486 | | hbpro_test/report.json | ok |
 | t1.mai_dxo_style_uncapped | 66.7 (2.5) | 69.2 | 63.6 | 66.6 | 72.1 | 68.4 | 63.7 | 2,823 | | hbpro_test/report.json | ok |
 | t1.amie_style_search | 72.3 (2.4) | 73.6 | 68.9 | 71.1 | 79.4 | 74.8 | 67.9 | 2,431 | | hbpro_test/report.json | ok |
-| search.abstract | With the same web search, the difference was 4.4 (0.3–8.5) | compare_amie_search.txt | ok |
-| search.results | The AMIE-style agent then scored 72.3, 4.7 points higher than without search. Our pipeline scored 4.4 points higher than the AMIE-style agent with search (0.3 to 8.5), and the two-step pipeline described below scored 2.9 points higher (−0.7 to 6.6) | compare_amie_search.txt | ok |
-| search.discussion | our pipeline's lead fell to 4.4 points (0.3 to 8.5), and the two-step pipeline's lead fell to 2.9 points (−0.7 to 6.6) | compare_amie_search.txt | ok |
+| search.abstract | cut the pipeline's lead from 9.1 points (95% CI, 4.5–13.8) to 4.4 (0.3–8.5) | compare_amie_search.txt | ok |
+| search.results | the AMIE-style agent scored 72.3, 4.7 points higher than without search, and the multi-model pipeline's lead fell to 4.4 points (0.3 to 8.5) | compare_amie_search.txt | ok |
+| search.twostep | the two-step pipeline's lead was 2.9 points (−0.7 to 6.6) | compare_amie_search.txt | ok |
+| search.discussion | the multi-model pipeline's lead fell to 4.4 points (0.3 to 8.5), and the two-step pipeline's lead fell to 2.9 points (−0.7 to 6.6) | compare_amie_search.txt | ok |
 | search.lift | by 4.7 points | report.json | ok |
-| layer.range.abstract | hazard sensitivity of 57.8–69.6% | same_safety_layer | ok |
+| layer.range.abstract | 57.8–69.6% hazard sensitivity | same_safety_layer | ok |
 | layer.range.discussion | hazard sensitivity of 57.8% to 69.6% | same_safety_layer | ok |
 | nosearch.vs_search | 4.9 points (1.3 to 8.4) | compare_nosearch.txt | ok |
 | nosearch.vs_amie | 2.7 points (−1.0 to 6.5) | compare_nosearch.txt | ok |
-| leak.cls | in 3.5 of every 1,000 replies, the MAI-DxO-style agent in 5.6 and our reply model in 3.5 | texts_gate_test_and_leak.json | ok |
-| hb.simple_raw | two-step pipeline scored 78.3 and the full pipeline 78.2 | hbpro_test/report.json | ok |
-| hb.simple_chars | averaged 2,496 characters and the two-step pipeline's 3,030 | hbpro_test/report.json | ok |
+| leak.cls | in 3.5 of every 1,000 replies, the MAI-DxO-style agent in 5.6 and the reply model in 3.5 | texts_gate_test_and_leak.json | ok |
 | gate.test | It sent only 26 of the 53 texts needing a doctor's call to a physician | texts_gate_test_and_leak.json | ok |
 | gate.test_share | it sent an alert for 1.4% of texts and a review request for 1.8% | texts_gate_test_and_leak.json | ok |
 | intake.4.71 | 4.71 | intake_eval/report.md | ok |
 | intake.3.46 | 3.46 | intake_eval/report.md | ok |
 | intake.3.18 | 3.18 | intake_eval/report.md | ok |
 | intake.71.7% | 71.7 | intake_eval/report.md | ok |
-| intake.40.9% | 40.9 | intake_eval/report.md | ok |
-| intake.55.8% | 55.8 | intake_eval/report.md | ok |
-| intake.6.43 | 6.43 | intake_eval/report.md | ok |
-| intake.7.82 | 7.82 | intake_eval/report.md | ok |
-| intake.7.71 | 7.71 | intake_eval/report.md | ok |
+| intake.40.9% | 40.9 | intake_eval/report.md [supplement] | ok |
+| intake.55.8% | 55.8 | intake_eval/report.md [supplement] | ok |
+| intake.6.43 | 6.43 | intake_eval/report.md [supplement] | ok |
+| intake.7.82 | 7.82 | intake_eval/report.md [supplement] | ok |
+| intake.7.71 | 7.71 | intake_eval/report.md [supplement] | ok |
 | intake.27.3% | 27.3 | intake_eval/report.md | ok |
-| intake.19.0% | 19.0 | intake_eval/report.md | ok |
-| intake.19.4% | 19.4 | intake_eval/report.md | ok |
+| intake.19.0% | 19.0 | intake_eval/report.md [supplement] | ok |
+| intake.19.4% | 19.4 | intake_eval/report.md [supplement] | ok |
