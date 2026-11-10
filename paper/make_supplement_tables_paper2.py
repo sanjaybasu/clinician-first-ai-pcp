@@ -452,7 +452,7 @@ def t13() -> str:
             "| Simulated patient and note judge (history taking) | GPT-6.1 Sol | OpenAI; proprietary | reasoning effort high | OpenAI API, BAA |"]
     return ("Supplementary Table 13 | Models, settings and access. All calls ran from the United States between "
             "November 6 and November 9, 2026, with a fresh context for each reply or task. Patient texts were not "
-            "de-identified and went only to vendors with a business associate agreement.\n\n" + "\n".join(rows))
+            "de-identified and went only to vendors with a business associate agreement. No call set a temperature or a seed; each model sampled at its provider default.\n\n" + "\n".join(rows))
 
 
 def t14() -> str:
@@ -547,8 +547,44 @@ def t14() -> str:
             "otherwise). CIs are from 2,000 bootstrap resamples of texts.\n\n" + "\n".join(out))
 
 
+def t15() -> str:
+    a = _j(DER / "texts_subgroups.json")
+    if not a:
+        return "Supplementary Table 15 | Sender characteristics and subgroups. pending"
+    lab = {"state": "State", "sex": "Sex", "age": "Age group", "race": "Race"}
+    ch = a["characteristics"]
+    out = ["*Sender characteristics by sampling stratum, n (%).*", "",
+           f"| Characteristic | Group | Random sample (n = {ch['state']['random']['_n']}) | Flagged texts (n = "
+           f"{ch['state']['enriched']['_n']}) | All test texts (n = {ch['state']['all']['_n']}) |", "|---|---|---|---|---|"]
+    for var in ("state", "sex", "age", "race"):
+        for g in sorted(k for k in ch[var]["all"] if k != "_n"):
+            cell = lambda s_: f"{ch[var][s_][g][0]} ({ch[var][s_][g][1]:.1f})" if g in ch[var][s_] else "0 (0.0)"  # noqa: E731
+            out.append(f"| {lab[var]} | {g} | {cell('random')} | {cell('enriched')} | {cell('all')} |")
+    out += ["", "*Hazard sensitivity and escalation burden by subgroup (weighted; post hoc, descriptive).*", "",
+            "| Characteristic | Group | Texts | Texts with a safety hazard | Hazard sensitivity, separated design, % (95% CI) | "
+            "Hazard sensitivity, AMIE-style agent, % (95% CI) | Escalation burden, separated design, per 1,000 (95% CI) | "
+            "Escalation burden, AMIE-style agent, per 1,000 (95% CI) |", "|---|---|---|---|---|---|---|---|"]
+    for var in ("state", "sex", "age", "race"):
+        for g, v in a["subgroups"][var].items():
+            o, m = v["ours"], v["amie_style"]
+            sens = lambda x: "—" if x["safety_positive"] < 5 else (  # noqa: E731
+                f"{_pct(x['hazard_sensitivity_weighted'])} ({_ci([100 * y for y in x['hazard_sensitivity_weighted_ci']])})")
+            bur = lambda x: "—" if x["no_hazard"] < 10 else (  # noqa: E731
+                f"{x['escalation_no_hazard_per_1000_weighted']:.1f} ({_ci(x['escalation_no_hazard_weighted_ci'])})")
+            out.append(f"| {lab[var]} | {g} | {v['texts']} | {o['safety_positive']} | {sens(o)} | {sens(m)} | {bur(o)} | {bur(m)} |")
+    return ("Supplementary Table 15 | Sender characteristics and subgroup results for the 949 test texts (post hoc). The "
+            "sender is known when the phone belongs to one Waymark member (737 texts); for a shared phone, state is given "
+            "when all members on the phone live in the same state. Age is the linked member's age on the day of the text; "
+            "for a member under 18, a parent may have sent the text. Race is as recorded in Waymark's care-team "
+            "application, which records Hispanic or Latinx as a race and does not record ethnicity; Other race combines "
+            "Asian, American Indian or Alaska Native, Native Hawaiian or Other Pacific Islander and Other. Estimates use "
+            "S.B.'s labels and the two-phase weights, with 2,000 bootstrap resamples of texts within each group; a dash marks "
+            "an estimate from fewer than 5 texts with a safety hazard or fewer than 10 texts without a hazard. No "
+            "interaction tests were run.\n\n" + "\n".join(out))
+
+
 def main() -> None:
-    parts = [t2(), t3(), t4(), t5(), t6(), t7(), t8(), t9(), t10(), t11(), t12(), t13(), t14()]
+    parts = [t2(), t3(), t4(), t5(), t6(), t7(), t8(), t9(), t10(), t11(), t12(), t13(), t14(), t15()]
     OUT.write_text("\n\n".join(parts) + "\n")
     print(OUT, sum(p.count("pending") for p in parts), "pending cells")
 

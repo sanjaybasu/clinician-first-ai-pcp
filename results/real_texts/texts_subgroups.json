@@ -1,0 +1,1840 @@
+{
+ "definition": "post hoc, descriptive; S. Basu labels; weighted; sender known when the phone belongs to one member; 'Member under 18' is the linked member's age (a parent may have sent the text)",
+ "characteristics": {
+  "state": {
+   "random": {
+    "Illinois": [
+     68,
+     11.3
+    ],
+    "Ohio": [
+     174,
+     29.0
+    ],
+    "Unknown": [
+     12,
+     2.0
+    ],
+    "Virginia": [
+     177,
+     29.5
+    ],
+    "Washington": [
+     169,
+     28.2
+    ],
+    "_n": 600
+   },
+   "enriched": {
+    "Illinois": [
+     34,
+     9.7
+    ],
+    "Ohio": [
+     113,
+     32.4
+    ],
+    "Unknown": [
+     2,
+     0.6
+    ],
+    "Virginia": [
+     109,
+     31.2
+    ],
+    "Washington": [
+     91,
+     26.1
+    ],
+    "_n": 349
+   },
+   "all": {
+    "Illinois": [
+     102,
+     10.7
+    ],
+    "Ohio": [
+     287,
+     30.2
+    ],
+    "Unknown": [
+     14,
+     1.5
+    ],
+    "Virginia": [
+     286,
+     30.1
+    ],
+    "Washington": [
+     260,
+     27.4
+    ],
+    "_n": 949
+   }
+  },
+  "sex": {
+   "random": {
+    "Female": [
+     293,
+     48.8
+    ],
+    "Male": [
+     154,
+     25.7
+    ],
+    "Other or unknown": [
+     2,
+     0.3
+    ],
+    "Unknown sender": [
+     151,
+     25.2
+    ],
+    "_n": 600
+   },
+   "enriched": {
+    "Female": [
+     196,
+     56.2
+    ],
+    "Male": [
+     89,
+     25.5
+    ],
+    "Other or unknown": [
+     3,
+     0.9
+    ],
+    "Unknown sender": [
+     61,
+     17.5
+    ],
+    "_n": 349
+   },
+   "all": {
+    "Female": [
+     489,
+     51.5
+    ],
+    "Male": [
+     243,
+     25.6
+    ],
+    "Other or unknown": [
+     5,
+     0.5
+    ],
+    "Unknown sender": [
+     212,
+     22.3
+    ],
+    "_n": 949
+   }
+  },
+  "age": {
+   "random": {
+    "18-39": [
+     161,
+     26.8
+    ],
+    "40-64": [
+     226,
+     37.7
+    ],
+    "65 or older": [
+     11,
+     1.8
+    ],
+    "Member under 18": [
+     50,
+     8.3
+    ],
+    "Unknown": [
+     1,
+     0.2
+    ],
+    "Unknown sender": [
+     151,
+     25.2
+    ],
+    "_n": 600
+   },
+   "enriched": {
+    "18-39": [
+     95,
+     27.2
+    ],
+    "40-64": [
+     175,
+     50.1
+    ],
+    "65 or older": [
+     5,
+     1.4
+    ],
+    "Member under 18": [
+     13,
+     3.7
+    ],
+    "Unknown sender": [
+     61,
+     17.5
+    ],
+    "_n": 349
+   },
+   "all": {
+    "18-39": [
+     256,
+     27.0
+    ],
+    "40-64": [
+     401,
+     42.3
+    ],
+    "65 or older": [
+     16,
+     1.7
+    ],
+    "Member under 18": [
+     63,
+     6.6
+    ],
+    "Unknown": [
+     1,
+     0.1
+    ],
+    "Unknown sender": [
+     212,
+     22.3
+    ],
+    "_n": 949
+   }
+  },
+  "race": {
+   "random": {
+    "Black": [
+     131,
+     21.8
+    ],
+    "Hispanic or Latinx": [
+     26,
+     4.3
+    ],
+    "Other race": [
+     15,
+     2.5
+    ],
+    "Unknown or not recorded": [
+     146,
+     24.3
+    ],
+    "Unknown sender": [
+     151,
+     25.2
+    ],
+    "White": [
+     131,
+     21.8
+    ],
+    "_n": 600
+   },
+   "enriched": {
+    "Black": [
+     104,
+     29.8
+    ],
+    "Hispanic or Latinx": [
+     11,
+     3.2
+    ],
+    "Other race": [
+     13,
+     3.7
+    ],
+    "Unknown or not recorded": [
+     92,
+     26.4
+    ],
+    "Unknown sender": [
+     61,
+     17.5
+    ],
+    "White": [
+     68,
+     19.5
+    ],
+    "_n": 349
+   },
+   "all": {
+    "Black": [
+     235,
+     24.8
+    ],
+    "Hispanic or Latinx": [
+     37,
+     3.9
+    ],
+    "Other race": [
+     28,
+     3.0
+    ],
+    "Unknown or not recorded": [
+     238,
+     25.1
+    ],
+    "Unknown sender": [
+     212,
+     22.3
+    ],
+    "White": [
+     199,
+     21.0
+    ],
+    "_n": 949
+   }
+  }
+ },
+ "subgroups": {
+  "state": {
+   "Illinois": {
+    "texts": 102,
+    "ours": {
+     "safety_positive": 8,
+     "no_hazard": 69,
+     "hazard_sensitivity_weighted": 0.625,
+     "hazard_sensitivity_weighted_ci": [
+      0.296,
+      0.933
+     ],
+     "escalation_no_hazard_per_1000_weighted": 177.8,
+     "escalation_no_hazard_weighted_ci": [
+      94.6,
+      275.0
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 8,
+     "no_hazard": 69,
+     "hazard_sensitivity_weighted": 0.667,
+     "hazard_sensitivity_weighted_ci": [
+      0.381,
+      0.889
+     ],
+     "escalation_no_hazard_per_1000_weighted": 222.6,
+     "escalation_no_hazard_weighted_ci": [
+      134.9,
+      320.1
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 8,
+     "no_hazard": 69,
+     "hazard_sensitivity_weighted": 0.667,
+     "hazard_sensitivity_weighted_ci": [
+      0.333,
+      1.0
+     ],
+     "escalation_no_hazard_per_1000_weighted": 248.1,
+     "escalation_no_hazard_weighted_ci": [
+      149.8,
+      347.9
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 8,
+     "no_hazard": 69,
+     "hazard_sensitivity_weighted": 0.5,
+     "hazard_sensitivity_weighted_ci": [
+      0.167,
+      0.833
+     ],
+     "escalation_no_hazard_per_1000_weighted": 157.3,
+     "escalation_no_hazard_weighted_ci": [
+      77.8,
+      251.6
+     ]
+    },
+    "v22": {
+     "safety_positive": 8,
+     "no_hazard": 69,
+     "hazard_sensitivity_weighted": 0.542,
+     "hazard_sensitivity_weighted_ci": [
+      0.222,
+      0.833
+     ],
+     "escalation_no_hazard_per_1000_weighted": 227.5,
+     "escalation_no_hazard_weighted_ci": [
+      136.7,
+      326.5
+     ]
+    }
+   },
+   "Ohio": {
+    "texts": 287,
+    "ours": {
+     "safety_positive": 21,
+     "no_hazard": 182,
+     "hazard_sensitivity_weighted": 0.746,
+     "hazard_sensitivity_weighted_ci": [
+      0.565,
+      0.912
+     ],
+     "escalation_no_hazard_per_1000_weighted": 87.3,
+     "escalation_no_hazard_weighted_ci": [
+      51.8,
+      129.0
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 21,
+     "no_hazard": 182,
+     "hazard_sensitivity_weighted": 0.492,
+     "hazard_sensitivity_weighted_ci": [
+      0.317,
+      0.667
+     ],
+     "escalation_no_hazard_per_1000_weighted": 101.1,
+     "escalation_no_hazard_weighted_ci": [
+      68.3,
+      139.6
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 21,
+     "no_hazard": 182,
+     "hazard_sensitivity_weighted": 0.46,
+     "hazard_sensitivity_weighted_ci": [
+      0.278,
+      0.648
+     ],
+     "escalation_no_hazard_per_1000_weighted": 152.4,
+     "escalation_no_hazard_weighted_ci": [
+      107.4,
+      201.8
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 21,
+     "no_hazard": 182,
+     "hazard_sensitivity_weighted": 0.492,
+     "hazard_sensitivity_weighted_ci": [
+      0.304,
+      0.683
+     ],
+     "escalation_no_hazard_per_1000_weighted": 69.2,
+     "escalation_no_hazard_weighted_ci": [
+      36.9,
+      108.1
+     ]
+    },
+    "v22": {
+     "safety_positive": 21,
+     "no_hazard": 182,
+     "hazard_sensitivity_weighted": 0.492,
+     "hazard_sensitivity_weighted_ci": [
+      0.292,
+      0.689
+     ],
+     "escalation_no_hazard_per_1000_weighted": 68.4,
+     "escalation_no_hazard_weighted_ci": [
+      37.6,
+      105.2
+     ]
+    }
+   },
+   "Unknown": {
+    "texts": 14,
+    "ours": {
+     "safety_positive": 1,
+     "no_hazard": 7,
+     "hazard_sensitivity_weighted": 0.0,
+     "hazard_sensitivity_weighted_ci": [
+      0.0,
+      0.0
+     ],
+     "escalation_no_hazard_per_1000_weighted": 238.1,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      571.4
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 1,
+     "no_hazard": 7,
+     "hazard_sensitivity_weighted": 0.333,
+     "hazard_sensitivity_weighted_ci": [
+      0.333,
+      0.333
+     ],
+     "escalation_no_hazard_per_1000_weighted": 190.5,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      388.9
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 1,
+     "no_hazard": 7,
+     "hazard_sensitivity_weighted": 0.0,
+     "hazard_sensitivity_weighted_ci": [
+      0.0,
+      0.0
+     ],
+     "escalation_no_hazard_per_1000_weighted": 190.5,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      444.4
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 1,
+     "no_hazard": 7,
+     "hazard_sensitivity_weighted": 0.0,
+     "hazard_sensitivity_weighted_ci": [
+      0.0,
+      0.0
+     ],
+     "escalation_no_hazard_per_1000_weighted": 238.1,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      571.4
+     ]
+    },
+    "v22": {
+     "safety_positive": 1,
+     "no_hazard": 7,
+     "hazard_sensitivity_weighted": 1.0,
+     "hazard_sensitivity_weighted_ci": [
+      1.0,
+      1.0
+     ],
+     "escalation_no_hazard_per_1000_weighted": 285.7,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      666.7
+     ]
+    }
+   },
+   "Virginia": {
+    "texts": 286,
+    "ours": {
+     "safety_positive": 27,
+     "no_hazard": 150,
+     "hazard_sensitivity_weighted": 0.457,
+     "hazard_sensitivity_weighted_ci": [
+      0.273,
+      0.64
+     ],
+     "escalation_no_hazard_per_1000_weighted": 129.5,
+     "escalation_no_hazard_weighted_ci": [
+      85.1,
+      178.3
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 27,
+     "no_hazard": 150,
+     "hazard_sensitivity_weighted": 0.506,
+     "hazard_sensitivity_weighted_ci": [
+      0.347,
+      0.667
+     ],
+     "escalation_no_hazard_per_1000_weighted": 146.1,
+     "escalation_no_hazard_weighted_ci": [
+      98.0,
+      198.2
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 27,
+     "no_hazard": 150,
+     "hazard_sensitivity_weighted": 0.358,
+     "hazard_sensitivity_weighted_ci": [
+      0.212,
+      0.514
+     ],
+     "escalation_no_hazard_per_1000_weighted": 157.6,
+     "escalation_no_hazard_weighted_ci": [
+      109.6,
+      207.3
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 27,
+     "no_hazard": 150,
+     "hazard_sensitivity_weighted": 0.247,
+     "hazard_sensitivity_weighted_ci": [
+      0.108,
+      0.405
+     ],
+     "escalation_no_hazard_per_1000_weighted": 99.6,
+     "escalation_no_hazard_weighted_ci": [
+      59.8,
+      141.5
+     ]
+    },
+    "v22": {
+     "safety_positive": 27,
+     "no_hazard": 150,
+     "hazard_sensitivity_weighted": 0.63,
+     "hazard_sensitivity_weighted_ci": [
+      0.47,
+      0.785
+     ],
+     "escalation_no_hazard_per_1000_weighted": 155.5,
+     "escalation_no_hazard_weighted_ci": [
+      104.8,
+      209.0
+     ]
+    }
+   },
+   "Washington": {
+    "texts": 260,
+    "ours": {
+     "safety_positive": 22,
+     "no_hazard": 163,
+     "hazard_sensitivity_weighted": 0.576,
+     "hazard_sensitivity_weighted_ci": [
+      0.386,
+      0.758
+     ],
+     "escalation_no_hazard_per_1000_weighted": 179.0,
+     "escalation_no_hazard_weighted_ci": [
+      125.5,
+      233.1
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 22,
+     "no_hazard": 163,
+     "hazard_sensitivity_weighted": 0.515,
+     "hazard_sensitivity_weighted_ci": [
+      0.314,
+      0.708
+     ],
+     "escalation_no_hazard_per_1000_weighted": 193.0,
+     "escalation_no_hazard_weighted_ci": [
+      140.5,
+      248.3
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 22,
+     "no_hazard": 163,
+     "hazard_sensitivity_weighted": 0.545,
+     "hazard_sensitivity_weighted_ci": [
+      0.356,
+      0.729
+     ],
+     "escalation_no_hazard_per_1000_weighted": 196.6,
+     "escalation_no_hazard_weighted_ci": [
+      148.0,
+      247.7
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 22,
+     "no_hazard": 163,
+     "hazard_sensitivity_weighted": 0.333,
+     "hazard_sensitivity_weighted_ci": [
+      0.167,
+      0.509
+     ],
+     "escalation_no_hazard_per_1000_weighted": 169.2,
+     "escalation_no_hazard_weighted_ci": [
+      118.0,
+      224.5
+     ]
+    },
+    "v22": {
+     "safety_positive": 22,
+     "no_hazard": 163,
+     "hazard_sensitivity_weighted": 0.652,
+     "hazard_sensitivity_weighted_ci": [
+      0.449,
+      0.833
+     ],
+     "escalation_no_hazard_per_1000_weighted": 179.6,
+     "escalation_no_hazard_weighted_ci": [
+      127.2,
+      234.1
+     ]
+    }
+   }
+  },
+  "sex": {
+   "Female": {
+    "texts": 489,
+    "ours": {
+     "safety_positive": 50,
+     "no_hazard": 267,
+     "hazard_sensitivity_weighted": 0.547,
+     "hazard_sensitivity_weighted_ci": [
+      0.413,
+      0.675
+     ],
+     "escalation_no_hazard_per_1000_weighted": 170.9,
+     "escalation_no_hazard_weighted_ci": [
+      129.5,
+      212.9
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 50,
+     "no_hazard": 267,
+     "hazard_sensitivity_weighted": 0.467,
+     "hazard_sensitivity_weighted_ci": [
+      0.353,
+      0.586
+     ],
+     "escalation_no_hazard_per_1000_weighted": 187.0,
+     "escalation_no_hazard_weighted_ci": [
+      146.2,
+      228.6
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 50,
+     "no_hazard": 267,
+     "hazard_sensitivity_weighted": 0.4,
+     "hazard_sensitivity_weighted_ci": [
+      0.286,
+      0.519
+     ],
+     "escalation_no_hazard_per_1000_weighted": 191.8,
+     "escalation_no_hazard_weighted_ci": [
+      150.5,
+      235.3
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 50,
+     "no_hazard": 267,
+     "hazard_sensitivity_weighted": 0.293,
+     "hazard_sensitivity_weighted_ci": [
+      0.185,
+      0.404
+     ],
+     "escalation_no_hazard_per_1000_weighted": 150.4,
+     "escalation_no_hazard_weighted_ci": [
+      109.5,
+      190.8
+     ]
+    },
+    "v22": {
+     "safety_positive": 50,
+     "no_hazard": 267,
+     "hazard_sensitivity_weighted": 0.54,
+     "hazard_sensitivity_weighted_ci": [
+      0.42,
+      0.667
+     ],
+     "escalation_no_hazard_per_1000_weighted": 186.2,
+     "escalation_no_hazard_weighted_ci": [
+      141.9,
+      230.8
+     ]
+    }
+   },
+   "Male": {
+    "texts": 243,
+    "ours": {
+     "safety_positive": 19,
+     "no_hazard": 158,
+     "hazard_sensitivity_weighted": 0.754,
+     "hazard_sensitivity_weighted_ci": [
+      0.576,
+      0.921
+     ],
+     "escalation_no_hazard_per_1000_weighted": 91.8,
+     "escalation_no_hazard_weighted_ci": [
+      50.2,
+      141.5
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 19,
+     "no_hazard": 158,
+     "hazard_sensitivity_weighted": 0.754,
+     "hazard_sensitivity_weighted_ci": [
+      0.595,
+      0.896
+     ],
+     "escalation_no_hazard_per_1000_weighted": 112.6,
+     "escalation_no_hazard_weighted_ci": [
+      69.1,
+      157.0
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 19,
+     "no_hazard": 158,
+     "hazard_sensitivity_weighted": 0.719,
+     "hazard_sensitivity_weighted_ci": [
+      0.537,
+      0.884
+     ],
+     "escalation_no_hazard_per_1000_weighted": 143.8,
+     "escalation_no_hazard_weighted_ci": [
+      100.9,
+      194.8
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 19,
+     "no_hazard": 158,
+     "hazard_sensitivity_weighted": 0.596,
+     "hazard_sensitivity_weighted_ci": [
+      0.397,
+      0.795
+     ],
+     "escalation_no_hazard_per_1000_weighted": 70.4,
+     "escalation_no_hazard_weighted_ci": [
+      34.7,
+      112.9
+     ]
+    },
+    "v22": {
+     "safety_positive": 19,
+     "no_hazard": 158,
+     "hazard_sensitivity_weighted": 0.772,
+     "hazard_sensitivity_weighted_ci": [
+      0.606,
+      0.917
+     ],
+     "escalation_no_hazard_per_1000_weighted": 93.1,
+     "escalation_no_hazard_weighted_ci": [
+      50.9,
+      139.4
+     ]
+    }
+   },
+   "Other or unknown": {
+    "texts": 5,
+    "ours": {
+     "safety_positive": 0,
+     "no_hazard": 2,
+     "hazard_sensitivity_weighted": null,
+     "hazard_sensitivity_weighted_ci": [
+      null,
+      null
+     ],
+     "escalation_no_hazard_per_1000_weighted": 0.0,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      0.0
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 0,
+     "no_hazard": 2,
+     "hazard_sensitivity_weighted": null,
+     "hazard_sensitivity_weighted_ci": [
+      null,
+      null
+     ],
+     "escalation_no_hazard_per_1000_weighted": 166.7,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      333.3
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 0,
+     "no_hazard": 2,
+     "hazard_sensitivity_weighted": null,
+     "hazard_sensitivity_weighted_ci": [
+      null,
+      null
+     ],
+     "escalation_no_hazard_per_1000_weighted": 166.7,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      333.3
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 0,
+     "no_hazard": 2,
+     "hazard_sensitivity_weighted": null,
+     "hazard_sensitivity_weighted_ci": [
+      null,
+      null
+     ],
+     "escalation_no_hazard_per_1000_weighted": 0.0,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      0.0
+     ]
+    },
+    "v22": {
+     "safety_positive": 0,
+     "no_hazard": 2,
+     "hazard_sensitivity_weighted": null,
+     "hazard_sensitivity_weighted_ci": [
+      null,
+      null
+     ],
+     "escalation_no_hazard_per_1000_weighted": 0.0,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      0.0
+     ]
+    }
+   },
+   "Unknown sender": {
+    "texts": 212,
+    "ours": {
+     "safety_positive": 10,
+     "no_hazard": 144,
+     "hazard_sensitivity_weighted": 0.4,
+     "hazard_sensitivity_weighted_ci": [
+      0.111,
+      0.695
+     ],
+     "escalation_no_hazard_per_1000_weighted": 136.8,
+     "escalation_no_hazard_weighted_ci": [
+      84.3,
+      192.9
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 10,
+     "no_hazard": 144,
+     "hazard_sensitivity_weighted": 0.333,
+     "hazard_sensitivity_weighted_ci": [
+      0.083,
+      0.615
+     ],
+     "escalation_no_hazard_per_1000_weighted": 149.5,
+     "escalation_no_hazard_weighted_ci": [
+      102.4,
+      200.5
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 10,
+     "no_hazard": 144,
+     "hazard_sensitivity_weighted": 0.3,
+     "hazard_sensitivity_weighted_ci": [
+      0.042,
+      0.583
+     ],
+     "escalation_no_hazard_per_1000_weighted": 194.0,
+     "escalation_no_hazard_weighted_ci": [
+      136.0,
+      253.5
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 10,
+     "no_hazard": 144,
+     "hazard_sensitivity_weighted": 0.233,
+     "hazard_sensitivity_weighted_ci": [
+      0.037,
+      0.458
+     ],
+     "escalation_no_hazard_per_1000_weighted": 124.3,
+     "escalation_no_hazard_weighted_ci": [
+      72.7,
+      177.9
+     ]
+    },
+    "v22": {
+     "safety_positive": 10,
+     "no_hazard": 144,
+     "hazard_sensitivity_weighted": 0.533,
+     "hazard_sensitivity_weighted_ci": [
+      0.2,
+      0.857
+     ],
+     "escalation_no_hazard_per_1000_weighted": 138.0,
+     "escalation_no_hazard_weighted_ci": [
+      89.4,
+      190.1
+     ]
+    }
+   }
+  },
+  "age": {
+   "18-39": {
+    "texts": 256,
+    "ours": {
+     "safety_positive": 17,
+     "no_hazard": 134,
+     "hazard_sensitivity_weighted": 0.529,
+     "hazard_sensitivity_weighted_ci": [
+      0.311,
+      0.742
+     ],
+     "escalation_no_hazard_per_1000_weighted": 107.5,
+     "escalation_no_hazard_weighted_ci": [
+      65.8,
+      155.5
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 17,
+     "no_hazard": 134,
+     "hazard_sensitivity_weighted": 0.549,
+     "hazard_sensitivity_weighted_ci": [
+      0.354,
+      0.733
+     ],
+     "escalation_no_hazard_per_1000_weighted": 166.4,
+     "escalation_no_hazard_weighted_ci": [
+      115.1,
+      222.1
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 17,
+     "no_hazard": 134,
+     "hazard_sensitivity_weighted": 0.49,
+     "hazard_sensitivity_weighted_ci": [
+      0.273,
+      0.695
+     ],
+     "escalation_no_hazard_per_1000_weighted": 117.2,
+     "escalation_no_hazard_weighted_ci": [
+      77.0,
+      165.6
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 17,
+     "no_hazard": 134,
+     "hazard_sensitivity_weighted": 0.392,
+     "hazard_sensitivity_weighted_ci": [
+      0.2,
+      0.6
+     ],
+     "escalation_no_hazard_per_1000_weighted": 94.2,
+     "escalation_no_hazard_weighted_ci": [
+      53.4,
+      141.5
+     ]
+    },
+    "v22": {
+     "safety_positive": 17,
+     "no_hazard": 134,
+     "hazard_sensitivity_weighted": 0.549,
+     "hazard_sensitivity_weighted_ci": [
+      0.35,
+      0.747
+     ],
+     "escalation_no_hazard_per_1000_weighted": 86.0,
+     "escalation_no_hazard_weighted_ci": [
+      45.9,
+      132.4
+     ]
+    }
+   },
+   "40-64": {
+    "texts": 401,
+    "ours": {
+     "safety_positive": 51,
+     "no_hazard": 221,
+     "hazard_sensitivity_weighted": 0.641,
+     "hazard_sensitivity_weighted_ci": [
+      0.511,
+      0.759
+     ],
+     "escalation_no_hazard_per_1000_weighted": 178.0,
+     "escalation_no_hazard_weighted_ci": [
+      130.9,
+      230.4
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 51,
+     "no_hazard": 221,
+     "hazard_sensitivity_weighted": 0.542,
+     "hazard_sensitivity_weighted_ci": [
+      0.423,
+      0.654
+     ],
+     "escalation_no_hazard_per_1000_weighted": 165.7,
+     "escalation_no_hazard_weighted_ci": [
+      121.6,
+      214.8
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 51,
+     "no_hazard": 221,
+     "hazard_sensitivity_weighted": 0.477,
+     "hazard_sensitivity_weighted_ci": [
+      0.359,
+      0.593
+     ],
+     "escalation_no_hazard_per_1000_weighted": 200.8,
+     "escalation_no_hazard_weighted_ci": [
+      155.6,
+      249.1
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 51,
+     "no_hazard": 221,
+     "hazard_sensitivity_weighted": 0.379,
+     "hazard_sensitivity_weighted_ci": [
+      0.258,
+      0.497
+     ],
+     "escalation_no_hazard_per_1000_weighted": 151.3,
+     "escalation_no_hazard_weighted_ci": [
+      106.9,
+      199.0
+     ]
+    },
+    "v22": {
+     "safety_positive": 51,
+     "no_hazard": 221,
+     "hazard_sensitivity_weighted": 0.621,
+     "hazard_sensitivity_weighted_ci": [
+      0.5,
+      0.739
+     ],
+     "escalation_no_hazard_per_1000_weighted": 203.0,
+     "escalation_no_hazard_weighted_ci": [
+      150.7,
+      257.8
+     ]
+    }
+   },
+   "65 or older": {
+    "texts": 16,
+    "ours": {
+     "safety_positive": 1,
+     "no_hazard": 13,
+     "hazard_sensitivity_weighted": 0.0,
+     "hazard_sensitivity_weighted_ci": [
+      0.0,
+      0.0
+     ],
+     "escalation_no_hazard_per_1000_weighted": 0.0,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      0.0
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 1,
+     "no_hazard": 13,
+     "hazard_sensitivity_weighted": 0.667,
+     "hazard_sensitivity_weighted_ci": [
+      0.667,
+      0.667
+     ],
+     "escalation_no_hazard_per_1000_weighted": 217.3,
+     "escalation_no_hazard_weighted_ci": [
+      76.8,
+      351.6
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 1,
+     "no_hazard": 13,
+     "hazard_sensitivity_weighted": 1.0,
+     "hazard_sensitivity_weighted_ci": [
+      1.0,
+      1.0
+     ],
+     "escalation_no_hazard_per_1000_weighted": 289.8,
+     "escalation_no_hazard_weighted_ci": [
+      89.6,
+      514.3
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 1,
+     "no_hazard": 13,
+     "hazard_sensitivity_weighted": 0.0,
+     "hazard_sensitivity_weighted_ci": [
+      0.0,
+      0.0
+     ],
+     "escalation_no_hazard_per_1000_weighted": 0.0,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      0.0
+     ]
+    },
+    "v22": {
+     "safety_positive": 1,
+     "no_hazard": 13,
+     "hazard_sensitivity_weighted": 0.667,
+     "hazard_sensitivity_weighted_ci": [
+      0.667,
+      0.667
+     ],
+     "escalation_no_hazard_per_1000_weighted": 217.3,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      449.1
+     ]
+    }
+   },
+   "Member under 18": {
+    "texts": 63,
+    "ours": {
+     "safety_positive": 0,
+     "no_hazard": 58,
+     "hazard_sensitivity_weighted": null,
+     "hazard_sensitivity_weighted_ci": [
+      null,
+      null
+     ],
+     "escalation_no_hazard_per_1000_weighted": 110.8,
+     "escalation_no_hazard_weighted_ci": [
+      48.2,
+      188.9
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 0,
+     "no_hazard": 58,
+     "hazard_sensitivity_weighted": null,
+     "hazard_sensitivity_weighted_ci": [
+      null,
+      null
+     ],
+     "escalation_no_hazard_per_1000_weighted": 103.9,
+     "escalation_no_hazard_weighted_ci": [
+      44.1,
+      177.4
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 0,
+     "no_hazard": 58,
+     "hazard_sensitivity_weighted": null,
+     "hazard_sensitivity_weighted_ci": [
+      null,
+      null
+     ],
+     "escalation_no_hazard_per_1000_weighted": 188.7,
+     "escalation_no_hazard_weighted_ci": [
+      106.4,
+      280.9
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 0,
+     "no_hazard": 58,
+     "hazard_sensitivity_weighted": null,
+     "hazard_sensitivity_weighted_ci": [
+      null,
+      null
+     ],
+     "escalation_no_hazard_per_1000_weighted": 90.0,
+     "escalation_no_hazard_weighted_ci": [
+      30.8,
+      162.7
+     ]
+    },
+    "v22": {
+     "safety_positive": 0,
+     "no_hazard": 58,
+     "hazard_sensitivity_weighted": null,
+     "hazard_sensitivity_weighted_ci": [
+      null,
+      null
+     ],
+     "escalation_no_hazard_per_1000_weighted": 100.3,
+     "escalation_no_hazard_weighted_ci": [
+      35.5,
+      181.5
+     ]
+    }
+   },
+   "Unknown": {
+    "texts": 1,
+    "ours": {
+     "safety_positive": 0,
+     "no_hazard": 1,
+     "hazard_sensitivity_weighted": null,
+     "hazard_sensitivity_weighted_ci": [
+      null,
+      null
+     ],
+     "escalation_no_hazard_per_1000_weighted": 0.0,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      0.0
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 0,
+     "no_hazard": 1,
+     "hazard_sensitivity_weighted": null,
+     "hazard_sensitivity_weighted_ci": [
+      null,
+      null
+     ],
+     "escalation_no_hazard_per_1000_weighted": 333.3,
+     "escalation_no_hazard_weighted_ci": [
+      333.3,
+      333.3
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 0,
+     "no_hazard": 1,
+     "hazard_sensitivity_weighted": null,
+     "hazard_sensitivity_weighted_ci": [
+      null,
+      null
+     ],
+     "escalation_no_hazard_per_1000_weighted": 0.0,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      0.0
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 0,
+     "no_hazard": 1,
+     "hazard_sensitivity_weighted": null,
+     "hazard_sensitivity_weighted_ci": [
+      null,
+      null
+     ],
+     "escalation_no_hazard_per_1000_weighted": 0.0,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      0.0
+     ]
+    },
+    "v22": {
+     "safety_positive": 0,
+     "no_hazard": 1,
+     "hazard_sensitivity_weighted": null,
+     "hazard_sensitivity_weighted_ci": [
+      null,
+      null
+     ],
+     "escalation_no_hazard_per_1000_weighted": 0.0,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      0.0
+     ]
+    }
+   },
+   "Unknown sender": {
+    "texts": 212,
+    "ours": {
+     "safety_positive": 10,
+     "no_hazard": 144,
+     "hazard_sensitivity_weighted": 0.4,
+     "hazard_sensitivity_weighted_ci": [
+      0.111,
+      0.695
+     ],
+     "escalation_no_hazard_per_1000_weighted": 136.8,
+     "escalation_no_hazard_weighted_ci": [
+      84.3,
+      192.9
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 10,
+     "no_hazard": 144,
+     "hazard_sensitivity_weighted": 0.333,
+     "hazard_sensitivity_weighted_ci": [
+      0.083,
+      0.615
+     ],
+     "escalation_no_hazard_per_1000_weighted": 149.5,
+     "escalation_no_hazard_weighted_ci": [
+      102.4,
+      200.5
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 10,
+     "no_hazard": 144,
+     "hazard_sensitivity_weighted": 0.3,
+     "hazard_sensitivity_weighted_ci": [
+      0.042,
+      0.583
+     ],
+     "escalation_no_hazard_per_1000_weighted": 194.0,
+     "escalation_no_hazard_weighted_ci": [
+      136.0,
+      253.5
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 10,
+     "no_hazard": 144,
+     "hazard_sensitivity_weighted": 0.233,
+     "hazard_sensitivity_weighted_ci": [
+      0.037,
+      0.458
+     ],
+     "escalation_no_hazard_per_1000_weighted": 124.3,
+     "escalation_no_hazard_weighted_ci": [
+      72.7,
+      177.9
+     ]
+    },
+    "v22": {
+     "safety_positive": 10,
+     "no_hazard": 144,
+     "hazard_sensitivity_weighted": 0.533,
+     "hazard_sensitivity_weighted_ci": [
+      0.2,
+      0.857
+     ],
+     "escalation_no_hazard_per_1000_weighted": 138.0,
+     "escalation_no_hazard_weighted_ci": [
+      89.4,
+      190.1
+     ]
+    }
+   }
+  },
+  "race": {
+   "Black": {
+    "texts": 235,
+    "ours": {
+     "safety_positive": 26,
+     "no_hazard": 116,
+     "hazard_sensitivity_weighted": 0.718,
+     "hazard_sensitivity_weighted_ci": [
+      0.547,
+      0.877
+     ],
+     "escalation_no_hazard_per_1000_weighted": 108.8,
+     "escalation_no_hazard_weighted_ci": [
+      66.1,
+      156.9
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 26,
+     "no_hazard": 116,
+     "hazard_sensitivity_weighted": 0.487,
+     "hazard_sensitivity_weighted_ci": [
+      0.333,
+      0.653
+     ],
+     "escalation_no_hazard_per_1000_weighted": 159.2,
+     "escalation_no_hazard_weighted_ci": [
+      106.8,
+      221.2
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 26,
+     "no_hazard": 116,
+     "hazard_sensitivity_weighted": 0.5,
+     "hazard_sensitivity_weighted_ci": [
+      0.319,
+      0.679
+     ],
+     "escalation_no_hazard_per_1000_weighted": 174.5,
+     "escalation_no_hazard_weighted_ci": [
+      115.7,
+      234.1
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 26,
+     "no_hazard": 116,
+     "hazard_sensitivity_weighted": 0.41,
+     "hazard_sensitivity_weighted_ci": [
+      0.238,
+      0.593
+     ],
+     "escalation_no_hazard_per_1000_weighted": 97.1,
+     "escalation_no_hazard_weighted_ci": [
+      54.7,
+      145.0
+     ]
+    },
+    "v22": {
+     "safety_positive": 26,
+     "no_hazard": 116,
+     "hazard_sensitivity_weighted": 0.551,
+     "hazard_sensitivity_weighted_ci": [
+      0.387,
+      0.714
+     ],
+     "escalation_no_hazard_per_1000_weighted": 152.6,
+     "escalation_no_hazard_weighted_ci": [
+      92.2,
+      220.3
+     ]
+    }
+   },
+   "Hispanic or Latinx": {
+    "texts": 37,
+    "ours": {
+     "safety_positive": 1,
+     "no_hazard": 25,
+     "hazard_sensitivity_weighted": 1.0,
+     "hazard_sensitivity_weighted_ci": [
+      1.0,
+      1.0
+     ],
+     "escalation_no_hazard_per_1000_weighted": 96.2,
+     "escalation_no_hazard_weighted_ci": [
+      23.5,
+      191.6
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 1,
+     "no_hazard": 25,
+     "hazard_sensitivity_weighted": 0.333,
+     "hazard_sensitivity_weighted_ci": [
+      0.333,
+      0.333
+     ],
+     "escalation_no_hazard_per_1000_weighted": 147.7,
+     "escalation_no_hazard_weighted_ci": [
+      40.4,
+      275.5
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 1,
+     "no_hazard": 25,
+     "hazard_sensitivity_weighted": 0.667,
+     "hazard_sensitivity_weighted_ci": [
+      0.667,
+      0.667
+     ],
+     "escalation_no_hazard_per_1000_weighted": 147.7,
+     "escalation_no_hazard_weighted_ci": [
+      64.2,
+      243.0
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 1,
+     "no_hazard": 25,
+     "hazard_sensitivity_weighted": 1.0,
+     "hazard_sensitivity_weighted_ci": [
+      1.0,
+      1.0
+     ],
+     "escalation_no_hazard_per_1000_weighted": 92.2,
+     "escalation_no_hazard_weighted_ci": [
+      19.3,
+      186.1
+     ]
+    },
+    "v22": {
+     "safety_positive": 1,
+     "no_hazard": 25,
+     "hazard_sensitivity_weighted": 1.0,
+     "hazard_sensitivity_weighted_ci": [
+      1.0,
+      1.0
+     ],
+     "escalation_no_hazard_per_1000_weighted": 159.9,
+     "escalation_no_hazard_weighted_ci": [
+      26.1,
+      320.6
+     ]
+    }
+   },
+   "Other race": {
+    "texts": 28,
+    "ours": {
+     "safety_positive": 3,
+     "no_hazard": 19,
+     "hazard_sensitivity_weighted": 0.222,
+     "hazard_sensitivity_weighted_ci": [
+      0.0,
+      0.333
+     ],
+     "escalation_no_hazard_per_1000_weighted": 109.4,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      261.8
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 3,
+     "no_hazard": 19,
+     "hazard_sensitivity_weighted": 0.556,
+     "hazard_sensitivity_weighted_ci": [
+      0.0,
+      1.0
+     ],
+     "escalation_no_hazard_per_1000_weighted": 135.3,
+     "escalation_no_hazard_weighted_ci": [
+      4.9,
+      313.1
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 3,
+     "no_hazard": 19,
+     "hazard_sensitivity_weighted": 0.444,
+     "hazard_sensitivity_weighted_ci": [
+      0.0,
+      1.0
+     ],
+     "escalation_no_hazard_per_1000_weighted": 104.4,
+     "escalation_no_hazard_weighted_ci": [
+      27.4,
+      184.1
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 3,
+     "no_hazard": 19,
+     "hazard_sensitivity_weighted": 0.222,
+     "hazard_sensitivity_weighted_ci": [
+      0.0,
+      0.333
+     ],
+     "escalation_no_hazard_per_1000_weighted": 109.4,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      261.8
+     ]
+    },
+    "v22": {
+     "safety_positive": 3,
+     "no_hazard": 19,
+     "hazard_sensitivity_weighted": 0.556,
+     "hazard_sensitivity_weighted_ci": [
+      0.0,
+      1.0
+     ],
+     "escalation_no_hazard_per_1000_weighted": 83.5,
+     "escalation_no_hazard_weighted_ci": [
+      0.0,
+      230.2
+     ]
+    }
+   },
+   "Unknown or not recorded": {
+    "texts": 238,
+    "ours": {
+     "safety_positive": 19,
+     "no_hazard": 142,
+     "hazard_sensitivity_weighted": 0.579,
+     "hazard_sensitivity_weighted_ci": [
+      0.364,
+      0.792
+     ],
+     "escalation_no_hazard_per_1000_weighted": 157.1,
+     "escalation_no_hazard_weighted_ci": [
+      102.6,
+      214.2
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 19,
+     "no_hazard": 142,
+     "hazard_sensitivity_weighted": 0.579,
+     "hazard_sensitivity_weighted_ci": [
+      0.404,
+      0.733
+     ],
+     "escalation_no_hazard_per_1000_weighted": 163.5,
+     "escalation_no_hazard_weighted_ci": [
+      111.1,
+      219.6
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 19,
+     "no_hazard": 142,
+     "hazard_sensitivity_weighted": 0.491,
+     "hazard_sensitivity_weighted_ci": [
+      0.281,
+      0.694
+     ],
+     "escalation_no_hazard_per_1000_weighted": 201.3,
+     "escalation_no_hazard_weighted_ci": [
+      135.8,
+      262.1
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 19,
+     "no_hazard": 142,
+     "hazard_sensitivity_weighted": 0.421,
+     "hazard_sensitivity_weighted_ci": [
+      0.214,
+      0.63
+     ],
+     "escalation_no_hazard_per_1000_weighted": 117.1,
+     "escalation_no_hazard_weighted_ci": [
+      68.7,
+      168.8
+     ]
+    },
+    "v22": {
+     "safety_positive": 19,
+     "no_hazard": 142,
+     "hazard_sensitivity_weighted": 0.544,
+     "hazard_sensitivity_weighted_ci": [
+      0.333,
+      0.739
+     ],
+     "escalation_no_hazard_per_1000_weighted": 162.8,
+     "escalation_no_hazard_weighted_ci": [
+      106.6,
+      220.2
+     ]
+    }
+   },
+   "Unknown sender": {
+    "texts": 212,
+    "ours": {
+     "safety_positive": 10,
+     "no_hazard": 144,
+     "hazard_sensitivity_weighted": 0.4,
+     "hazard_sensitivity_weighted_ci": [
+      0.111,
+      0.695
+     ],
+     "escalation_no_hazard_per_1000_weighted": 136.8,
+     "escalation_no_hazard_weighted_ci": [
+      84.3,
+      192.9
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 10,
+     "no_hazard": 144,
+     "hazard_sensitivity_weighted": 0.333,
+     "hazard_sensitivity_weighted_ci": [
+      0.083,
+      0.615
+     ],
+     "escalation_no_hazard_per_1000_weighted": 149.5,
+     "escalation_no_hazard_weighted_ci": [
+      102.4,
+      200.5
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 10,
+     "no_hazard": 144,
+     "hazard_sensitivity_weighted": 0.3,
+     "hazard_sensitivity_weighted_ci": [
+      0.042,
+      0.583
+     ],
+     "escalation_no_hazard_per_1000_weighted": 194.0,
+     "escalation_no_hazard_weighted_ci": [
+      136.0,
+      253.5
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 10,
+     "no_hazard": 144,
+     "hazard_sensitivity_weighted": 0.233,
+     "hazard_sensitivity_weighted_ci": [
+      0.037,
+      0.458
+     ],
+     "escalation_no_hazard_per_1000_weighted": 124.3,
+     "escalation_no_hazard_weighted_ci": [
+      72.7,
+      177.9
+     ]
+    },
+    "v22": {
+     "safety_positive": 10,
+     "no_hazard": 144,
+     "hazard_sensitivity_weighted": 0.533,
+     "hazard_sensitivity_weighted_ci": [
+      0.2,
+      0.857
+     ],
+     "escalation_no_hazard_per_1000_weighted": 138.0,
+     "escalation_no_hazard_weighted_ci": [
+      89.4,
+      190.1
+     ]
+    }
+   },
+   "White": {
+    "texts": 199,
+    "ours": {
+     "safety_positive": 20,
+     "no_hazard": 125,
+     "hazard_sensitivity_weighted": 0.517,
+     "hazard_sensitivity_weighted_ci": [
+      0.286,
+      0.727
+     ],
+     "escalation_no_hazard_per_1000_weighted": 163.4,
+     "escalation_no_hazard_weighted_ci": [
+      106.3,
+      228.6
+     ]
+    },
+    "amie_style": {
+     "safety_positive": 20,
+     "no_hazard": 125,
+     "hazard_sensitivity_weighted": 0.6,
+     "hazard_sensitivity_weighted_ci": [
+      0.392,
+      0.794
+     ],
+     "escalation_no_hazard_per_1000_weighted": 160.3,
+     "escalation_no_hazard_weighted_ci": [
+      106.1,
+      222.9
+     ]
+    },
+    "mai_dxo_style": {
+     "safety_positive": 20,
+     "no_hazard": 125,
+     "hazard_sensitivity_weighted": 0.467,
+     "hazard_sensitivity_weighted_ci": [
+      0.278,
+      0.652
+     ],
+     "escalation_no_hazard_per_1000_weighted": 160.5,
+     "escalation_no_hazard_weighted_ci": [
+      111.4,
+      216.1
+     ]
+    },
+    "raw_llm": {
+     "safety_positive": 20,
+     "no_hazard": 125,
+     "hazard_sensitivity_weighted": 0.283,
+     "hazard_sensitivity_weighted_ci": [
+      0.119,
+      0.476
+     ],
+     "escalation_no_hazard_per_1000_weighted": 148.0,
+     "escalation_no_hazard_weighted_ci": [
+      91.3,
+      212.0
+     ]
+    },
+    "v22": {
+     "safety_positive": 20,
+     "no_hazard": 125,
+     "hazard_sensitivity_weighted": 0.717,
+     "hazard_sensitivity_weighted_ci": [
+      0.514,
+      0.889
+     ],
+     "escalation_no_hazard_per_1000_weighted": 144.2,
+     "escalation_no_hazard_weighted_ci": [
+      88.9,
+      202.8
+     ]
+    }
+   }
+  }
+ }
+}

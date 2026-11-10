@@ -15,10 +15,10 @@ M = Path.home() / "waymark-local/notebooks/compass-pcp-paper2/manuscript"
 import re
 
 # Supplementary Table numbers in order of first mention in the main text (generator numbering -> published numbering)
-TABLE_MAP = {1: 1, 4: 2, 5: 3, 2: 4, 3: 5, 12: 6, 7: 7, 6: 8, 11: 9, 8: 10, 14: 11, 9: 12, 10: 13, 13: 17}
-CHECKLISTS = [(14, "TRIPOD-LLM_checklist.md", "TRIPOD-LLM reporting checklist"),
-              (15, "CHART_checklist.md", "CHART reporting checklist"),
-              (16, "STARD2015_checklist.md", "STARD 2015 reporting checklist")]
+TABLE_MAP = {1: 1, 4: 2, 5: 3, 2: 4, 3: 5, 12: 6, 7: 7, 6: 8, 11: 9, 8: 10, 15: 11, 14: 12, 9: 13, 10: 14, 13: 18}
+CHECKLISTS = [(15, "TRIPOD-LLM_checklist.md", "TRIPOD-LLM reporting checklist"),
+              (16, "CHART_checklist.md", "CHART reporting checklist"),
+              (17, "STARD2015_checklist.md", "STARD 2015 reporting checklist")]
 HB_TABLES = {2, 3, 4, 5}  # generator numbers of the HealthBench Professional tables
 ARM_NAMES = {"amie_style+layer": "the AMIE-style agent with the safety layer",
              "mai_dxo_style+layer": "the MAI-DxO-style agent with the safety layer",

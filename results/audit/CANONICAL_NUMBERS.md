@@ -140,6 +140,10 @@
 | a2.irr | moderate or severe harm with κ = 0.791 | a2_rating.json | ok |
 | a2.cls | (86 against 218 of 279 generated replies; κ = 0.210) | a2_rating.json | ok |
 | a2.rj | escalated 73.4% of the 79 texts with a safety hazard (63.3 to 82.3) and the AMIE-style agent 75.9% (65.8 to 84.8) | a2_rating.json | ok |
+| sub.state | ranged from 87.3 per 1,000 texts without a hazard in Ohio to 179.0 in Washington | texts_subgroups.json | ok |
+| sub.sex | was 170.9 for women and 91.8 for men; the AMIE-style agent showed the same pattern (187.0 and 112.6) | texts_subgroups.json | ok |
+| sub.max | rested on 51 or fewer texts with a safety hazard | texts_subgroups.json | ok |
+| sub.race | race was unknown or not recorded for 238 of 737 known senders, and 212 texts came from shared phones | texts_subgroups.json | ok |
 | a2.cls.lim | κ = 0.210 | a2_rating.json | ok |
 | repeat | 86.4% of texts with the separated design and 76.9% | texts_supplement.json [supplement] | ok |
 | urg.agree | 87.6% of 800 sampled replies (κ = 0.648) | urgency_agreement.json [supplement] | ok |
@@ -175,7 +179,7 @@
 | t1.amie_style_uncapped | 68.5 (2.5) | 70.0 | 64.2 | 66.3 | 78.0 | 69.9 | 66.1 | 2,486 | | hbpro_test/report.json | ok |
 | t1.mai_dxo_style_uncapped | 66.7 (2.5) | 69.2 | 63.6 | 66.6 | 72.1 | 68.4 | 63.7 | 2,823 | | hbpro_test/report.json | ok |
 | t1.amie_style_search | 72.3 (2.4) | 73.6 | 68.9 | 71.1 | 79.4 | 74.8 | 67.9 | 2,431 | | hbpro_test/report.json | ok |
-| search.abstract | cut the pipeline's lead from 9.1 points (95% CI, 4.5–13.8) to 4.4 (0.3–8.5) | compare_amie_search.txt | ok |
+| search.abstract | cut the pipeline's lead over the AMIE-style agent from 9.1 points (95% CI, 4.5–13.8) to 4.4 (0.3–8.5) | compare_amie_search.txt | ok |
 | search.results | the AMIE-style agent scored 72.3, 4.7 points higher than without search, and the multi-model pipeline's lead fell to 4.4 points (0.3 to 8.5) | compare_amie_search.txt | ok |
 | search.twostep | the two-step pipeline's lead was 2.9 points (−0.7 to 6.6) | compare_amie_search.txt | ok |
 | search.discussion | the multi-model pipeline's lead fell to 4.4 points (0.3 to 8.5), and the two-step pipeline's lead fell to 2.9 points (−0.7 to 6.6) | compare_amie_search.txt | ok |

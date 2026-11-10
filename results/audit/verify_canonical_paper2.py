@@ -170,6 +170,16 @@ def registry():
     R.append(("a2.cls", f"({cv['classifier_escalates']} against {cv['rater_escalates']} of {cv['replies']} generated replies; κ = {cv['agreement']['kappa']:.3f})", "a2_rating.json"))
     rj = a2["rater_judged_escalation_safety_positive"]["same_day_or_more"]
     R.append(("a2.rj", f"escalated {pc(rj['separated_design']['sens'])}% of the 79 texts with a safety hazard ({pc(rj['separated_design']['ci95'][0])} to {pc(rj['separated_design']['ci95'][1])}) and the AMIE-style agent {pc(rj['amie']['sens'])}% ({pc(rj['amie']['ci95'][0])} to {pc(rj['amie']['ci95'][1])})", "a2_rating.json"))
+    sg = j(DER / "texts_subgroups.json")["subgroups"]
+    st = {k: v["ours"]["escalation_no_hazard_per_1000_weighted"] for k, v in sg["state"].items() if k != "Unknown"}
+    lo, hi = min(st, key=st.get), max(st, key=st.get)
+    R.append(("sub.state", f"ranged from {f1(st[lo])} per 1,000 texts without a hazard in {lo} to {f1(st[hi])}\nin {hi}", "texts_subgroups.json"))
+    sx = sg["sex"]
+    R.append(("sub.sex", f"was {f1(sx['Female']['ours']['escalation_no_hazard_per_1000_weighted'])} for women and {f1(sx['Male']['ours']['escalation_no_hazard_per_1000_weighted'])} for men; the AMIE-style agent showed the same pattern ({f1(sx['Female']['amie_style']['escalation_no_hazard_per_1000_weighted'])} and\n{f1(sx['Male']['amie_style']['escalation_no_hazard_per_1000_weighted'])})", "texts_subgroups.json"))
+    mx = max(v["ours"]["safety_positive"] for var in sg.values() for v in var.values())
+    R.append(("sub.max", f"rested on {mx} or fewer texts with a safety hazard", "texts_subgroups.json"))
+    ch = j(DER / "texts_subgroups.json")["characteristics"]["race"]["all"]
+    R.append(("sub.race", f"race was unknown or not recorded for {ch['Unknown or not recorded'][0]} of {949 - ch['Unknown sender'][0]} known senders, and {ch['Unknown sender'][0]} texts came from shared phones", "texts_subgroups.json"))
     R.append(("a2.cls.lim", f"κ = {cv['agreement']['kappa']:.3f}", "a2_rating.json"))
     rc = t["repeat_consistency"]
     R.append(("repeat", f"{pc(rc['ours']['share_all_3_agree'])}% of texts with the separated design and {pc(rc['amie_style']['share_all_3_agree'])}%", "texts_supplement.json"))
@@ -233,7 +243,7 @@ def registry():
     ca = cmp_file(D / "hbpro_test/compare_amie_search.txt")
     xa, xb = ca["compass_pro_full - amie_style_search"], ca["opus_search_edit - amie_style_search"]
     sc = rep2["amie_style_search"]["length_adjusted"]["score"]
-    R.append(("search.abstract", f"cut the pipeline's lead from 9.1 points (95% CI, 4.5–13.8) to\n{f1(xa['diff'])} ({f1(xa['ci95'][0])}–{f1(xa['ci95'][1])})", "compare_amie_search.txt"))
+    R.append(("search.abstract", f"cut the pipeline's lead over the AMIE-style agent from 9.1 points (95% CI, 4.5–13.8) to\n{f1(xa['diff'])} ({f1(xa['ci95'][0])}–{f1(xa['ci95'][1])})", "compare_amie_search.txt"))
     R.append(("search.results", f"the AMIE-style agent scored {f1(sc)}, {f1(sc - rep2['amie_style']['length_adjusted']['score'])} points higher than without search, and the multi-model pipeline's lead fell to {f1(xa['diff'])} points ({f1(xa['ci95'][0])} to {f1(xa['ci95'][1])})", "compare_amie_search.txt"))
     R.append(("search.twostep", f"the two-step\npipeline's lead was {f1(xb['diff'])} points ({f1(xb['ci95'][0])} to {f1(xb['ci95'][1])})".replace('-0', '−0'), "compare_amie_search.txt"))
     R.append(("search.discussion", f"the multi-model pipeline's lead fell to {f1(xa['diff'])} points ({f1(xa['ci95'][0])} to {f1(xa['ci95'][1])}), and the two-step pipeline's lead fell to {f1(xb['diff'])} points ({f1(xb['ci95'][0])} to {f1(xb['ci95'][1])})".replace('-0', '−0'), "compare_amie_search.txt"))
