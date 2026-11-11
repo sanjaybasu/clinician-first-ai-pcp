@@ -15,11 +15,11 @@ M = Path.home() / "waymark-local/notebooks/compass-pcp-paper2/manuscript"
 import re
 
 # Supplementary Table numbers in order of first mention in the main text (generator numbering -> published numbering)
-TABLE_MAP = {1: 1, 4: 2, 5: 3, 2: 4, 3: 5, 12: 6, 7: 7, 6: 8, 11: 9, 8: 10, 15: 11, 14: 12, 9: 13, 10: 14, 13: 18}
-CHECKLISTS = [(15, "TRIPOD-LLM_checklist.md", "TRIPOD-LLM reporting checklist"),
-              (16, "CHART_checklist.md", "CHART reporting checklist"),
-              (17, "STARD2015_checklist.md", "STARD 2015 reporting checklist")]
-HB_TABLES = {2, 3, 4, 5}  # generator numbers of the HealthBench Professional tables
+TABLE_MAP = {1: 1, 4: 2, 5: 3, 2: 4, 16: 5, 3: 6, 12: 7, 7: 8, 6: 9, 11: 10, 8: 11, 17: 12, 15: 13, 14: 14, 9: 15, 13: 19, 10: 20}
+CHECKLISTS = [(16, "TRIPOD-LLM_checklist.md", "TRIPOD-LLM reporting checklist"),
+              (17, "CHART_checklist.md", "CHART reporting checklist"),
+              (18, "STARD2015_checklist.md", "STARD 2015 reporting checklist")]
+HB_TABLES = {2, 3, 4, 5, 16}  # generator numbers of the HealthBench Professional tables
 ARM_NAMES = {"amie_style+layer": "the AMIE-style agent with the safety layer",
              "mai_dxo_style+layer": "the MAI-DxO-style agent with the safety layer",
              "v22+layer": "the rule-based system with the safety layer", "amie_style": "the AMIE-style agent",
@@ -172,7 +172,7 @@ def main() -> None:
         t = (M / "checklists" / fname).read_text()
         t = re.sub(r"(?m)^# .*\n", "", t, count=1)
         t = re.sub(r"(?m)^## ", "### ", t)
-        blocks[n] = f"## Supplementary Table {n}. {title}\n\n" + renumber_refs(reader_terms(t)).strip() + "\n"
+        blocks[n] = f"## Supplementary Table {n}. {title}\n\n" + reader_terms(t).strip() + "\n"  # checklists cite published numbers
     tables = "\n".join(blocks[k] for k in sorted(blocks) if k != 1)
     out = head.replace("<<NOTE2>>", note2()).replace("<<TABLES>>", tables)
     (M / "compass_clinician_first_ai_pcp_npj_supplement.md").write_text(out)

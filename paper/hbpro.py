@@ -42,6 +42,12 @@ PRICE = {"opus55": (4.0, 20.0), "gpt55": (2.5, 15.0), "gpt61sol": (5.0, 30.0), "
 ARMS = ["opus55", "gpt61sol", "gpt55", "gemini31pro", "mai_dxo_style", "amie_style", "mai_dxo_style_g61", "amie_style_g61",
         "compass_pro", "compass_pro_nosearch", "compass_pro_single", "compass_pro_noreview", "compass_pro_edit", "compass_pro_full", "compass_pro_opusonly", "opus_search_edit",
         "amie_style_uncapped", "mai_dxo_style_uncapped", "opus_edit", "amie_style_search", "physician"]
+# Addendum registration (2026-11-10): every searched system rerun with HealthBench-hosting domains blocked and every
+# search logged (contamination check), and two tuning variants per comparator (web search; web search + the same
+# length editor), chosen on the first 80 development tasks. Usage rows carry the arm; searches go to search_log.jsonl.
+BLK_ARMS = ["compass_pro_full_blk", "opus_search_edit_blk", "amie_style_search_blk", "amie_style_search_edit_blk",
+            "mai_dxo_style_search_blk", "mai_dxo_style_search_edit_blk"]
+ARMS += BLK_ARMS
 PRO_FLAGS = {"compass_pro": {}, "compass_pro_nosearch": {"search": False}, "compass_pro_single": {"dual": False},
              "compass_pro_noreview": {"review": False}, "compass_pro_full": {"edit": True},
              "compass_pro_opusonly": {"edit": True, "second": "opus"},  # single-developer pipeline (post hoc, dev)
@@ -144,6 +150,39 @@ def answer(arm: str, conv: list[dict], out: Path) -> str:
         for who, (i, o) in p.usage.items():
             _append(out / "usage.jsonl", {"who": who, "in": i, "out": o})
         return final
+    if arm in BLK_ARMS:
+        from compass_pcp.arms.baselines import (AMIE_ANALYZE, AMIE_DRAFT, AMIE_REFINE, OUTPUT_LIMITS, PANEL_DECIDE,
+                                                PANEL_ROLES)
+        from compass_pcp.arms.pro import SEARCH_BLOCKED_DOMAINS, SEARCH_NOTE, ProPipeline
+        msgs, base = _text_of(conv), arm.removesuffix("_blk")
+        if base in PRO_FLAGS:
+            p = ProPipeline(**PRO_FLAGS[base], blocked=SEARCH_BLOCKED_DOMAINS)
+            text, _ = p.answer(msgs)
+        else:  # comparator chains, every step through the same Opus 5.5 call as amie_style_search
+            p = ProPipeline(blocked=SEARCH_BLOCKED_DOMAINS)
+            if base.startswith("amie_style_search"):
+                analysis = p._opus(AMIE_ANALYZE, msgs, search=False, max_tokens=4000)
+                draft = p._opus(AMIE_DRAFT + SEARCH_NOTE + "\n\nANALYSIS:\n" + analysis, msgs, search=True, max_tokens=12000)
+                text = p._opus(AMIE_REFINE + " " + OUTPUT_LIMITS,
+                               [*msgs, {"role": "user", "content": f"DRAFT REPLY TO REVIEW:\n{draft}"}], search=False,
+                               max_tokens=12000)
+            else:  # MAI-DxO-style panel; the deciding step, which writes the answer, has the web search
+                notes = []
+                for role, brief in PANEL_ROLES.items():
+                    prior = "\n".join(notes)
+                    note = p._opus(f"You are Dr. {role.replace('_', ' ').title()} on a diagnostic panel. {brief}"
+                                   + (f"\n\nPanel notes so far:\n{prior}" if prior else ""), msgs, search=False,
+                                   max_tokens=4000)
+                    notes.append(f"[{role}] {note}")
+                text = p._opus(PANEL_DECIDE + SEARCH_NOTE + "\n\nPANEL NOTES:\n" + "\n".join(notes), msgs, search=True,
+                               max_tokens=12000)
+            if base.endswith("_edit"):
+                text = p.edit_only(msgs, text)
+        for who, (i, o) in p.usage.items():
+            _append(out / "usage.jsonl", {"who": who, "in": i, "out": o, "arm": arm})
+        key = next((k for k, r in load().items() if r["conversation"]["messages"] == conv), None)
+        _append(out / "search_log.jsonl", {"id": key, "arm": arm, "log": p.search_log})
+        return text
     if arm == "compass_pro_edit":  # development: step 5 applied to the stored step-4 answer of compass_pro
         from compass_pcp.arms.pro import ProPipeline
         base = {(r["id"]): r["text"] for r in _rows(out / "replies.jsonl") if r["arm"] == "compass_pro"}

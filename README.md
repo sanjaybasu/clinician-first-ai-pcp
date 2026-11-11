@@ -24,6 +24,12 @@ HealthBench Professional analyses run on the public benchmark.
 | Error analysis by hazard category and cross-tabulation | `paper/texts_errors_paper2.py` |
 | Second reply classifier agreement | `paper/urgency_agreement.py` |
 | History-taking intake agent and evaluation | `compass_pcp/arms/intake.py`, `paper/intake_eval.py` |
+| Batch execution of test-split runs (Anthropic and OpenAI batch interfaces; same prompts, models and step order) | `paper/batch_runner.py` |
+| Comparator tuning on the first 80 development tasks and the selection rule | `paper/addendum_select.py` |
+| Stricter comparisons: tuned comparators, benchmark sources blocked from search, search audit, cost-matched comparison | `paper/addendum_hb_analysis.py` |
+| Third physician (outside Waymark): label packet, majority-of-three labels, reply-classifier validation, ratings and blinding assessment | `paper/external_rater_packet.py`, `paper/addendum_rater_analysis.py` |
+| Physician rating packets | `paper/a2_rating_packet.py` |
+| Sender characteristics (state, sex, age group, race) | `paper/sender_demographics.py` |
 | Figures, supplementary tables, supplement assembly | `paper/make_figures_paper2.py`, `paper/make_supplement_tables_paper2.py`, `paper/build_supplement_paper2.py` |
 | Number registry that re-derives every manuscript number from the result files | `results/audit/verify_canonical_paper2.py`, `results/audit/CANONICAL_NUMBERS.md` |
 

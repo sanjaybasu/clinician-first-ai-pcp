@@ -583,8 +583,129 @@ def t15() -> str:
             "interaction tests were run.\n\n" + "\n".join(out))
 
 
+def t16() -> str:
+    a = _j(DER / "addendum_hb.json")
+    if not a or "scores" not in a:
+        return "Supplementary Table 16 | Stricter comparisons on physician-facing tasks. pending"
+    lab = {"compass_pro_full": "Multi-model pipeline", "compass_pro_full_blk": "Multi-model pipeline, blocked search",
+           "opus_search_edit": "Two-step pipeline", "opus_search_edit_blk": "Two-step pipeline, blocked search",
+           "amie_style": "AMIE-style agent (as published)", "amie_style_search": "AMIE-style agent with search",
+           "amie_style_search_blk": "AMIE-style agent with blocked search", "amie_style_search_edit_blk":
+           "AMIE-style agent with blocked search and shortening step", "mai_dxo_style": "MAI-DxO-style agent (as published)",
+           "mai_dxo_style_search_blk": "MAI-DxO-style agent with blocked search", "mai_dxo_style_search_edit_blk":
+           "MAI-DxO-style agent with blocked search and shortening step"}
+    cost = dict(a["E_cost_per_task_usd"])
+    sel = a["selection"]
+    out = [f"*Tuning on the first {sel['tasks']} development tasks (variant chosen by the fixed rule in bold).*", "",
+           "| Agent | Variant | Mean length-adjusted score | List-price cost per task, USD |", "|---|---|---|---|"]
+    for ag in ("amie_style", "mai_dxo_style"):
+        for v, x in sel[ag]["variants"].items():
+            nm = lab[v] if v != sel[ag]["selected"] else f"**{lab[v]}**"
+            out.append(f"| {lab[ag].split(' (')[0]} | {nm} | {x['mean_length_adjusted']:.1f} | {x['usd_per_task']:.3f} |")
+    out += ["", "*Scores on the 350 test tasks.*", "", "| System | Mean length-adjusted score (SE) | List-price cost per task, USD |",
+            "|---|---|---|"]
+    v1 = _j(DER / "hbpro_test_supplement.json")["cost"]
+    allc = {**{k: x["usd_per_task"] for k, x in v1.get("comparator_chains", {}).items()}, **cost}
+    allc.setdefault("compass_pro_full", v1["attribution_rules"]["A_file_order"]["compass_pro_full"]["usd_per_task"])
+    for k, x in a["scores"].items():
+        c = allc.get(k)
+        out.append(f"| {lab[k]} | {x['mean']:.1f} ({x['se']:.1f}) | {'—' if c is None else f'{c:.3f}'} |")
+    t = a["all_tasks"]
+    rows = [("Multi-model pipeline minus tuned AMIE-style agent (registered primary)", t["A1_pipeline_minus_tuned_amie"], True),
+            ("Multi-model pipeline minus tuned MAI-DxO-style agent (registered primary)", t["A2_pipeline_minus_tuned_mai"], True),
+            ("Two-step pipeline minus tuned AMIE-style agent", t["A_secondary"]["two_step_minus_tuned_amie"], False),
+            ("Two-step pipeline minus tuned MAI-DxO-style agent", t["A_secondary"]["two_step_minus_tuned_mai"], False)]
+    rows += [(f"{lab[k.split(' - ')[0]]} minus earlier run", d, False) for k, d in t["B_blocked_minus_original"].items()]
+    out += ["", "*Paired differences on the 350 test tasks, points.*", "",
+            "| Comparison | Difference (95% CI) | 90% CI | Holm-adjusted P |", "|---|---|---|---|"]
+    for nm, d, prim in rows:
+        p = f"{d['p_holm']:.3f}" if prim else "—"
+        out.append(f"| {nm} | {d['diff']:.1f} ({_ci(d['ci95'])}) | {_ci(d['ci90'])} | {p} |")
+    au, e = a["audit"], a["E_two_step_vs_tuned_amie"]
+    return ("Supplementary Table 16 | Stricter comparisons on physician-facing tasks. "
+            "Each agent's variants ran once on the first 80 development tasks; the rule chose the "
+            "highest mean score, or the cheaper variant within 0.5 points. Blocked search excluded openai.com, github.com, "
+            "githubusercontent.com, huggingface.co, hf.co, arxiv.org, alphaxiv.org, epoch.ai, paperswithcode.com, kaggle.com "
+            "and openreview.net. Benchmark content found by search was to be judged unlikely if each blocked-minus-earlier "
+            f"90% CI lay within ±4 points. Across the blocked runs, {au['results_logged']:,} search results were logged; "
+            f"{au['results_on_blocked_list']} came from a blocked domain and {au['results_mentioning_healthbench']} had "
+            "\"healthbench\" in the address or title. The two-step pipeline cost "
+            f"{e['cost_ratio']:.2f} times as much per task as the tuned AMIE-style agent "
+            f"({'cost-matched, within 25%' if e['cost_matched'] else 'not cost-matched'}). Costs are at list prices, "
+            "including USD 10 per 1,000 searches. CIs are from 2,000 bootstrap resamples of tasks (seed 20261108); P values are "
+            "paired t-tests with Holm adjustment over the two primary comparisons.\n\n" + "\n".join(out))
+
+
+def t17() -> str:
+    a = _j(DER / "addendum_rater.json")
+    if not a:
+        return "Supplementary Table 17 | Third physician and reply-classifier validation. pending"
+    nm = {"ours": "Separated design", "amie_style": "AMIE-style agent", "mai_dxo_style": "MAI-DxO-style agent",
+          "raw_llm": "Reply model alone", "v22": "Rule-based system", "amie_style+layer": "AMIE-style agent with safety layer",
+          "mai_dxo_style+layer": "MAI-DxO-style agent with safety layer", "v22+layer": "Rule-based system with safety layer"}
+    p1, m = a["part1"], a["majority_labels"]
+    out = ["*Hazard labels on 150 texts.*", "", "| Comparison | Exact agreement | Cohen's κ |", "|---|---|---|",
+           f"| Third physician vs first (S.B.) | {p1['kappa_external_basu']['exact_agreement']:.3f} | {p1['kappa_external_basu']['kappa']:.3f} |",
+           f"| Third physician vs second (J.M.) | {p1['kappa_external_morgan']['exact_agreement']:.3f} | {p1['kappa_external_morgan']['kappa']:.3f} |",
+           "", f"*Majority-of-three labels ({m['metrics']['ours']['safety_positive']} of 949 texts with a safety hazard), weighted.*", "",
+           "| System | Hazard sensitivity, % (95% CI) | Separated design minus system, points (95% CI) | Escalation burden per 1,000 (95% CI) |",
+           "|---|---|---|---|"]
+    for k, v in m["metrics"].items():
+        d = m["paired_diffs"].get(f"ours - {k}")
+        dd = "—" if not d else f"{100 * d['sens_diff_weighted']:.1f} ({_ci([100 * y for y in d['sens_diff_weighted_ci']])})"
+        out.append(f"| {nm[k]} | {_pct(v['hazard_sensitivity_weighted'])} ({_ci([100 * y for y in v['hazard_sensitivity_weighted_ci']])}) | "
+                   f"{dd} | {v['escalation_no_hazard_per_1000_weighted']:.1f} ({_ci(v['escalation_no_hazard_weighted_ci'])}) |")
+    c = a["part2_classifier"]
+    out += ["", f"*Reply classifier against the third physician ({c['replies_labeled']} replies; stratum-weighted).*", "",
+            "| Reply source | Sensitivity, routine follow-up or more | Specificity, routine follow-up or more | Sensitivity, same day or more | "
+            "Specificity, same day or more | Cohen's κ (sample) |", "|---|---|---|---|---|---|"]
+    for k, v in c["classifier_vs_external"].items():
+        out.append(f"| {nm[k]} | {v['routine_or_more']['sensitivity']:.3f} | {v['routine_or_more']['specificity']:.3f} | "
+                   f"{v['same_day_or_more']['sensitivity']:.3f} | {v['same_day_or_more']['specificity']:.3f} | {v['kappa_unweighted_sample']['kappa']:.3f} |")
+    for thr, tl in (("routine_or_more", "routine follow-up or more urgent care"), ("same_day_or_more", "same-day or more urgent care")):
+        out += ["", f"*Corrected for classifier error, escalation = {tl} (S.B.'s labels, weighted).*", "",
+                "| System | Hazard sensitivity, % (95% CI) | Separated design minus system, points (95% CI) | Escalation burden per 1,000 (95% CI) |",
+                "|---|---|---|---|"]
+        for k, v in c["corrected"][thr].items():
+            dd = "—" if "ours_minus_this_sensitivity" not in v else (
+                f"{100 * v['ours_minus_this_sensitivity']:.1f} ({_ci([100 * y for y in v['ours_minus_this_sensitivity_ci']])})")
+            out.append(f"| {nm[k]} | {_pct(v['hazard_sensitivity'])} ({_ci([100 * y for y in v['hazard_sensitivity_ci']])}) | {dd} | "
+                       f"{v['escalation_burden_per_1000']:.1f} ({_ci(v['escalation_burden_ci'])}) |")
+    r = a["part3_ratings"]
+    lab3 = {"accuracy_quadratic": "Accuracy (quadratic-weighted)", "usefulness_quadratic": "Usefulness (quadratic-weighted)",
+            "harm_4_quadratic": "Harm, 4 levels (quadratic-weighted)", "moderate_or_severe": "Moderate or severe harm",
+            "critical_omission": "Critical omission", "advised_care_quadratic": "Advised care (quadratic-weighted)"}
+    out += ["", f"*Reply ratings on 50 texts ({r['replies']} replies): agreement of the third physician with the two raters (κ).*", "",
+            "| Measure | With C.M. | With R.B. |", "|---|---|---|"]
+    for k, l in lab3.items():
+        out.append(f"| {l} | {r['agreement_with_moher'][k]['kappa']:.3f} | {r['agreement_with_batniji'][k]['kappa']:.3f} |")
+    src = {"separated_alert_text": "Separated design, fixed alert text", "separated_generated": "Separated design, generated reply",
+           "physician": "Physician-written reply", "amie": "AMIE-style agent", "care_team": "Care-team reply"}
+    out += ["", "*Third physician's ratings by reply source.*", "",
+            "| Source | Replies | Moderate or severe harm | Critical omission | Mean accuracy (1–5) |", "|---|---|---|---|---|"]
+    for k, l in src.items():
+        v = r["external_by_source"][k]
+        out.append(f"| {l} | {v['replies']} | {v['moderate_or_severe']} | {v['critical_omission']} | {v['mean_accuracy']:.2f} |")
+    b = r["blinding"]
+    out += ["", "*Blinding assessment: the third physician's guess of each reply's source.*", "",
+            "| True source | Replies | Guessed correctly | Bang's blinding index |", "|---|---|---|---|"]
+    for k, v in b.items():
+        out.append(f"| {k.capitalize()} | {v['replies']} | {v['guessed_correctly']} | {v['bang_index']:.2f} |")
+    return ("Supplementary Table 17 | Third physician (outside Waymark) and validation of the reply classifier. "
+            "The third physician labeled 150 texts (the 83 that S.B. or J.M. labeled as "
+            "having a safety hazard and 67 random others), the care advised in 300 replies (75 per source, 19 or 18 per "
+            "stratum of classifier label by text hazard status) and the 172 replies to the 50 texts that R.B. rated, in that "
+            "order and blind to all other labels and to system identity. Majority-of-three labels keep S.B.'s label where S.B. "
+            "and J.M. agree and take the third physician's label otherwise; escalation burden keeps S.B.'s no-hazard set. "
+            "Corrected estimates replace each reply's classifier escalation with the estimated probability that the third "
+            "physician labels it as escalating, by source, classifier label and text hazard status; routed texts and held "
+            "replies stay escalated. Bang's index runs from −1 (all guesses wrong) to 1 (all right); because the physician "
+            "guessed \"AI\" for 150 of 172 replies, the index for AI replies reflects that tendency. CIs are from 2,000 "
+            "bootstrap resamples (seed 20261108).\n\n" + "\n".join(out))
+
+
 def main() -> None:
-    parts = [t2(), t3(), t4(), t5(), t6(), t7(), t8(), t9(), t10(), t11(), t12(), t13(), t14(), t15()]
+    parts = [t2(), t3(), t4(), t5(), t6(), t7(), t8(), t9(), t10(), t11(), t12(), t13(), t14(), t15(), t16(), t17()]
     OUT.write_text("\n\n".join(parts) + "\n")
     print(OUT, sum(p.count("pending") for p in parts), "pending cells")
 

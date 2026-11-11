@@ -53,17 +53,29 @@ def check_overlap(fig, name: str) -> None:
 
 D = Path(__file__).resolve().parents[2] / "compass-pcp-data"
 OUT = Path.home() / "waymark-local/notebooks/compass-pcp-paper2/figures"
-ARMS = [("compass_pro_full", "Our pipeline"), ("opus_search_edit", "Two-step pipeline*"),
-        ("opus_edit", "Two-step pipeline, no web search*"), ("amie_style", "AMIE-style agent"),
+ARMS = [("compass_pro_full", "Multi-model pipeline"), ("opus_search_edit", "Two-step pipeline*"),
+        ("opus_edit", "Two-step pipeline, no web search*"),
+        ("compass_pro_full_blk", "Multi-model pipeline, blocked search†"), ("opus_search_edit_blk", "Two-step pipeline, blocked search†"),
+        ("amie_style", "AMIE-style agent"),
         ("amie_style_search", "AMIE-style agent, web search*"), ("amie_style_uncapped", "AMIE-style agent, 12,000 tokens*"),
+        ("amie_style_search_blk", "Tuned AMIE-style agent, blocked search†"),
         ("mai_dxo_style", "MAI-DxO-style agent"), ("mai_dxo_style_uncapped", "MAI-DxO-style agent, 12,000 tokens*"),
+        ("mai_dxo_style_search_edit_blk", "Tuned MAI-DxO-style agent, blocked search†"),
         ("opus55", "Claude Opus 5.5, no system prompt"), ("gpt61sol", "GPT-6.1 Sol, no system prompt"),
         ("physician", "Physicians (dataset responses)")]
 
 
 def _diffs() -> dict:
-    """compass_pro_full minus each arm, from every compare file (reversed pairs negated)."""
+    """compass_pro_full minus each arm, from every compare file (reversed pairs negated); for arms with blocked search,
+    compass_pro_full_blk minus the arm (and compass_pro_full minus compass_pro_full_blk), from addendum_hb.json."""
     out = {}
+    ad = D / "paper2_final/derived/addendum_hb.json"
+    if ad.exists():
+        h = json.loads(ad.read_text())
+        for k, v in h.get("pipeline_blk_minus", {}).items():
+            out[k] = v
+        v = h["all_tasks"]["B_blocked_minus_original"]["compass_pro_full_blk - compass_pro_full"]
+        out["compass_pro_full_blk"] = {"diff": -v["diff"], "ci95": [-v["ci95"][1], -v["ci95"][0]]}
     for f in sorted((D / "hbpro_test").glob("compare*.txt")):
         if f.name in ("compare_g61.txt", "compare_opus.txt"):  # alternate graders
             continue
@@ -103,7 +115,7 @@ def fig1(out: Path) -> None:
     ax.set_ylim(0, 6.1)
     ax.axis("off")
     det, llm, md = "#e8eef6", "#fdf1dc", "#e3f1e3"
-    ax.text(0.1, 5.85, "a  Patient-facing path: our safety layer around the reply model", fontsize=8, weight="bold")
+    ax.text(0.1, 5.85, "a  Separated design (patient-facing): a safety layer outside the reply model", fontsize=8, weight="bold")
     _box(ax, 0.1, 4.55, 1.4, 0.95, "Patient text", "white")
     _box(ax, 1.9, 4.55, 2.1, 0.95, "Emergency screen\n(Kev-9B, fine-tuned;\nconformal thresholds)", det)
     _box(ax, 4.4, 4.55, 2.0, 0.95, "Reply model\n(frontier model,\nno clinical rules)", llm)
@@ -116,7 +128,7 @@ def fig1(out: Path) -> None:
     _arrow(ax, 2.4, 4.55, 2.4, 3.95)
     _arrow(ax, 3.6, 4.55, 4.7, 3.95)
     _arrow(ax, 7.7, 4.55, 7.7, 3.95)
-    ax.text(0.1, 2.5, "b  Physician-facing pipeline (consults, notes, evidence questions)", fontsize=8, weight="bold")
+    ax.text(0.1, 2.5, "b  Multi-model pipeline (physician-facing: consults, notes, evidence questions)", fontsize=8, weight="bold")
     _box(ax, 0.1, 1.0, 1.3, 0.95, "Physician\nrequest", "white")
     _box(ax, 1.8, 1.6, 2.0, 0.6, "Draft 1: Claude Opus 5.5\nwith web search", llm)
     _box(ax, 1.8, 0.75, 2.0, 0.6, "Draft 2: GPT-6.1 Sol", llm)
@@ -163,8 +175,8 @@ def fig2(out: Path) -> None:
     a.set_title("a  Score on 350 test tasks", loc="left", fontsize=8)
     b.axvline(0, color="#333", lw=0.6)
     b.tick_params(axis="y", left=False)
-    b.set_xlabel("Our pipeline minus each system (95% CI)")
-    b.set_title("b  Difference from our pipeline", loc="left", fontsize=8)
+    b.set_xlabel("Multi-model pipeline minus each system (95% CI)")
+    b.set_title("b  Difference from the multi-model pipeline", loc="left", fontsize=8)
     fig.subplots_adjust(left=0.3, right=0.98, bottom=0.14, top=0.92, wspace=0.12)
     check_overlap(fig, "Figure 2")
     fig.savefig(out / "Figure2_healthbench_professional.png", dpi=300, bbox_inches="tight")
@@ -189,8 +201,8 @@ def main() -> None:
         raise SystemExit(1)
 
 
-TEXT_ARMS = [("ours", "Our system"), ("amie_style", "AMIE-style agent"), ("mai_dxo_style", "MAI-DxO-style agent"),
-             ("raw_llm", "Our reply model alone"), ("v22", "Rule-based system"), ("gate_alone", "Emergency screen alone")]
+TEXT_ARMS = [("ours", "Separated design"), ("amie_style", "AMIE-style agent"), ("mai_dxo_style", "MAI-DxO-style agent"),
+             ("raw_llm", "Reply model alone"), ("v22", "Rule-based system"), ("gate_alone", "Emergency screen alone")]
 
 
 def fig3(out: Path) -> None:
@@ -225,7 +237,7 @@ def fig3(out: Path) -> None:
     a.set_xlabel("Escalations per 1,000 texts without a hazard (95% CI)")
     a.set_ylabel("Hazard sensitivity, % (95% CI)")
     a.set_title("a  Hazard sensitivity and escalation burden", loc="left", fontsize=8)
-    arms = [("ours", "Our system"), ("raw_llm", "Our reply model alone"), ("v22", "Rule-based system"),
+    arms = [("ours", "Separated design"), ("raw_llm", "Reply model alone"), ("v22", "Rule-based system"),
             ("amie_style", "AMIE-style agent"), ("mai_dxo_style", "MAI-DxO-style agent")]
     pat = [0.0 if k == "ours" else ins[k]["unconditional_instruction_per_1000_replies"] for k, _ in arms]
     em = json.loads((D / "paper2_final/derived/texts_routing_endpoints.json").read_text())[

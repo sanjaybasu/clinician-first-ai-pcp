@@ -73,6 +73,12 @@ EDIT_SYS = (
 )
 
 
+# Addendum registration (2026-11-10): domains that host HealthBench Professional, its source papers, code or reviews.
+# Arms run with this list are named *_blk in paper/hbpro.py; the default (no blocking) leaves the original arms unchanged.
+SEARCH_BLOCKED_DOMAINS = ("openai.com", "github.com", "githubusercontent.com", "huggingface.co", "hf.co", "arxiv.org",
+                          "alphaxiv.org", "epoch.ai", "paperswithcode.com", "kaggle.com", "openreview.net")
+
+
 def _transcript(conv: list[dict]) -> str:
     return "\n\n".join(f"{m['role'].upper()}: {m['content']}" for m in conv)
 
@@ -86,6 +92,8 @@ class ProPipeline:
     second: str = "gpt"
     final: bool = True
     usage: dict = field(default_factory=dict)
+    blocked: tuple = ()  # web search blocked_domains (addendum arms only)
+    search_log: list = field(default_factory=list)  # queries and result URLs/titles of every search call
 
     def __post_init__(self) -> None:
         import anthropic
@@ -100,7 +108,10 @@ class ProPipeline:
 
     def _opus(self, system: str, messages: list[dict], search: bool, max_tokens: int = 16000) -> str:
         msgs = [{"role": m["role"], "content": m["content"]} for m in messages]
-        tools = [{"type": "web_search_20260209", "name": "web_search", "max_uses": 5}] if search else []
+        tool = {"type": "web_search_20260209", "name": "web_search", "max_uses": 5}
+        if self.blocked:
+            tool["blocked_domains"] = list(self.blocked)
+        tools = [tool] if search else []
         m = None
         for _ in range(4):
             kw = {"tools": tools} if tools else {}
@@ -108,6 +119,13 @@ class ProPipeline:
                                          system=system, messages=msgs, **kw) as s:
                 m = s.get_final_message()
             self._add("opus55", m.usage.input_tokens, m.usage.output_tokens)
+            for blk in m.content:
+                if blk.type == "server_tool_use" and getattr(blk, "name", "") == "web_search":
+                    self.search_log.append({"query": (blk.input or {}).get("query")})
+                elif blk.type == "web_search_tool_result":
+                    res = blk.content if isinstance(blk.content, list) else []
+                    self.search_log.append({"results": [{"url": getattr(r, "url", None), "title": getattr(r, "title", None)}
+                                                        for r in res]})
             st = getattr(m.usage, "server_tool_use", None)
             if st is not None:
                 self._add("web_search", getattr(st, "web_search_requests", 0) or 0, 0)
