@@ -107,7 +107,17 @@ def main() -> None:
     res["transfer"] = {"doctor_call_hazard_texts": len(dc), "sent_to_physician": sum(sent[i] for i in dc),
                        "without_overlap": {"texts": sum(i not in ov for i in dc),
                                            "sent_to_physician": sum(sent[i] for i in dc if i not in ov)},
-                       "overlapping_test_texts": len(ov)}
+                       "overlapping_test_texts": len(ov),
+                       "doctor_call_texts_by_group": {"safety_hazard": int((doc & sp).sum()),
+                                                      "other_hazard_only": int((doc & ~sp).sum())}}
+    # discrimination on the test texts (unweighted, as for the calibration texts), bootstrap 95% CI over texts
+    from sklearn.metrics import roc_auc_score
+    y911 = np.array([act[i] == "Call 911/988" for i in ids])
+    for name, y, key in (("call_911", y911, "emergency"), ("doctor_call", doc, "safety")):
+        sc = np.array([g[i][key] for i in ids])
+        bs = [roc_auc_score(y[b], sc[b]) for b in B if 0 < y[b].sum() < len(b)]
+        res["transfer"][f"test_auroc_{name}"] = {"est": round(float(roc_auc_score(y, sc)), 3),
+                                                 "ci": [round(float(np.percentile(bs, q)), 3) for q in (2.5, 97.5)]}
     OUT.write_text(json.dumps(res, indent=1))
     print(json.dumps({k: v for k, v in res.items() if k != "definition"}, indent=1))
 

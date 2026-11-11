@@ -327,6 +327,14 @@ def registry():
     R.append(("conf.em.ours", f"all to texts that needed no action", "texts_confusion.json"))
     ov, tr = j(DER / "calib_test_overlap.json"), cf["transfer"]
     R.append(("overlap", f"at most {ov['test_texts_whose_possible_sender_also_sent_a_calibration_text']} test texts came from a phone linked to a person who also sent a calibration text, and\nwithout them the thresholds sent {tr['without_overlap']['sent_to_physician']} of {tr['without_overlap']['texts']} such texts", "calib_test_overlap.json; texts_confusion.json"))
+    dg, ta, tb = tr["doctor_call_texts_by_group"], tr["test_auroc_call_911"], tr["test_auroc_doctor_call"]
+    R.append(("doc.split", f"({dg['safety_hazard']} with a safety hazard and {dg['other_hazard_only']} with only an \"other\" hazard)", "texts_confusion.json"))
+    R.append(("test.auroc", f"AUROC was {ta['est']:.3f} ({ta['ci'][0]:.3f} to {ta['ci'][1]:.3f}) for \"call 911 or 988\" and {tb['est']:.3f} ({tb['ci'][0]:.3f} to {tb['ci'][1]:.3f}) for a doctor's call", "texts_confusion.json"))
+    gg = j(D / "paper2_dev/paging_gate_497/report.json")["outcomes"]
+    ge = gg["emergency"]; wr = ge["scores"]["kev_p911"]["crc_weighted_rule_0.05"]
+    R.append(("gate.weighted", f"alerted on {pc(wr['paged']['mean'])}% of calibration texts on average", "paging_gate_497/report.json"))
+    R.append(("gate.wshare", f"one emergency text held {pc(ge['largest_positive_weight_share'])}% of the weight of all {ge['positives']}", "paging_gate_497/report.json"))
+    R.append(("gate.positives", f"{ge['positives']} texts needed a call to 911 or 988 and {gg['safety']['positives']} at least a call from a doctor", "paging_gate_497/report.json"))
     R.append(("layer.range.discussion", f"hazard sensitivity of {lo}% to {hi}%", "same_safety_layer"))
     cn = cmp_file(D / "hbpro_test/compare_nosearch.txt")
     for k, lab in [("opus_edit - opus_search_edit", "nosearch.vs_search"), ("opus_edit - amie_style", "nosearch.vs_amie")]:
