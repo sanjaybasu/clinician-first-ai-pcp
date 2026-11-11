@@ -6,6 +6,9 @@ Usage: python -m paper.make_supplement_tables_paper2
 """
 
 import json
+import re
+
+from scipy.stats import beta as _beta
 from pathlib import Path
 
 D = Path(__file__).resolve().parents[2] / "compass-pcp-data"
@@ -364,7 +367,8 @@ def _gate_test() -> str:
     e, s_ = t["gate_test"]["call911_paged"], t["gate_test"]["hazard_contact_doctor_or_911_gated"]
     return (f" On the 949 test texts (later period, patient texts on the service), the deployed thresholds paged on {e[1]} of "
             f"{e[0]} 'call 911 or 988' texts and paged or sent to review {s_[1]} of {s_[0]} texts labeled as a hazard needing "
-            f"a doctor's call or more; weighted to the test frame, {100 * t['weighted_page_share']:.1f}% of texts were paged "
+            f"a doctor's call or more ({100 * s_[1] / s_[0]:.1f}%; exact 95% CI, {100 * _beta.ppf(0.025, s_[1], s_[0] - s_[1] + 1):.1f} "
+            f"to {100 * _beta.ppf(0.975, s_[1] + 1, s_[0] - s_[1]):.1f}); weighted to the test frame, {100 * t['weighted_page_share']:.1f}% of texts were paged "
             f"and {100 * t['weighted_review_share']:.1f}% sent to review." + _refit())
 
 
@@ -385,8 +389,24 @@ def _refit() -> str:
 def t10() -> str:
     md = (D / "paper2_dev/intake_eval/report.md").read_text()
     body = md[md.index("| Arm"):].replace("COMPASS structured intake", "Intake agent")
+    body = body.replace("Paired differences, COMPASS minus comparator (case bootstrap 95% CI):",
+                        "*Paired differences: the intake agent's value minus each comparator's value on the same 28 cases "
+                        "(case-bootstrap 95% CI). Percentages are differences in percentage points; counts are differences in "
+                        "means.*")
+    body = body.replace("| Measure | vs AMIE-style | vs MAI-DxO-style |",
+                        "| Measure | Intake agent minus AMIE-style agent | Intake agent minus MAI-DxO-style agent |")
+    labels = {"cond_recall": "Condition recall", "cond_precision": "Condition precision", "med_recall": "Medicine recall",
+              "med_precision": "Medicine precision", "hpi_of8": "HPI elements (of 8)",
+              "fhsh": "FH/SH/social coverage", "turns": "Agent messages",
+              "dropoff_completeness": "Drop-off-weighted completeness", "full_completeness": "Full-transcript completeness"}
+    for k, v in labels.items():
+        body = body.replace(f"| {k} |", f"| {v} |")
+    if "*Paired differences" in body:
+        head, tail = body.split("*Paired differences", 1)
+        tail = re.sub(r"(-?\d+\.\d)% \((-?\d+\.\d) to (-?\d+\.\d)\)", r"\1 points (\2 to \3)", tail)
+        body = head + "*Paired differences" + tail
     ii = _j(DER / "intake_instructions.json")["arms"]
-    cap = (f" With the final check (Supplementary Note 2), any instruction appeared in {ii['amie_style']['any_instruction']} "
+    cap = (f" With the final check (Supplementary Note 1), any instruction appeared in {ii['amie_style']['any_instruction']} "
            f"of {ii['amie_style']['messages']} AMIE-style, {ii['mai_dxo_style']['any_instruction']} of "
            f"{ii['mai_dxo_style']['messages']} MAI-DxO-style and {ii['intake']['any_instruction']} of "
            f"{ii['intake']['messages']} intake-agent messages, and unconditional instructions in "
@@ -394,7 +414,8 @@ def t10() -> str:
            f"{ii['intake']['unconditional_instruction']}.")
     return ("Supplementary Table 10 | History taking from real texts with simulated patients (28 development cases; "
             "means with case-bootstrap 95% CIs, 2,000 resamples). The last column is the run's own count of messages with an "
-            "emergency-room or 911/988 instruction (the intake agent's prompt forbids them)." + cap + "\n\n" + body.strip())
+            "emergency-room or 911/988 instruction (the intake agent's prompt forbids them). HPI, history of present illness; "
+            "FH/SH, family and social history." + cap + "\n\n" + body.strip())
 
 
 def t11() -> str:
@@ -466,7 +487,15 @@ def t13() -> str:
             "interface with the same requests. Kev-9B ran on Modal. No call set a temperature or a seed; each model "
             "sampled at its provider's default, so we drew three replies per patient text. Patient texts were not "
             "de-identified and went only to vendors under a business associate agreement. In deployment, texts that "
-            "the emergency screen or a model cannot score, or that time out, go to the care team.\n\n" + "\n".join(rows))
+            "the emergency screen or a model cannot score, or that time out, go to the care team. This study did not evaluate "
+            "texts of 20 characters or fewer or texts in languages other than English, and it did not set or measure physician "
+            "response times. Each developer announced its model in 2026 (main-text references for each model); the developers "
+            "do not publish training cut-off dates, so we blocked benchmark sources from search and compared blocked and open "
+            "runs (Supplementary Table 3). HealthBench Professional (MIT licence) was posted in April 2026. Kev-9B used the "
+            "default hyperparameters of the Kev training recipe, which are in the code repository; the fine-tuned adapters are "
+            "not released because they were trained on patient data, and the base weights are public. We did not record "
+            "inference time or fine-tuning compute; list-price costs per task are in Supplementary Table 2. Every system's "
+            "answers to HealthBench Professional tasks are available from the corresponding author on request.\n\n" + "\n".join(rows))
 
 
 def t14() -> str:

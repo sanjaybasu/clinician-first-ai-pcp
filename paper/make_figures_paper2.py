@@ -159,7 +159,7 @@ def fig1(out: Path) -> None:
     ax.text(0.05, 1.8, "c  Transfer test: do the safety layer's thresholds hold in a new service?", fontsize=8, weight="bold")
     _box(ax, 0.1, 0.75, 3.0, 0.75, "497 texts to care teams\n(answered by staff),\nbefore December 2025", "white")
     _box(ax, 3.5, 0.75, 2.6, 0.75, "Thresholds set by conformal\nrisk control, then fixed", det)
-    _box(ax, 6.5, 0.75, 3.4, 0.75, "949 later texts to Compass\n(Waymark's AI text-message service),\nDecember 2025 to October 2026", "white")
+    _box(ax, 6.5, 0.75, 3.4, 0.75, "949 later texts to Compass\n(Waymark's AI text-message chatbot),\nDecember 2025 to October 2026", "white")
     _arrow(ax, 3.1, 1.12, 3.5, 1.12)
     _arrow(ax, 6.1, 1.12, 6.5, 1.12)
     for i, (fc, lab) in enumerate([(det, "safety layer: classifier or text rules"), (llm, "frontier language model"),

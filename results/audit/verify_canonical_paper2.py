@@ -95,7 +95,7 @@ def registry():
     ad = j(DER / "addendum_hb.json")
     t, sc_, co = ad["all_tasks"], ad["scores"], ad["E_cost_per_task_usd"]
     a1, a2 = t["A1_pipeline_minus_tuned_amie"], t["A2_pipeline_minus_tuned_mai"]
-    R.append(("abs.ladder", f"{m(a1['diff'])} points higher than a re-implemented AMIE-style agent (95% CI, {ci(a1['ci95'])})", "addendum_hb.json"))
+    R.append(("abs.ladder", f"scored {m(a1['diff'])} points (95% CI, {ci(a1['ci95'])}) and {m(a2['diff'])} points ({ci(a2['ci95'])}) higher than\nre-implemented AMIE-style and MAI-DxO-style agents", "addendum_hb.json"))
     R.append(("strict.scores", f"the multi-model pipeline scored {f1(sc_['compass_pro_full_blk']['mean'])} (SE, {f1(sc_['compass_pro_full_blk']['se'])}), the tuned AMIE-style agent {f1(sc_['amie_style_search_blk']['mean'])} ({f1(sc_['amie_style_search_blk']['se'])}) and the tuned MAI-DxO-style agent {f1(sc_['mai_dxo_style_search_edit_blk']['mean'])} ({f1(sc_['mai_dxo_style_search_edit_blk']['se'])})", "addendum_hb.json"))
     R.append(("strict.A1", f"{m(a1['diff'])} points higher than the tuned AMIE-style agent ({ci(a1['ci95'])}; Holm-adjusted P = {a1['p_holm']:.2f})", "addendum_hb.json"))
     R.append(("strict.A2", f"{m(a2['diff'])} points higher than the tuned MAI-DxO-style agent ({ci(a2['ci95'])}; P = {a2['p_holm']:.2f})", "addendum_hb.json"))
@@ -303,6 +303,8 @@ def registry():
     inc["raw_llm"] = 100 * (mn["ours"]["hazard_sensitivity_weighted"] - mn["raw_llm"]["hazard_sensitivity_weighted"])
     binc = {a: sl[f"{a}+layer"]["escalation_no_hazard_per_1000_weighted"] - mn[a]["escalation_no_hazard_per_1000_weighted"] for a in ("amie_style", "mai_dxo_style", "v22")}
     binc["raw_llm"] = mn["ours"]["escalation_no_hazard_per_1000_weighted"] - mn["raw_llm"]["escalation_no_hazard_per_1000_weighted"]
+    wa = mn["writer_alone"]
+    R.append(("writer.filter", f"escalated {pc(wa['hazard_sensitivity_weighted'])}% ({pc(wa['hazard_sensitivity_weighted_ci'][0])} to {pc(wa['hazard_sensitivity_weighted_ci'][1])}) and {f1(wa['escalation_no_hazard_per_1000_weighted'])} per 1,000 ({f1(wa['escalation_no_hazard_weighted_ci'][0])} to {f1(wa['escalation_no_hazard_weighted_ci'][1])})", "texts_supplement.json"))
     R.append(("layer.inc.abstract", f"hazard sensitivity by {min(inc.values()):.1f}\nto {max(inc.values()):.1f} percentage points", "same_safety_layer"))
     R.append(("layer.inc.each", f"by {inc['raw_llm']:.1f} percentage points for\nthe reply model alone (which with the safety layer is the separated design), {inc['amie_style']:.1f} points for the AMIE-style agent, {inc['mai_dxo_style']:.1f}\npoints for the MAI-DxO-style agent and {inc['v22']:.1f} points for the rule-based system", "same_safety_layer"))
     R.append(("layer.inc.burden", f"by {min(binc.values()):.1f} to {max(binc.values()):.1f} per 1,000 texts without a hazard", "same_safety_layer"))

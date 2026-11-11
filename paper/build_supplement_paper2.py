@@ -1,6 +1,6 @@
 """Assemble the Paper 2 Supplementary Information from its parts (no patient data).
 
-Parts: manuscript/supplement_notes.md (hand-written notes and Supplementary Table 1), Supplementary Note 2 generated
+Parts: manuscript/supplement_notes.md (hand-written notes and Supplementary Table 1), Supplementary Note 1 generated
 here from the prompt constants in code (so the printed prompts are the run prompts), supplement_tables_generated.md
 (paper/make_supplement_tables_paper2.py) and the checklists in manuscript/checklists/.
 Out: manuscript/compass_clinician_first_ai_pcp_npj_supplement.md
@@ -15,7 +15,7 @@ M = Path.home() / "waymark-local/notebooks/compass-pcp-paper2/manuscript"
 import re
 
 # Supplementary Table numbers in order of first mention in the main text (generator numbering -> published numbering)
-TABLE_MAP = {1: 1, 4: 2, 16: 3, 3: 4, 5: 5, 2: 6, 12: 7, 18: 8, 7: 9, 6: 10, 14: 11, 8: 12, 17: 13, 15: 14, 9: 15, 13: 19, 11: 20, 10: 21}
+TABLE_MAP = {1: 1, 4: 2, 16: 3, 3: 4, 5: 5, 2: 6, 12: 7, 18: 8, 7: 9, 6: 10, 14: 11, 8: 12, 17: 13, 15: 14, 9: 15, 13: 19, 10: 20}
 CHECKLISTS = [(16, "TRIPOD-LLM_checklist.md", "TRIPOD-LLM reporting checklist"),
               (17, "CHART_checklist.md", "CHART reporting checklist"),
               (18, "STARD2015_checklist.md", "STARD 2015 reporting checklist")]
@@ -139,7 +139,7 @@ def note2() -> str:
     def block(title: str, text: str) -> str:
         return f"*{title}.*\n\n```text\n{reflow(text)}\n```\n"
 
-    parts = ["## Supplementary Note 2. Prompts and rules as run\n",
+    parts = ["## Supplementary Note 1. Prompts and rules as run\n",
              "The text below is read from the source code at build time. Line breaks inside a sentence are joined for display.\n",
              block("Physician-facing pipeline, draft prompt (both drafts)", p.DRAFT_SYS),
              block("Physician-facing pipeline, web search note added to draft 1", p.SEARCH_NOTE),
@@ -174,6 +174,8 @@ def main() -> None:
         m = re.match(r"Supplementary Table (\d+) \|(.*)", chunk, re.S)
         if m:
             n = int(m.group(1))
+            if n not in TABLE_MAP:  # generated but not published (registered hypotheses table)
+                continue
             body = renumber_refs(reader_terms(m.group(2), hb=n in HB_TABLES))
             first, _, rest = body.strip().partition("\n")
             t, dot, more = first.partition(". ")
