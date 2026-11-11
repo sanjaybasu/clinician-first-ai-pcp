@@ -15,7 +15,7 @@ M = Path.home() / "waymark-local/notebooks/compass-pcp-paper2/manuscript"
 import re
 
 # Supplementary Table numbers in order of first mention in the main text (generator numbering -> published numbering)
-TABLE_MAP = {1: 1, 4: 2, 5: 3, 2: 4, 16: 5, 3: 6, 12: 7, 7: 8, 6: 9, 11: 10, 8: 11, 17: 12, 15: 13, 14: 14, 9: 15, 13: 19, 10: 20}
+TABLE_MAP = {1: 1, 4: 2, 16: 3, 3: 4, 5: 5, 2: 6, 12: 7, 18: 8, 7: 9, 6: 10, 14: 11, 8: 12, 17: 13, 15: 14, 9: 15, 13: 19, 11: 20, 10: 21}
 CHECKLISTS = [(16, "TRIPOD-LLM_checklist.md", "TRIPOD-LLM reporting checklist"),
               (17, "CHART_checklist.md", "CHART reporting checklist"),
               (18, "STARD2015_checklist.md", "STARD 2015 reporting checklist")]
@@ -74,10 +74,21 @@ def _arm(m: re.Match) -> str:
 def reader_terms(text: str, hb: bool = False) -> str:
     text = re.sub(r"\bours - (\w+\+?\w*)", lambda m: ("Multi-model pipeline" if hb else "Separated design") + " minus " + _arm(m), text)
     text = re.sub(r"\b(amie_style\+layer|mai_dxo_style\+layer|v22\+layer|amie_style|mai_dxo_style|raw_llm)\b", _arm, text)
+    if hb:  # on physician-facing tables "our architecture" is the multi-model pipeline
+        text = text.replace("Our architecture (development)", "Multi-model pipeline (development)")
+        text = text.replace("Our architecture", "Multi-model pipeline").replace("our architecture", "the multi-model pipeline")
     text = re.sub(r"\bOurs\b", "Multi-model pipeline" if hb else "Separated design", text)
     text = re.sub(r"\bours\b", "the multi-model pipeline" if hb else "the separated design", text)
     for a, b in TERMS:
         text = re.sub(a, b, text) if any(c in a for c in "\\()[]") or a.startswith("\\b") else text.replace(a, b)
+    text = re.sub(r"\s*\(post hoc\)", "", text)
+    text = re.sub(r", post hoc\)", ")", text)
+    text = re.sub(r"\(post hoc; ", "(", text)
+    text = re.sub(r"The alternate graders, the second run, [^.]*? are post hoc\.\s*", "", text)
+    text = re.sub(r"[,;] post hoc(?=[,)\s|])", "", text)
+    text = re.sub(r"post hoc, ", "", text)
+    text = text.replace("the registered filter", "the stricter filter").replace("Registered filter", "Stricter filter")
+    text = text.replace("registered filter", "stricter filter")
     return re.sub(r"\bv22\b", "the rule-based system", text)
 
 

@@ -109,6 +109,13 @@ def t4() -> str:
         m = h["arms"][arm]
         cc = f"{cost[arm]:.3f}" if arm in cost else "—"
         rows.append(f"| {NAMES[arm]} | {cc} | {m['mean_chars']:,} | {m['median_chars']:,} | {_pct(m['share_le_2000_chars'])}% |")
+    # systems of the matched comparisons (benchmark sources blocked from search); cost from arm-labeled usage
+    ad, rep = _j(DER / "addendum_hb.json"), _j(D / "hbpro_test/report.json")
+    for arm, name in (("compass_pro_full_blk", "Multi-model pipeline, blocked search"),
+                      ("opus_search_edit_blk", "Two-step pipeline, blocked search"),
+                      ("amie_style_search_blk", "Tuned AMIE-style agent (web search, blocked)"),
+                      ("mai_dxo_style_search_edit_blk", "Tuned MAI-DxO-style agent (web search, blocked, shortening step)")):
+        rows.append(f"| {name} | {ad['E_cost_per_task_usd'][arm]:.3f} | {rep[arm]['mean_chars']:,} | — | — |")
     L = h["length"]
     reg = L.get("regression", {}).get("amie_style", {})
     extra = []
@@ -443,16 +450,23 @@ def t12() -> str:
 def t13() -> str:
     rows = ["| Role | Model (API identifier) | Developer; weights | Settings | Access |", "|---|---|---|---|---|",
             "| Draft A, final writer, length editor; patient-facing writer; intake agent; comparator backbone | Claude Opus 5.5 (claude-opus-5-5) | Anthropic; proprietary | adaptive thinking; web search tool web_search_20260209 (Draft A only, ≤5 searches) | Anthropic API, BAA |",
-            "| Draft B and review | GPT-6.1 Sol (gpt-6.1-sol) | OpenAI; proprietary | reasoning effort high | OpenAI API, BAA |",
+            "| Draft B and review | GPT-6.1 Sol (gpt-6.1-sol) | OpenAI; proprietary | reasoning effort high; no web search | OpenAI API, BAA |",
+            "| Sampling screen for the patient-text test set (not a tested system) | GPT-5.5 (gpt-5.5) | OpenAI; proprietary | default | OpenAI API, BAA |",
             "| Paging gate | Kev-9B, five fold fine-tunes (adapter recipe of the Kev package) | open weights (jaredpalmer/kev) | message only, 384 tokens | Modal, BAA |",
             "| Reply-disposition classifier | Claude Sonnet 5.5 (claude-sonnet-5-5) | Anthropic; proprietary | default | Anthropic API, BAA |",
             "| Second reply classifier (post hoc) | GPT-6.1 Sol | OpenAI; proprietary | reasoning effort low | OpenAI API, BAA |",
             "| HealthBench Professional grader | GPT-5.4 (gpt-5.4) | OpenAI; proprietary | reasoning effort low | OpenAI API |",
             "| Alternate graders (post hoc) | GPT-6.1 Sol; Claude Opus 5.5 | OpenAI; Anthropic | reasoning low; no thinking | APIs |",
             "| Simulated patient and note judge (history taking) | GPT-6.1 Sol | OpenAI; proprietary | reasoning effort high | OpenAI API, BAA |"]
-    return ("Supplementary Table 13 | Models, settings and access. All calls ran from the United States between "
-            "November 6 and November 9, 2026, with a fresh context for each reply or task. Patient texts were not "
-            "de-identified and went only to vendors with a business associate agreement. No call set a temperature or a seed; each model sampled at its provider default.\n\n" + "\n".join(rows))
+    return ("Supplementary Table 13 | Models, settings and access. We called Claude Opus 5.5 and Claude Sonnet 5.5 "
+            "through the Anthropic application programming interface (API) and GPT-6.1 Sol, GPT-5.5 and GPT-5.4 "
+            "through the OpenAI API, from San Francisco, California, United States. Development calls ran from "
+            "November 3 to November 10, 2026, and the test runs from November 8 to November 10, 2026, with a fresh "
+            "context for each reply or task. The runs with blocked search went through each developer's batch "
+            "interface with the same requests. Kev-9B ran on Modal. No call set a temperature or a seed; each model "
+            "sampled at its provider's default, so we drew three replies per patient text. Patient texts were not "
+            "de-identified and went only to vendors under a business associate agreement. In deployment, texts that "
+            "the emergency screen or a model cannot score, or that time out, go to the care team.\n\n" + "\n".join(rows))
 
 
 def t14() -> str:
@@ -586,7 +600,7 @@ def t15() -> str:
 def t16() -> str:
     a = _j(DER / "addendum_hb.json")
     if not a or "scores" not in a:
-        return "Supplementary Table 16 | Stricter comparisons on physician-facing tasks. pending"
+        return "Supplementary Table 16 | Matched comparisons on the physician-facing test. pending"
     lab = {"compass_pro_full": "Multi-model pipeline", "compass_pro_full_blk": "Multi-model pipeline, blocked search",
            "opus_search_edit": "Two-step pipeline", "opus_search_edit_blk": "Two-step pipeline, blocked search",
            "amie_style": "AMIE-style agent (as published)", "amie_style_search": "AMIE-style agent with search",
@@ -622,11 +636,11 @@ def t16() -> str:
         p = f"{d['p_holm']:.3f}" if prim else "—"
         out.append(f"| {nm} | {d['diff']:.1f} ({_ci(d['ci95'])}) | {_ci(d['ci90'])} | {p} |")
     au, e = a["audit"], a["E_two_step_vs_tuned_amie"]
-    return ("Supplementary Table 16 | Stricter comparisons on physician-facing tasks. "
+    return ("Supplementary Table 16 | Matched comparisons on the physician-facing test. "
             "Each agent's variants ran once on the first 80 development tasks; the rule chose the "
             "highest mean score, or the cheaper variant within 0.5 points. Blocked search excluded openai.com, github.com, "
             "githubusercontent.com, huggingface.co, hf.co, arxiv.org, alphaxiv.org, epoch.ai, paperswithcode.com, kaggle.com "
-            "and openreview.net. Benchmark content found by search was to be judged unlikely if each blocked-minus-earlier "
+            "and openreview.net. Benchmark content found by search was to be judged unlikely if each blocked-minus-open "
             f"90% CI lay within ±4 points. Across the blocked runs, {au['results_logged']:,} search results were logged; "
             f"{au['results_on_blocked_list']} came from a blocked domain and {au['results_mentioning_healthbench']} had "
             "\"healthbench\" in the address or title. The two-step pipeline cost "
@@ -704,8 +718,53 @@ def t17() -> str:
             "bootstrap resamples (seed 20261108).\n\n" + "\n".join(out))
 
 
+def t18() -> str:
+    c = _j(DER / "texts_confusion.json")
+    names = [("ours", "Separated design"), ("gate_alone", "Emergency screen alone"), ("amie_style", "AMIE-style agent"),
+             ("mai_dxo_style", "MAI-DxO-style agent"), ("raw_llm", "Reply model alone"), ("v22", "Rule-based system"),
+             ("amie_style+layer", "AMIE-style agent with the safety layer"),
+             ("mai_dxo_style+layer", "MAI-DxO-style agent with the safety layer"),
+             ("v22+layer", "Rule-based system with the safety layer")]
+
+    def ci(m):
+        return f"{_pct(m['est'])} ({_pct(m['ci'][0])}–{_pct(m['ci'][1])})"
+
+    out = []
+    for ref, title, pos, neg in (("safety_hazard", "Reference standard: safety hazard", "79 texts with a safety hazard",
+                                  "571 texts without a hazard"),
+                                 ("doctor_call", "Reference standard: needs at least a doctor's call",
+                                  "53 texts labeled call 911 or 988 or contact a doctor", "896 other texts")):
+        rows = [f"*{title}* (positives: {pos}; negatives: {neg}).", "",
+                "| System | Escalated positives (TP) | Missed positives (FN) | Escalated negatives (FP) | Not escalated negatives (TN) "
+                "| Sensitivity, % (95% CI) | Specificity, % (95% CI) | PPV, % (95% CI) | NPV, % (95% CI) | Share escalated, % |",
+                "|---|---|---|---|---|---|---|---|---|---|"]
+        for k, nm in names:
+            m = c["systems"][k][ref]
+            e = m["expected_counts"]
+            rows.append(f"| {nm} | {e['tp']} | {e['fn']} | {e['fp']} | {e['tn']} | {ci(m['sensitivity'])} | "
+                        f"{ci(m['specificity'])} | {ci(m['ppv'])} | {ci(m['npv'])} | {_pct(m['escalated_share']['est'])} |")
+        out.append("\n".join(rows))
+    em = c["emergency_now_reaching_patient_by_label"]
+    rows = ["*Advice to seek emergency care now that reached the patient, by the text's labeled action* (number of "
+            "replies out of 2,847 per system; a reply withheld by an alert or by the filter does not reach the patient).", "",
+            "| System | Call 911 or 988 (5 texts) | Contact a doctor (48) | Routine follow-up (325) | None (571) | Total |",
+            "|---|---|---|---|---|---|"]
+    for k, nm in names:
+        if k in em:
+            v = em[k]
+            rows.append(f"| {nm} | {v['Call 911/988']} | {v['Contact Doctor']} | {v['Routine Follow-up']} | {v['None']} | {v['total']} |")
+    out.append("\n".join(rows))
+    return ("Supplementary Table 18 | Confusion matrices and accuracy of escalation on the 949 patient texts (3 replies "
+            "per text). Counts are expected numbers of texts (each text's share of escalated replies, summed over "
+            "texts); sensitivity, specificity, positive predictive value (PPV), negative predictive value (NPV) and "
+            "the share escalated are weighted for the sampling design, with bootstrap 95% CIs (2,000 resamples of "
+            "texts). Under the safety-hazard standard, 299 texts with a hazard in the \"other\" category enter neither "
+            "group. Specificity equals 1 minus the escalation burden per 1,000 texts without a hazard divided by "
+            "1,000.\n\n" + "\n\n".join(out))
+
+
 def main() -> None:
-    parts = [t2(), t3(), t4(), t5(), t6(), t7(), t8(), t9(), t10(), t11(), t12(), t13(), t14(), t15(), t16(), t17()]
+    parts = [t2(), t3(), t4(), t5(), t6(), t7(), t8(), t9(), t10(), t11(), t12(), t13(), t14(), t15(), t16(), t17(), t18()]
     OUT.write_text("\n\n".join(parts) + "\n")
     print(OUT, sum(p.count("pending") for p in parts), "pending cells")
 
