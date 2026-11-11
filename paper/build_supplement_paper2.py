@@ -185,6 +185,8 @@ def main() -> None:
         t = re.sub(r"(?m)^## ", "### ", t)
         blocks[n] = f"## Supplementary Table {n}. {title}\n\n" + reader_terms(t).strip() + "\n"  # checklists cite published numbers
     tables = "\n".join(blocks[k] for k in sorted(blocks) if k != 1)
+    ex = Path(__file__).resolve().parents[2] / "compass-pcp-data/paper2_final/derived/example_texts_table.md"  # custodian storage
+    head = head.replace("<<EXAMPLES>>", ex.read_text().strip() if ex.exists() else "")
     out = head.replace("<<NOTE2>>", note2()).replace("<<TABLES>>", tables)
     (M / "compass_clinician_first_ai_pcp_npj_supplement.md").write_text(out)
     print("written", len(out.split()), "words; tables", sorted(blocks))

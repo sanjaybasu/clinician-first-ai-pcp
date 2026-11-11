@@ -90,6 +90,12 @@ def main() -> None:
         em[name] = {a: c[a] for a in ACTIONS}
         em[name]["total"] = sum(c.values())
     res["emergency_now_reaching_patient_by_label"] = em
+    # reply-level advice on the texts labeled "call 911 or 988" (before any filter), and emergency screen alerts
+    e911 = [i for i in ids if act[i] == "Call 911/988"]
+    res["call_911_texts"] = {"texts": len(e911), "replies_per_system": 3 * len(e911),
+                             "emergency_screen_alerts": int(sum(page_e[i] for i in e911)),
+                             "reply_urgency": {a: dict(collections.Counter(urg[(i, k, a)] for i in e911 for k in range(3)))
+                                               for a in ("amie_style", "mai_dxo_style", "raw_llm", "v22")}}
     res["emergency_now_note"] = ("counts of replies over 2,847 per system; a withheld reply (alert or held by the "
                                  "filter) does not reach the patient")
     # transfer without overlapping senders

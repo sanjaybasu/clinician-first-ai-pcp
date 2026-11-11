@@ -95,19 +95,20 @@ def registry():
     ad = j(DER / "addendum_hb.json")
     t, sc_, co = ad["all_tasks"], ad["scores"], ad["E_cost_per_task_usd"]
     a1, a2 = t["A1_pipeline_minus_tuned_amie"], t["A2_pipeline_minus_tuned_mai"]
-    R.append(("abs.ladder", f"{m(a1['diff'])} points higher than the AMIE-style agent (95% CI, {ci(a1['ci95'])})", "addendum_hb.json"))
+    R.append(("abs.ladder", f"{m(a1['diff'])} points higher than a re-implemented AMIE-style agent (95% CI, {ci(a1['ci95'])})", "addendum_hb.json"))
     R.append(("strict.scores", f"the multi-model pipeline scored {f1(sc_['compass_pro_full_blk']['mean'])} (SE, {f1(sc_['compass_pro_full_blk']['se'])}), the tuned AMIE-style agent {f1(sc_['amie_style_search_blk']['mean'])} ({f1(sc_['amie_style_search_blk']['se'])}) and the tuned MAI-DxO-style agent {f1(sc_['mai_dxo_style_search_edit_blk']['mean'])} ({f1(sc_['mai_dxo_style_search_edit_blk']['se'])})", "addendum_hb.json"))
     R.append(("strict.A1", f"{m(a1['diff'])} points higher than the tuned AMIE-style agent ({ci(a1['ci95'])}; Holm-adjusted P = {a1['p_holm']:.2f})", "addendum_hb.json"))
     R.append(("strict.A2", f"{m(a2['diff'])} points higher than the tuned MAI-DxO-style agent ({ci(a2['ci95'])}; P = {a2['p_holm']:.2f})", "addendum_hb.json"))
     e = ad["E_two_step_vs_tuned_amie"]
-    R.append(("strict.E", f"(USD {co['opus_search_edit_blk']:.3f} per task), scored {f1(sc_['opus_search_edit_blk']['mean'])}, {m(e['diff'])} points higher than the tuned AMIE-style agent (USD {co['amie_style_search_blk']:.3f}; {ci(e['ci95'])})", "addendum_hb.json"))
+    R.append(("strict.E", f"(USD {co['opus_search_edit_blk']:.3f} per task), scored {f1(sc_['opus_search_edit_blk']['mean'])}, {m(e['diff'])} points higher than the tuned AMIE-style agent at USD {co['amie_style_search_blk']:.3f} per task ({ci(e['ci95'])})", "addendum_hb.json"))
     x = t["A_secondary"]["two_step_minus_tuned_mai"]
-    R.append(("strict.twostep_mai", f"{m(x['diff'])} points higher than the tuned MAI-DxO-style agent ({ci(x['ci95'])}), which cost USD {co['mai_dxo_style_search_edit_blk']:.3f}", "addendum_hb.json"))
+    R.append(("strict.twostep_mai", f"{m(x['diff'])} points higher than the tuned MAI-DxO-style agent ({ci(x['ci95'])}), which cost more (USD {co['mai_dxo_style_search_edit_blk']:.3f}", "addendum_hb.json"))
     R.append(("strict.cost_pipe", f"USD {co['compass_pro_full_blk']:.3f} per task", "addendum_hb.json"))
     R.append(("strict.ratio", f"cost {co['compass_pro_full_blk'] / co['amie_style_search_blk']:.1f} times as much as the tuned AMIE-style agent", "addendum_hb.json"))
     b = t["B_blocked_minus_original"]
     p_, o_, s_ = b["compass_pro_full_blk - compass_pro_full"], b["opus_search_edit_blk - opus_search_edit"], b["amie_style_search_blk - amie_style_search"]
-    R.append(("B.diffs", f"With blocked search, the multi-model pipeline scored {m(-p_['diff'])} points lower ({ci(p_['ci95'])}), the two-step pipeline {m(-o_['diff'])} points lower ({ci(o_['ci95'])}) and the AMIE-style agent with search {m(-s_['diff'])} points lower ({ci(s_['ci95'])})", "addendum_hb.json"))
+    R.append(("B.diffs", f"With blocked search, the multi-model pipeline scored {m(-p_['diff'])} points lower (95% CI, {ci(p_['ci95'])}), the two-step pipeline {m(-o_['diff'])} points lower ({ci(o_['ci95'])}) and the AMIE-style agent with search {m(-s_['diff'])} points lower ({ci(s_['ci95'])})", "addendum_hb.json"))
+    R.append(("B.amie90", "the\nAMIE-style agent's 90% CI lay within it" if b["amie_style_search_blk - amie_style_search"]["within_4_points_90ci"] else "MISSING", "addendum_hb.json"))
     R.append(("B.audit", f"The blocked runs logged {ad['audit']['results_logged']:,} search results", "addendum_hb.json"))
     R.append(("disc.ladder", f"and to {m(a1['diff'])} points over the AMIE-style agent and {m(a2['diff'])} points over the\nMAI-DxO-style agent", "addendum_hb.json"))
     for k, arm in (("t1.blk.pipe", "compass_pro_full_blk"), ("t1.blk.two", "opus_search_edit_blk"), ("t1.blk.amie", "amie_style_search_blk"), ("t1.blk.mai", "mai_dxo_style_search_edit_blk")):
@@ -115,7 +116,7 @@ def registry():
         R.append((k, f"{f1(x['length_adjusted']['score'])} ({f1(x['length_adjusted']['se'])}) | {f1(x['raw']['score'])} | " + " | ".join(f1(x[c]['score']) for c in ['use_case=consult','use_case=research','use_case=writing','type=good_faith','type=red_teaming']) + f" | {x['mean_chars']:,} |", "hbpro_test/report.json"))
     ar = j(DER / "addendum_rater.json")
     p1, mj = ar["part1"], ar["majority_labels"]
-    R.append(("av.kappa", f"She found {p1['positives']['external']} texts with a safety hazard (κ = {p1['kappa_external_basu']['kappa']:.3f} with the first physician and {p1['kappa_external_morgan']['kappa']:.3f} with the second)", "addendum_rater.json"))
+    R.append(("av.kappa", f"(κ with them, {p1['kappa_external_basu']['kappa']:.3f} and {p1['kappa_external_morgan']['kappa']:.3f})", "addendum_rater.json"))
     o, am_ = mj["metrics"]["ours"], mj["metrics"]["amie_style"]
     d = mj["paired_diffs"]["ours - amie_style"]
     R.append(("av.majority", f"Under majority-of-three labels, {o['safety_positive']} texts had a safety hazard. The separated design escalated {pc(o['hazard_sensitivity_weighted'])}% of them ({pc(o['hazard_sensitivity_weighted_ci'][0])} to {pc(o['hazard_sensitivity_weighted_ci'][1])}) and the AMIE-style agent {pc(am_['hazard_sensitivity_weighted'])}% ({pc(am_['hazard_sensitivity_weighted_ci'][0])} to {pc(am_['hazard_sensitivity_weighted_ci'][1])}), a difference of {m(100*d['sens_diff_weighted'])} points ({ci([100*v for v in d['sens_diff_weighted_ci']])})", "addendum_rater.json"))
@@ -199,7 +200,7 @@ def registry():
     p1, p2 = a2["primary"]["P1_safety_noninferiority_ai_minus_physician"], a2["primary"]["P2_accuracy_superiority_ai_minus_care_team"]
     R.append(("a2.p1", f"{pc(p1['diff'])} percentage points more frequent in the separated design's replies than in physician-written replies (95% CI, {pc(p1['ci95'][0])} to {pc(p1['ci95'][1])})", "a2_rating.json"))
     R.append(("a2.p1.holm", f"margin of {round(100 * 0.05)} points (Holm-adjusted P = {p1['p_holm']:.3f})", "a2_rating.json"))
-    R.append(("a2.p2", f"scored {p2['diff']:.2f} points higher than care-team replies for accuracy on a 5-point scale ({p2['ci95'][0]:.2f} to {p2['ci95'][1]:.2f}; P = {p2['p_holm']:.3f})", "a2_rating.json"))
+    R.append(("a2.p2", f"scored {p2['diff']:.2f} points higher than care-team replies, available for 53 texts, for accuracy on a 5-point scale ({p2['ci95'][0]:.2f} to {p2['ci95'][1]:.2f}; P = {p2['p_holm']:.3f})", "a2_rating.json"))
     d2 = a2["design"]
     R.append(("a2.design", f"all {d2['safety_positive_texts']} texts with a safety hazard and 71 random others", "a2_rating.json"))
     R.append(("a2.ct", f"for {d2['care_team_texts']} texts, the care team's reply", "a2_rating.json"))
@@ -212,7 +213,7 @@ def registry():
     R.append(("a2.gen", f"The {bt['generated_reply']['replies']} generated replies had no moderate or severe harm", "a2_rating.json"))
     assert bt["generated_reply"]["moderate_or_severe_harm"] == 0 and bt["alert_text"]["moderate_or_severe_harm"] == u2["moderate_or_severe"]
     R.append(("a2.gen.acc", f"{bt['generated_reply']['safety_positive']} texts with a safety hazard that got a generated reply, mean accuracy was {bt['generated_reply']['mean_accuracy_safety_positive']:.2f} for the separated design and {bt['generated_reply']['amie_mean_accuracy_same_texts']:.2f}", "a2_rating.json"))
-    R.append(("a2.irr", f"(κ between raters, {a2['inter_rater']['moderate_or_severe_harm']['kappa']:.3f})", "a2_rating.json"))
+    R.append(("a2.irr", f"(κ between raters for harm, {a2['inter_rater']['moderate_or_severe_harm']['kappa']:.3f})", "a2_rating.json"))
     cv = a2["classifier_validation"]
     R.append(("a2.cls", f"({cv['classifier_escalates']} against {cv['rater_escalates']} of {cv['replies']} generated replies; κ = {cv['agreement']['kappa']:.3f})", "a2_rating.json"))
     rj = a2["rater_judged_escalation_safety_positive"]["same_day_or_more"]
@@ -240,9 +241,9 @@ def registry():
     R.append(("h1a", f"{pc(rh['H1a']['majority_diff'])} points; {pc(rh['H1a']['majority_diff_ci95'][0])} to {pc(rh['H1a']['majority_diff_ci95'][1])}", "registered_hypotheses_v22"))
     R.append(("h1b", f"{pc(rh['H1b']['majority_diff'])} points; exact McNemar P = {rh['H1b']['mcnemar_exact_two_sided_p']:.3f}", "registered_hypotheses_v22"))
     e = j(DER / "texts_errors.json")
-    R.append(("err.med", f"{e['missed_by_category']['ours']['med_safety']:.1f} unescalated, and the AMIE-style agent {e['missed_by_category']['amie_style']['med_safety']:.1f}", "texts_errors.json"))
-    R.append(("err.house", f"the separated design left {e['missed_by_category']['ours']['environmental_housing_safety']:.1f} unescalated, and the AMIE-style agent {e['missed_by_category']['amie_style']['environmental_housing_safety']:.1f}", "texts_errors.json"))
-    R.append(("groups", f"{e['label_groups']['other_hazard']} texts with a hazard", "texts_errors.json"))
+    R.append(("err.med", f"{e['missed_by_category']['ours']['med_safety']:.1f} unescalated on average over its three replies, and the AMIE-style agent {e['missed_by_category']['amie_style']['med_safety']:.1f}", "texts_errors.json"))
+    R.append(("err.house", f"the separated design left {e['missed_by_category']['ours']['environmental_housing_safety']:.1f} unescalated on average over its three replies, and the AMIE-style agent {e['missed_by_category']['amie_style']['environmental_housing_safety']:.1f}", "texts_errors.json"))
+    R.append(("groups", f"{e['label_groups']['other_hazard']} texts whose only hazard", "texts_errors.json"))
     # gate
     g = j(D / "paper2_dev/paging_gate_497/report.json")["outcomes"]
     em = g["emergency"]["scores"]["kev_p911"]
@@ -264,7 +265,7 @@ def registry():
     rl = lk["released_raw_llm_replies"]
     re_ = j(DER / "texts_routing_endpoints.json")
     em = re_["emergency_now_reaching_patient_per_1000_all_replies"]
-    R.append(("leak.released", f"released {rl['n_released']:,} of its 2,847 replies, sent the texts labeled \"call 911 or 988\" to the alert route, and released {rl['emergency_now']} replies with this advice ({em['ours']} per 1,000)", "texts_gate_test_and_leak.json + routing"))
+    R.append(("leak.released", f"released {rl['n_released']:,} of\nits 2,847 replies, including {rl['emergency_now']} with this advice ({em['ours']} per 1,000)", "texts_gate_test_and_leak.json + routing"))
     ro, w = re_["ours_routed_only"], re_["withheld"]
     R.append(("route.only", f"escalated {pc(ro['sens_safety_positive'])}% of texts with a safety hazard ({pc(ro['sens_safety_positive_ci'][0])} to {pc(ro['sens_safety_positive_ci'][1])}) and {ro['per1000_no_hazard']} per 1,000", "texts_routing_endpoints.json"))
     R.append(("route.withheld", f"the separated design withheld {w['total']}: {w['replies_withheld_by_page']}\nbecause the emergency screen sent an alert for {w['texts_paged']} texts, and {w['replies_held_by_check_not_paged']}", "texts_routing_endpoints.json"))
@@ -311,7 +312,15 @@ def registry():
     nv = [cf["systems"][a]["safety_hazard"]["npv"]["est"] for a in writers]
     R.append(("conf.ppv", f"ranged from {pc(min(pv))}% to {pc(max(pv))}%, and negative predictive values from\n{pc(min(nv))}% to {pc(max(nv))}%", "texts_confusion.json"))
     emx = cf["emergency_now_reaching_patient_by_label"]
-    R.append(("conf.em.amie", f"{emx['amie_style']['Call 911/988']} of the AMIE-style agent's {emx['amie_style']['total']} such replies answered texts labeled", "texts_confusion.json"))
+    ct = cf["call_911_texts"]; ru = ct["reply_urgency"]
+    nu = lambda a: sum(v for k, v in ru[a].items() if k in ("urgent_same_day", "routine_followup", "none"))  # noqa: E731
+    assert nu("amie_style") == nu("mai_dxo_style") == nu("raw_llm")
+    R.append(("e911.reply", f"the AMIE-style agent advised emergency care now in {ru['amie_style']['emergency_now']} of {ct['replies_per_system']} replies, the MAI-DxO-style agent in {ru['mai_dxo_style']['emergency_now']},\nthe reply model in {ru['raw_llm']['emergency_now']} and the rule-based system in {ru['v22']['emergency_now']}; {nu('amie_style')} of {ct['replies_per_system']} replies from each of the first three advised only\nsame-day or routine care, and the emergency screen sent an alert for all {ct['emergency_screen_alerts']} texts", "texts_confusion.json"))
+    lo_, hi_ = min(ru[a]["emergency_now"] for a in ("amie_style", "mai_dxo_style", "raw_llm")), max(ru[a]["emergency_now"] for a in ("amie_style", "mai_dxo_style", "raw_llm"))
+    R.append(("e911.disc", f"advised emergency care\nnow in only {lo_} to {hi_} of {ct['replies_per_system']} replies to these texts", "texts_confusion.json"))
+    from scipy.stats import beta
+    R.append(("e911.ci", f"(95% CI, {100*beta.ppf(0.025, 5, 1):.1f}% to 100%;", "exact binomial, 5 of 5"))
+    pass  # conf.em.amie retired
     assert emx["ours"]["None"] == emx["ours"]["total"] == rl["emergency_now"]
     R.append(("conf.em.ours", f"all to texts that needed no action", "texts_confusion.json"))
     ov, tr = j(DER / "calib_test_overlap.json"), cf["transfer"]
@@ -322,11 +331,11 @@ def registry():
         d = cn[k]
         R.append((lab, f"{f1(abs(d['diff']))} points ({f1(d['ci95'][0])} to {f1(d['ci95'][1])})".replace('-', '−') if lab.endswith("amie") else f"{f1(abs(d['diff']))} points ({f1(-d['ci95'][1])} to {f1(-d['ci95'][0])})", "compare_nosearch.txt"))
     cl = lk["classifier_emergency_now_all_replies"]
-    R.append(("leak.cls", f"in {cl['amie_style']['per_1000']} of every 1,000 replies, the MAI-DxO-style agent in {cl['mai_dxo_style']['per_1000']} and the reply model in {cl['raw_llm']['per_1000']}", "texts_gate_test_and_leak.json"))
+    R.append(("leak.cls", f"in {cl['amie_style']['per_1000']} of every 1,000 replies, the MAI-DxO-style agent in {cl['mai_dxo_style']['per_1000']}, the reply model in {cl['raw_llm']['per_1000']} and the rule-based system in {cl['v22']['per_1000']}", "texts_gate_test_and_leak.json"))
     R.append(("hb.simple_raw", f"two-step pipeline scored {rep2['opus_search_edit']['raw']['score']} and the full pipeline {rep2['compass_pro_full']['raw']['score']}", "hbpro_test/report.json"))
     R.append(("hb.simple_chars", f"averaged {rep2['compass_pro_full']['mean_chars']:,} characters\nand the two-step pipeline's {rep2['opus_search_edit']['mean_chars']:,}", "hbpro_test/report.json"))
     gt = lk["gate_test"]["hazard_contact_doctor_or_911_gated"]
-    R.append(("gate.test", f"but sent only {gt[1]} of the {gt[0]} texts needing a doctor's call to a physician", "texts_gate_test_and_leak.json"))
+    R.append(("gate.test", f"but the review threshold sent only {gt[1]} of the {gt[0]} texts needing a doctor's call to a physician", "texts_gate_test_and_leak.json"))
     R.append(("gate.test_share", f"the emergency screen sent an alert for {100 * lk['weighted_page_share']:.1f}% of texts and a review request for {100 * lk['weighted_review_share']:.1f}%", "texts_gate_test_and_leak.json"))
     # intake
     ir = (D / "paper2_dev/intake_eval/report.md").read_text()
@@ -336,7 +345,7 @@ def registry():
 
 
 SUPP = MS.parent / "compass_clinician_first_ai_pcp_npj_supplement.md"
-SUPP_ONLY = {"hb_test.uncapped.amie_style_uncapped", "av.kappa", "sub.race", "intake.3.18", "strict.cost_pipe", "av.layer", "av.alert", "sub.state", "sub.sex", "gate.paged", "gate.test_share", "route.only", "hb_test.simple_vs_amie", "nosearch.vs_amie", "jm.layer", "a2.cls", "a2.cls.lim", "a2.rj", "intake.instr", "intake.none", "intake.4.71", "intake.3.46", "hb_test.uncapped.mai_dxo_style_uncapped", "retest.primary", "txt.gate_only", "txt.writer_only", "a2.ct",
+SUPP_ONLY = {"gate.safety_auroc", "hb_test.uncapped.amie_style_uncapped", "sub.race", "intake.3.18", "strict.cost_pipe", "av.layer", "av.alert", "sub.state", "sub.sex", "gate.paged", "gate.test_share", "route.only", "hb_test.simple_vs_amie", "nosearch.vs_amie", "jm.layer", "a2.cls", "a2.cls.lim", "a2.rj", "intake.instr", "intake.none", "intake.4.71", "intake.3.46", "hb_test.uncapped.mai_dxo_style_uncapped", "retest.primary", "txt.gate_only", "txt.writer_only", "a2.ct",
              "a2.gen.acc", "repeat", "urg.agree", "route.withheld", "doc.diffs", "intake.40.9%", "intake.55.8%", "dev.opusonly", "dev.simple", "hb_test.len_reg", "hb_test.redteam_diff", "retest.ours", "retest.amie",
              "hb_dev.amie_style_g61", "hb_dev.chars", "abl.search", "abl.single", "abl.review", "abl.editor",
              "txt.instr.amie_style", "txt.instr.mai_dxo_style", "txt.instr.raw_llm", "txt.gate_paged", "urg.rates", "strict.held", "h1a", "h1b", "err.house", "gate.above", "gate.full_paged",

@@ -754,6 +754,17 @@ def t18() -> str:
             v = em[k]
             rows.append(f"| {nm} | {v['Call 911/988']} | {v['Contact Doctor']} | {v['Routine Follow-up']} | {v['None']} | {v['total']} |")
     out.append("\n".join(rows))
+    ct = c["call_911_texts"]
+    rows = [f"*Advice in each reply to the {ct['texts']} texts labeled call 911 or 988* ({ct['replies_per_system']} replies per "
+            f"system, before any filter, by the reply classifier). The emergency screen sent an alert for "
+            f"{ct['emergency_screen_alerts']} of these {ct['texts']} texts, so the separated design sent the fixed alert text instead.", "",
+            "| System | Emergency now | Possible emergency | Urgent, same day | Routine follow-up | None |", "|---|---|---|---|---|---|"]
+    for k, nm in (("amie_style", "AMIE-style agent"), ("mai_dxo_style", "MAI-DxO-style agent"), ("raw_llm", "Reply model alone"),
+                  ("v22", "Rule-based system")):
+        u = ct["reply_urgency"][k]
+        rows.append(f"| {nm} | " + " | ".join(str(u.get(x, 0)) for x in ("emergency_now", "possible_emergency", "urgent_same_day",
+                                                                          "routine_followup", "none")) + " |")
+    out.append("\n".join(rows))
     return ("Supplementary Table 18 | Confusion matrices and accuracy of escalation on the 949 patient texts (3 replies "
             "per text). Counts are expected numbers of texts (each text's share of escalated replies, summed over "
             "texts); sensitivity, specificity, positive predictive value (PPV), negative predictive value (NPV) and "
