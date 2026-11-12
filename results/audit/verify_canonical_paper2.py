@@ -97,7 +97,7 @@ def registry():
     a1, a2 = t["A1_pipeline_minus_tuned_amie"], t["A2_pipeline_minus_tuned_mai"]
     c0 = cmp_file(D / "hbpro_test/compare.txt")
     p1, p2 = c0["compass_pro_full - amie_style"], c0["compass_pro_full - mai_dxo_style"]
-    R.append(("abs.ladder", f"fell from {f1(p1['diff'])} points (95% CI, {ci(p1['ci95'])}) as published to {m(a1['diff'])} ({ci(a1['ci95'])}) with equal search and tuning and benchmark sources blocked; over the panel, it fell from {f1(p2['diff'])} ({ci(p2['ci95'])}) to {m(a2['diff'])} ({ci(a2['ci95'])})", "compare.txt + addendum_hb.json"))
+    R.append(("abs.ladder", f"led the self-refining agent by {f1(p1['diff'])} points (95% CI, {ci(p1['ci95'])}) when only it had search and tuning, but {m(a1['diff'])} ({ci(a1['ci95'])}) when all had both and benchmark sources were blocked; it led the panel by {f1(p2['diff'])} ({ci(p2['ci95'])}) and {m(a2['diff'])} ({ci(a2['ci95'])})", "compare.txt + addendum_hb.json"))
     R.append(("strict.scores", f"the multi-model pipeline scored {f1(sc_['compass_pro_full_blk']['mean'])} (SE, {f1(sc_['compass_pro_full_blk']['se'])}), the tuned AMIE-style agent {f1(sc_['amie_style_search_blk']['mean'])} ({f1(sc_['amie_style_search_blk']['se'])}) and the tuned MAI-DxO-style agent {f1(sc_['mai_dxo_style_search_edit_blk']['mean'])} ({f1(sc_['mai_dxo_style_search_edit_blk']['se'])})", "addendum_hb.json"))
     R.append(("strict.A1", f"{m(a1['diff'])} points higher than the tuned AMIE-style agent ({ci(a1['ci95'])}; Holm-adjusted P = {a1['p_holm']:.2f})", "addendum_hb.json"))
     R.append(("strict.A2", f"{m(a2['diff'])} points higher than the tuned MAI-DxO-style agent ({ci(a2['ci95'])}; P = {a2['p_holm']:.2f})", "addendum_hb.json"))

@@ -632,9 +632,9 @@ def t16() -> str:
         return "Supplementary Table 16 | Matched comparisons on the physician-facing test. pending"
     lab = {"compass_pro_full": "Multi-model pipeline", "compass_pro_full_blk": "Multi-model pipeline, blocked search",
            "opus_search_edit": "Two-step pipeline", "opus_search_edit_blk": "Two-step pipeline, blocked search",
-           "amie_style": "AMIE-style agent (as published)", "amie_style_search": "AMIE-style agent with search",
+           "amie_style": "AMIE-style agent (base)", "amie_style_search": "AMIE-style agent with search",
            "amie_style_search_blk": "AMIE-style agent with blocked search", "amie_style_search_edit_blk":
-           "AMIE-style agent with blocked search and shortening step", "mai_dxo_style": "MAI-DxO-style agent (as published)",
+           "AMIE-style agent with blocked search and shortening step", "mai_dxo_style": "MAI-DxO-style agent (base)",
            "mai_dxo_style_search_blk": "MAI-DxO-style agent with blocked search", "mai_dxo_style_search_edit_blk":
            "MAI-DxO-style agent with blocked search and shortening step"}
     cost = dict(a["E_cost_per_task_usd"])

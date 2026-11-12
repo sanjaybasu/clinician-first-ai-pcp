@@ -131,7 +131,7 @@ def fig1(out: Path) -> None:
     _arrow(ax, 3.7, 9.02, 4.0, 8.9)
     _arrow(ax, 3.7, 8.37, 4.0, 8.5)
     _arrow(ax, 5.7, 8.75, 6.0, 8.75)
-    _box(ax, 0.1, 6.85, 9.8, 0.65, "Matched comparisons at four levels:  as published  |  same web search  |\nsame tuning, with benchmark sources blocked from search  |  equal cost", "#f2f2f2")
+    _box(ax, 0.1, 6.85, 9.8, 0.65, "Matched comparisons at four levels:  base agents  |  same web search  |\nsame tuning, with benchmark sources blocked from search  |  equal cost", "#f2f2f2")
     # b. patient-facing test
     ax.text(0.05, 6.55, "b  Patient-facing test: does a safety layer outside the reply model find more hazards?", fontsize=8,
             weight="bold")
