@@ -95,7 +95,9 @@ def registry():
     ad = j(DER / "addendum_hb.json")
     t, sc_, co = ad["all_tasks"], ad["scores"], ad["E_cost_per_task_usd"]
     a1, a2 = t["A1_pipeline_minus_tuned_amie"], t["A2_pipeline_minus_tuned_mai"]
-    R.append(("abs.ladder", f"scored {m(a1['diff'])} points (95% CI, {ci(a1['ci95'])}) and {m(a2['diff'])} points ({ci(a2['ci95'])}) higher than\nre-implemented AMIE-style and MAI-DxO-style agents", "addendum_hb.json"))
+    c0 = cmp_file(D / "hbpro_test/compare.txt")
+    p1, p2 = c0["compass_pro_full - amie_style"], c0["compass_pro_full - mai_dxo_style"]
+    R.append(("abs.ladder", f"fell from {f1(p1['diff'])} points (95% CI, {ci(p1['ci95'])}) as published to {m(a1['diff'])} ({ci(a1['ci95'])}) with equal search and tuning and benchmark sources blocked; over the panel, it fell from {f1(p2['diff'])} ({ci(p2['ci95'])}) to {m(a2['diff'])} ({ci(a2['ci95'])})", "compare.txt + addendum_hb.json"))
     R.append(("strict.scores", f"the multi-model pipeline scored {f1(sc_['compass_pro_full_blk']['mean'])} (SE, {f1(sc_['compass_pro_full_blk']['se'])}), the tuned AMIE-style agent {f1(sc_['amie_style_search_blk']['mean'])} ({f1(sc_['amie_style_search_blk']['se'])}) and the tuned MAI-DxO-style agent {f1(sc_['mai_dxo_style_search_edit_blk']['mean'])} ({f1(sc_['mai_dxo_style_search_edit_blk']['se'])})", "addendum_hb.json"))
     R.append(("strict.A1", f"{m(a1['diff'])} points higher than the tuned AMIE-style agent ({ci(a1['ci95'])}; Holm-adjusted P = {a1['p_holm']:.2f})", "addendum_hb.json"))
     R.append(("strict.A2", f"{m(a2['diff'])} points higher than the tuned MAI-DxO-style agent ({ci(a2['ci95'])}; P = {a2['p_holm']:.2f})", "addendum_hb.json"))
@@ -189,7 +191,7 @@ def registry():
     sp = t["second_physician"]
     m = lambda x: x.replace("-", "−")  # noqa: E731
     sm, sb = sp["morgan_labels"], sp["paired_diffs_morgan"]
-    R.append(("jm.n", f"found {sm['ours']['safety_positive']} texts with a safety hazard (Cohen's κ = {ag['kappa']:.3f})", "texts_supplement.json"))
+    R.append(("jm.n", f"found {sm['ours']['safety_positive']} texts with a safety hazard (κ = {ag['kappa']:.3f})", "texts_supplement.json"))
     R.append(("jm.sens", f"the separated design escalated {pc(sm['ours']['hazard_sensitivity_weighted'])}% of texts with a safety hazard ({pc(sm['ours']['hazard_sensitivity_weighted_ci'][0])} to {pc(sm['ours']['hazard_sensitivity_weighted_ci'][1])}) and the AMIE-style agent {pc(sm['amie_style']['hazard_sensitivity_weighted'])}% ({pc(sm['amie_style']['hazard_sensitivity_weighted_ci'][0])} to {pc(sm['amie_style']['hazard_sensitivity_weighted_ci'][1])})", "texts_supplement.json"))
     d = sb["ours - amie_style"]
     R.append(("jm.diff", f"a difference of {pc(d['sens_diff_weighted'])} points ({m(pc(d['sens_diff_weighted_ci'][0]))} to {pc(d['sens_diff_weighted_ci'][1])})", "texts_supplement.json"))
@@ -213,7 +215,7 @@ def registry():
     R.append(("a2.gen", f"The {bt['generated_reply']['replies']} generated replies had no moderate or severe harm", "a2_rating.json"))
     assert bt["generated_reply"]["moderate_or_severe_harm"] == 0 and bt["alert_text"]["moderate_or_severe_harm"] == u2["moderate_or_severe"]
     R.append(("a2.gen.acc", f"{bt['generated_reply']['safety_positive']} texts with a safety hazard that got a generated reply, mean accuracy was {bt['generated_reply']['mean_accuracy_safety_positive']:.2f} for the separated design and {bt['generated_reply']['amie_mean_accuracy_same_texts']:.2f}", "a2_rating.json"))
-    R.append(("a2.irr", f"(κ between raters for harm, {a2['inter_rater']['moderate_or_severe_harm']['kappa']:.3f})", "a2_rating.json"))
+    R.append(("a2.irr", f"(Cohen's κ, a measure of agreement beyond chance, between raters for harm, {a2['inter_rater']['moderate_or_severe_harm']['kappa']:.3f})", "a2_rating.json"))
     cv = a2["classifier_validation"]
     R.append(("a2.cls", f"({cv['classifier_escalates']} against {cv['rater_escalates']} of {cv['replies']} generated replies; κ = {cv['agreement']['kappa']:.3f})", "a2_rating.json"))
     rj = a2["rater_judged_escalation_safety_positive"]["same_day_or_more"]
